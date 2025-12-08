@@ -96,7 +96,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.19</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.21</div>
     </div>
 
     <!-- PAGE 1 -->
@@ -199,11 +199,13 @@
 </div>
 
 <script>
-    // --- GLOBAL VARIABLES & CONSTANTS ---
+    // --- CONSTANTS ---
+    const MAX_JOBS = 5; 
+    const ENABLE_VALIDATION = false; 
+    
+    // --- VARIABLES ---
     let currentLang = 'en';
     let targetSheetName = 'Phil'; 
-    const MAX_JOBS = 5; 
-    const ENABLE_VALIDATION = false;
 
     // --- UTILITY FUNCTIONS ---
     function saveLocal() {
@@ -289,6 +291,91 @@
     
     const indoMonths = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
     const engMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    // --- VALIDATION LOGIC ---
+
+    function validateField(input) {
+        if(!ENABLE_VALIDATION) return;
+        const parent = input.parentElement;
+        const errorMsg = parent.querySelector('.error-msg') || parent.parentElement.querySelector('.error-msg');
+        if(!errorMsg) return;
+        if(!input.value || input.value.trim() === '') {
+            errorMsg.classList.add('visible');
+            input.classList.add('input-error');
+        } else {
+            errorMsg.classList.remove('visible');
+            input.classList.remove('input-error');
+        }
+    }
+
+    function validateGroup(container) {
+        if(!ENABLE_VALIDATION) return;
+        const inputs = container.querySelectorAll('input');
+        let checked = false;
+        inputs.forEach(i => { if(i.checked) checked = true; });
+        const parent = container.parentElement;
+        const errorMsg = parent.querySelector('.error-msg');
+        if(!errorMsg) return;
+        if(!checked) { errorMsg.classList.add('visible'); } 
+        else { errorMsg.classList.remove('visible'); }
+    }
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.lang-btn[onclick="setLanguage('${lang}')"]`).classList.add('active');
+        document.getElementById('welcomeTitle').textContent = dict[lang].title_text;
+        updateUI();
+        regenerateAllSelects();
+    }
+
+    function updateUI() {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(dict[currentLang][key]) el.textContent = dict[currentLang][key];
+        });
+        
+        const phMap = { 
+            'ph_qty': '.pet-qty', 
+            'ph_pet': '.pet-other-input, #nat_other_input, #rel_other_input', 
+            'ph_resp': '.resp-other-input',
+            'ph_nat_other': '#nat_other_input',
+            'ph_rel_other': '#rel_other_input',
+            'ph_skill_other': '#skill_other_input',
+            'ph_cnt_other': '#otherCountryInput',
+            'ph_dis_other1': '.dis-other-input', 
+            'opt_select': '#whatsapp_code, #homePhone_code, #referrerPhone_code, #whatsapp_num, #homePhone_num, #referrerPhone_num'
+        };
+        
+        document.querySelectorAll('.pet-qty').forEach(el => el.placeholder = dict[currentLang].ph_qty);
+        if(document.getElementById('nat_other_input')) document.getElementById('nat_other_input').placeholder = dict[currentLang].ph_nat_other;
+        if(document.getElementById('rel_other_input')) document.getElementById('rel_other_input').placeholder = dict[currentLang].ph_rel_other;
+        if(document.getElementById('skill_other_input')) document.getElementById('skill_other_input').placeholder = dict[currentLang].ph_skill_other;
+        if(document.getElementById('otherCountryInput')) document.getElementById('otherCountryInput').placeholder = dict[currentLang].ph_cnt_other;
+        
+        document.querySelectorAll('.resp-other-input').forEach(el => el.placeholder = dict[currentLang].ph_resp);
+        document.querySelectorAll('.pet-other-input').forEach(el => el.placeholder = dict[currentLang].ph_pet);
+        
+        for(let i=1; i<=MAX_JOBS; i++) {
+             const d1 = document.getElementById(`w${i}_disabled_other1_input`);
+             const d2 = document.getElementById(`w${i}_disabled_other2_input`);
+             if(d1) d1.placeholder = dict[currentLang].ph_dis_other1;
+             if(d2) d2.placeholder = dict[currentLang].ph_dis_other2;
+        }
+
+        const prefix = currentLang === 'id' ? 'Contoh' : 'e.g.';
+        ['whatsapp_code', 'referrerPhone_code'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.placeholder = prefix + " +852"; 
+        });
+        const homeCode = document.getElementById('homePhone_code');
+        if(homeCode) homeCode.placeholder = currentLang === 'id' ? "Contoh +62" : "e.g. +63";
+
+         ['whatsapp_num', 'homePhone_num', 'referrerPhone_num'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.placeholder = prefix + " 96111003"; 
+        });
+    }
 
     // --- DYNAMIC SELECT GENERATION ---
     function regenerateAllSelects() {
@@ -611,7 +698,6 @@
 
         saveLocal();
         const more = document.querySelector(`input[name="w${index}_more"]:checked`);
-        // Check both English and Indo values or just substring "Yes"
         const val = more ? more.value : '';
         if((val.includes('Yes') || val.includes('Ya')) && index < MAX_JOBS) {
             goToPage(`pageWork${index+1}`);
@@ -657,7 +743,6 @@
     function validatePassport() {
         const input = document.getElementById('passportExpiry');
         if(!input.value) return;
-        // Parse date from yyyy-mm-dd (default value from date input type)
         const parts = input.value.split('-');
         if(parts.length === 3) {
              const d = new Date(parts[0], parts[1]-1, parts[2]);
@@ -776,10 +861,219 @@
         }
     }
 
-    window.onload = function() {
-        // Ensure createWorkPage logic runs FIRST to populate DOM
-        for(let i=1; i<=MAX_JOBS; i++) createWorkPage(i);
+    // Helper for Work Pages
+    const workPagesContainer = document.getElementById('workPagesContainer');
+
+    function createWorkPage(index) {
+        const div = document.createElement('div');
+        div.id = `pageWork${index}`;
+        div.className = 'page-section hidden';
         
+        const titleKey = index === 1 ? 'work_latest_title' : 'work_other_title';
+        const titleClass = index === 1 ? 'highlight-header' : '';
+        const titleText = index === 1 ? '' : ` (${index})`;
+        const noOptionKey = `work_more_no_${index}`;
+
+        div.innerHTML = `
+            <h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2 ${titleClass}"><span data-i18n="${titleKey}"></span>${titleText}</h2>
+            
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_country">Country of Employment?</label>
+                <input type="text" id="w${index}_country" onblur="validateField(this)">
+                <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+                
+                <label class="question-label mt-3" data-i18n="work_emp_nat">Employer's Nationality?</label>
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
+                    ${['Local people', 'Foreigner', 'Chinese', 'Hong Kong people', 'Asian'].map(o => 
+                        `<label class="checkbox-option"><input type="radio" name="w${index}_emp_nat" value="${o}"> ${o}</label>`
+                    ).join('')}
+                </div>
+                <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_start">Start Date?</label>
+                <div class="flex gap-2">
+                    <select id="w${index}_startMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
+                    <select id="w${index}_startYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+             <div class="question-block">
+                <label class="question-label" data-i18n="work_end">End Date?</label>
+                <div class="flex gap-2">
+                    <select id="w${index}_endMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
+                    <select id="w${index}_endYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_size">House Size?</label>
+                <input type="number" id="w${index}_houseSize" onblur="validateField(this)">
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_fam_count">Family Members Count?</label>
+                <select id="w${index}_famCount" onchange="renderFamMembers(${index}); validateField(this)" onblur="validateField(this)"></select>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+            
+            <div id="w${index}_famDetails" class="question-block hidden">
+                <label class="question-label" data-i18n="work_fam_age">Age of Employer Family Members</label>
+                <div id="w${index}_famRows" class="flex flex-col gap-3"></div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_helpers">Number of Helpers?</label>
+                 <select id="w${index}_helpers" onblur="validateField(this)"></select>
+                  <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_status">Contract Status?</label>
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Finished contract" onclick="singleSelect(this, 'w${index}_status')"> <span data-i18n="hk_finish">Finished contract</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Employer terminated me already" onclick="singleSelect(this, 'w${index}_status')"> <span data-i18n="hk_terminated">Employer terminated me already</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="I resigned already" onclick="singleSelect(this, 'w${index}_status')"> <span>I resigned already</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Not contract and can leave anytime" onclick="singleSelect(this, 'w${index}_status')"> <span>Not contract and can leave anytime</span></label>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_reason">Reason for Leaving?</label>
+                <textarea id="w${index}_reason" class="expandable" rows="3" onblur="validateField(this)"></textarea>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <!-- DISABLED CARE SECTION (NEW) -->
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_dis_q">In This Employer, Did You Take Care of Disabled Person?</label>
+                <div class="checkbox-group">
+                    ${[
+                        {id:'dis_no', val:'No'}, {id:'dis_bed', val:'Bedridden care'}, {id:'dis_dis', val:'Disability care'}, 
+                        {id:'dis_tra', val:'Tracheostomy care'}, {id:'dis_wheel', val:'Wheelchair'}, {id:'dis_walk', val:'Walking slowly'},
+                        {id:'dis_med', val:'Medication feeding'}, {id:'dis_bath', val:'Bathing assistance'}, {id:'dis_stroke', val:'Stroke'},
+                        {id:'dis_alz', val:'Alzheimer\'s disease'}, {id:'dis_park', val:'Parkinson\'s disease'}
+                    ].map(d => `<label class="checkbox-option"><input type="checkbox" name="w${index}_disabled" value="${d.val}"> <span data-i18n="${d.id}">${d.val}</span></label>`).join('')}
+                    
+                    <label class="checkbox-option flex-col !items-start">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="w${index}_disabled" value="Other disabled person (1)" onchange="toggleInput('w${index}_disabled_other1_input', this.checked)"> 
+                            <span data-i18n="dis_other1">Other disabled person (1)</span>
+                        </div>
+                        <input type="text" id="w${index}_disabled_other1_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)">
+                    </label>
+                    <label class="checkbox-option flex-col !items-start">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="w${index}_disabled" value="Other disabled person (2)" onchange="toggleInput('w${index}_disabled_other2_input', this.checked)"> 
+                            <span data-i18n="dis_other2">Other disabled person (2)</span>
+                        </div>
+                        <input type="text" id="w${index}_disabled_other2_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)">
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_pets">Employer’s Pets?</label>
+                <div class="checkbox-group">
+                     ${[
+                         {id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, 
+                         {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}
+                     ].map(p => `
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" class="pet-check" data-pet="${p.val}" onchange="togglePetQty(this, 'w${index}_${p.val.replace(/\s/g,'')}_qty')"> 
+                            <span data-i18n="${p.id}">${p.val}</span>
+                            <input type="number" id="w${index}_${p.val.replace(/\s/g,'')}_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
+                        </div>
+                     `).join('')}
+                     
+                     <div class="flex items-center gap-2">
+                        <input type="checkbox" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, 'w${index}_Others_qty')"> 
+                        <span data-i18n="pet_other">Other pet (1)</span>
+                        <div id="w${index}_Others_qty" class="hidden flex gap-2 w-full">
+                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
+                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
+                        </div>
+                    </div>
+                     <div class="flex items-center gap-2">
+                        <input type="checkbox" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, 'w${index}_Others2_qty')"> 
+                        <span data-i18n="pet_other2">Other pet (2)</span>
+                        <div id="w${index}_Others2_qty" class="hidden flex gap-2 w-full">
+                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
+                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
+                        </div>
+                    </div>
+                     <div class="flex items-center gap-2">
+                        <input type="checkbox" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, 'w${index}_Others3_qty')"> 
+                        <span data-i18n="pet_other3">Other pet (3)</span>
+                        <div id="w${index}_Others3_qty" class="hidden flex gap-2 w-full">
+                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
+                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_resp">Job Responsibilities?</label>
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
+                    ${[
+                        {id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'},
+                        {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_wet_market', val: 'I go to Chinese wet-market to buy food'},
+                        {id: 'resp_room', val: 'I sharing room with other'},
+                        {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}
+                    ].map(r => `
+                         <label class="checkbox-option"><input type="checkbox" name="w${index}_resp" value="${r.val}"> <span data-i18n="${r.id}">${r.val}</span></label>
+                    `).join('')}
+                    <label class="checkbox-option flex-col !items-start">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="w${index}_resp" value="Other" onchange="toggleInput('w${index}_resp_other_input', this.checked)"> 
+                            <span data-i18n="resp_other">Other responsibilities (1)</span>
+                        </div>
+                        <input type="text" id="w${index}_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
+                    </label>
+                    <label class="checkbox-option flex-col !items-start">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="w${index}_resp" value="Other2" onchange="toggleInput('w${index}_resp_other2_input', this.checked)"> 
+                            <span data-i18n="resp_other2">Other responsibilities (2)</span>
+                        </div>
+                        <input type="text" id="w${index}_resp_other2_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
+                    </label>
+                    <label class="checkbox-option flex-col !items-start">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="w${index}_resp" value="Other3" onchange="toggleInput('w${index}_resp_other3_input', this.checked)"> 
+                            <span data-i18n="resp_other3">Other responsibilities (3)</span>
+                        </div>
+                        <input type="text" id="w${index}_resp_other3_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
+                    </label>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_more_q">Do You Still Have Other Employer Work Experience?</label>
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_more" value="Yes" onclick="singleSelect(this, 'w${index}_more')"> <span data-i18n="work_more_yes">Yes, still have other employer</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_more" value="No" onclick="singleSelect(this, 'w${index}_more')"> <span data-i18n="${noOptionKey}">No, only one employer experience</span></label>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-primary btn-prev" onclick="handleWorkPrev(${index})" data-i18n="btn_prev">Previous Page</button>
+                <button class="btn-primary" onclick="handleWorkNext(${index})" data-i18n="btn_next">Save And Next Page</button>
+            </div>
+        `;
+        workPagesContainer.appendChild(div);
+    }
+    
+    // --- INIT ---
+    window.onload = function() {
+        for(let i=1; i<=MAX_JOBS; i++) createWorkPage(i);
         restoreLocal();
         document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
         document.getElementById('pageWelcome').classList.remove('hidden');
