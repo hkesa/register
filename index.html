@@ -96,7 +96,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.9</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.10</div>
     </div>
 
     <!-- PAGE 1: BASIC INFO -->
@@ -203,7 +203,7 @@
     let targetSheetName = 'Phil'; 
     const MAX_JOBS = 5; // Global Constant for Max Jobs
     const dict = {
-        // ... (Dictionary content same as V1.8) ...
+        // ... (Dictionary content) ...
         en: {
             title_text: "Online Registration of Horizon Employment Agency", error_msg: "Answer This Question",
             seeker_nat_q: "Job Seeker's Nationality?", btn_welcome_next: "I want to find a new employer. I am registering my information now",
@@ -256,7 +256,7 @@
             work_dis_q: "Di majikan ini, apakah Anda mengurus orang disabilitas?", dis_no: "Tidak", dis_bed: "Perawatan pasien terbaring", dis_dis: "Perawatan disabilitas", dis_tra: "Perawatan trakeostomi", dis_wheel: "Kursi roda", dis_walk: "Berjalan perlahan", dis_med: "Pemberian obat", dis_bath: "Bantuan mandi", dis_stroke: "Stroke", dis_alz: "Alzheimer", dis_park: "Parkinson", dis_other1: "Penyandang disabilitas lainnya (1)", dis_other2: "Penyandang disabilitas lainnya (2)", ph_dis_other1: "Isi detail", ph_dis_other2: "Isi detail",
             work_pets: "Hewan Peliharaan Majikan?", pet_no: "Tidak ada", pet_s_dog: "Anjing kecil", pet_m_dog: "Anjing sedang", pet_b_dog: "Anjing besar", pet_cat: "Kucing", pet_rabbit: "Kelinci", pet_other: "Hewan Lain (1)", pet_other2: "Hewan Lain (2)", pet_other3: "Hewan Lain (3)",
             work_resp: "Tanggung Jawab Pekerjaan?", resp_car: "Cuci mobil", resp_clean: "Bersih-bersih rumah", resp_wash: "Cuci baju tangan", resp_market: "Pergi ke pasar beli makanan", resp_wet_market: "Saya pergi ke pasar basah Cina untuk membeli makanan", resp_room: "Berbagi kamar dengan orang lain", resp_cook_c: "Masak makanan Cina", resp_cook_w: "Masak makanan Barat", resp_other: "Tanggung jawab lainnya (1)", resp_other2: "Tanggung jawab lainnya (2)", resp_other3: "Tanggung jawab lainnya (3)",
-            work_more_q: "Apakah Anda Masih Memiliki Pengalaman Kerja PRT Lain di HK, Negara lain, Filipina, Indonesia? (Hanya Pekerjaan PRT)?", work_more_yes: "Ya, masih ada yang lain", work_more_no_1: "Tidak, hanya 1 pengalaman majikan", work_more_no_2: "Tidak, hanya 2 pengalaman majikan", work_more_no_3: "Tidak, hanya 3 pengalaman majikan", work_more_no_4: "Tidak, hanya 4 pengalaman majikan", work_more_no_5: "Tidak, hanya 5 pengalaman majikan", work_status_resigned: "Saya mengundurkan diri", work_status_nocontract: "Tidak ada kontrak, bisa keluar kapan saja",
+            work_more_q: "Apakah Anda Masih Memiliki Pengalaman Kerja PRT Lain di HK, Negara lain, Filipina, Indonesia? (Hanya Pekerjaan PRT)?", work_more_yes: "Ya, masih punya majikan lain", work_more_no_1: "Tidak, hanya 1 pengalaman majikan", work_more_no_2: "Tidak, hanya 2 pengalaman majikan", work_more_no_3: "Tidak, hanya 3 pengalaman majikan", work_more_no_4: "Tidak, hanya 4 pengalaman majikan", work_more_no_5: "Tidak, hanya 5 pengalaman majikan", work_status_resigned: "Saya mengundurkan diri", work_status_nocontract: "Tidak ada kontrak, bisa keluar kapan saja",
             other_q_title: "Pertanyaan Lain", q_like_cooking: "Apakah Anda Suka Memasak?", q_like_cooking_yes: "Ya, saya suka", q_learn_yt: "Bisakah Anda Belajar Masakan Baru Sendiri Dari YouTube?", q_learn_yt_yes: "Ya, saya bisa", q_confident: "Apakah Anda Percaya Diri dengan Masakan Anda?", q_confident_yes: "Ya, saya percaya diri", q_sing: "Bisakah Anda Menyanyikan Lagu ATAU Bercerita untuk Menidurkan Anak?", q_sing_yes: "Ya, saya bisa", q_tutor: "Apakah Anda Punya Pengalaman Mengajari Anak-anak PR Mereka?", q_tutor_yes: "Ya, saya berpengalaman", visa_q: "Saat Anda Mendapatkan Visa Baru, Bisakah Anda Mulai Bekerja Dulu?", visa_yes: "Ya, saya bisa mulai kerja dulu", visa_no: "Tidak, saya pulang dulu", vacation_q: "Kapan Anda Akan Pulang Untuk Liburan?", stay_home_q: "Berapa Lama Anda Akan Tinggal di Rumah, Lalu Kembali ke HK untuk Bekerja?", q_dog: "Apakah Anda Takut Anjing?", q_cat: "Apakah Anda Takut Kucing?", q_afraid_yes: "Ya, takut", q_tattoo: "Apakah Anda Memiliki Tato?", q_tattoo_yes: "Ya, saya punya", tattoo_msg: "Jika Anda memiliki tato, silakan kirim foto-fotonya kepada kami nanti", q_smoke: "Apakah Anda Memiliki Kebiasaan Merokok ATAU Minum Alkohol?", q_allergy: "Apakah Anda Memiliki Alergi, Penyakit, Iritasi Kulit, Penyakit Menular, atau Kondisi Lainnya?", q_chronic: "Apakah Anda Memiliki Penyakit Kronis, Perlu Suntikan, Minum Obat, Perlu Janji Temu Lanjutan, Diabetes, Penyakit Jantung, atau Penyakit Serius Lainnya?", q_consent: "Apakah Anda sudah membaca, memahami, menyetujui, mengakui, dan memberikan wewenang pada Pernyataan Pengumpulan Informasi Pribadi Perusahaan kami, dan Anda tidak keberatan?", q_consent_yes: "Ya, saya setuju", q_fingers: "Apakah jari tangan dan jari kaki Anda normal, tidak lebih dan tidak kurang?", q_fingers_yes: "Ya, normal", q_fingers_no: "Tidak, saya punya lebih atau kurang",
             ph_qty: "Masukkan jumlah", ph_pet: "Mohon sebutkan", ph_resp: "Mohon sebutkan",
             opt_select: "Pilih", opt_month: "Bulan", opt_year: "Tahun", opt_sibling_suf: "saudara", opt_sibling_pos_pre: "Anak pertama", opt_week: "minggu", opt_weeks: "minggu", opt_emp_nat_local: "Orang Lokal", opt_emp_nat_foreigner: "Orang Asing", opt_emp_nat_chinese: "Orang Cina", opt_emp_nat_hk: "Orang Hong Kong", opt_emp_nat_asian: "Orang Asia", opt_only_emp: "Hanya majikan", opt_emp_plus: "Majikan +", opt_only_me: "1 (Saya sendiri)", opt_me_plus: "saya +", opt_role_adult: "Dewasa", opt_role_boy: "Anak Laki-laki", opt_role_girl: "Anak Perempuan", opt_role_twins: "Anak Kembar", opt_role_triplets: "Kembar Tiga", opt_role_grandpa: "Kakek", opt_role_grandma: "Nenek", opt_age_start: "Usia mulai (Dari)", opt_age_leave: "Usia selesai (Sampai)", opt_preg: "Majikan perempuan sedang hamil", opt_never_hk: "0 (Belum pernah ke Hong Kong)", opt_20_years: "0 sampai 20 tahun", opt_1_son: "1 putra", opt_1_daughter: "1 anak perempuan", opt_1_year: "1 tahun",
@@ -272,11 +272,12 @@
         if(!ENABLE_VALIDATION) return;
         const parent = input.parentElement;
         const errorMsg = parent.querySelector('.error-msg') || parent.parentElement.querySelector('.error-msg');
+        if(!errorMsg) return; // Prevent crash if element missing
         if(!input.value || input.value.trim() === '') {
-            if(errorMsg) errorMsg.classList.add('visible');
+            errorMsg.classList.add('visible');
             input.classList.add('input-error');
         } else {
-            if(errorMsg) errorMsg.classList.remove('visible');
+            errorMsg.classList.remove('visible');
             input.classList.remove('input-error');
         }
     }
@@ -288,8 +289,9 @@
         inputs.forEach(i => { if(i.checked) checked = true; });
         const parent = container.parentElement;
         const errorMsg = parent.querySelector('.error-msg');
-        if(!checked) { if(errorMsg) errorMsg.classList.add('visible'); } 
-        else { if(errorMsg) errorMsg.classList.remove('visible'); }
+        if(!errorMsg) return; // Prevent crash
+        if(!checked) { errorMsg.classList.add('visible'); } 
+        else { errorMsg.classList.remove('visible'); }
     }
 
     function setLanguage(lang) {
@@ -315,8 +317,7 @@
             'ph_rel_other': '#rel_other_input',
             'ph_skill_other': '#skill_other_input',
             'ph_cnt_other': '#otherCountryInput',
-            'ph_dis_other1': '#w1_disabled_other1_input, #w2_disabled_other1_input, #w3_disabled_other1_input, #w4_disabled_other1_input, #w5_disabled_other1_input',
-            'ph_dis_other2': '#w1_disabled_other2_input, #w2_disabled_other2_input, #w3_disabled_other2_input, #w4_disabled_other2_input, #w5_disabled_other2_input',
+            'ph_dis_other1': '.dis-other-input', // General selector for now
             'opt_select': '#whatsapp_code, #homePhone_code, #referrerPhone_code, #whatsapp_num, #homePhone_num, #referrerPhone_num'
         };
         
@@ -328,8 +329,15 @@
         
         document.querySelectorAll('.resp-other-input').forEach(el => el.placeholder = dict[currentLang].ph_resp);
         document.querySelectorAll('.pet-other-input').forEach(el => el.placeholder = dict[currentLang].ph_pet);
-        document.querySelectorAll('.dis-other-input').forEach(el => el.placeholder = dict[currentLang].ph_dis_other1); // Simplified targeting
         
+        // Disabled placeholders fix
+        for(let i=1; i<=MAX_JOBS; i++) {
+             const d1 = document.getElementById(`w${i}_disabled_other1_input`);
+             const d2 = document.getElementById(`w${i}_disabled_other2_input`);
+             if(d1) d1.placeholder = dict[currentLang].ph_dis_other1;
+             if(d2) d2.placeholder = dict[currentLang].ph_dis_other2;
+        }
+
         const prefix = currentLang === 'id' ? 'Contoh' : 'e.g.';
         ['whatsapp_code', 'referrerPhone_code'].forEach(id => {
             const el = document.getElementById(id);
@@ -389,8 +397,11 @@
         for(let i=2; i<=20; i++) opts += `<option value="${i}">${i}</option>`;
 
         questions.forEach(q => {
+            // Safety check for undefined keys in dict (though fixed now)
+            const labelText = dict[currentLang][q.id] || "Missing Translation";
+            
             html += `<div class="question-block">
-                <label class="question-label">${dict[currentLang][q.id]}</label>`;
+                <label class="question-label">${labelText}</label>`;
             if(q.type === 'input_select') {
                 html += `<div class="flex gap-2">
                     <input type="text" id="otherCountryInput" class="w-1/2" placeholder="${dict[currentLang].ph_cnt_other}" onblur="validateField(this)">
@@ -622,7 +633,7 @@
         document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
         document.getElementById(pageId).classList.remove('hidden');
         window.scrollTo(0,0);
-        updateUI(); 
+        try { updateUI(); } catch(e) { console.error("Update UI Error:", e); }
     }
 
     function nextPage(currentPageNum) {
@@ -637,7 +648,8 @@
             if(!valid) { alert("Please answer all questions"); return; }
         }
         
-        saveLocal();
+        try { saveLocal(); } catch(e) { console.error("Save Local Error:", e); }
+        
         const p1Nat = document.querySelector('input[name="nationality"]:checked');
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
@@ -687,8 +699,6 @@
         goToPage(`pageWork${targetPage}`);
     }
 
-    // --- HELPER LOGIC ---
-
     function singleSelect(checkbox, name) {
         document.getElementsByName(name).forEach((item) => {
             if (item !== checkbox) item.checked = false;
@@ -709,7 +719,6 @@
     function validatePassport() {
         const input = document.getElementById('passportExpiry');
         if(!input.value) return;
-        // Parse date from yyyy-mm-dd (default value from date input type)
         const parts = input.value.split('-');
         if(parts.length === 3) {
              const d = new Date(parts[0], parts[1]-1, parts[2]);
@@ -790,7 +799,6 @@
         const scriptURL = "https://script.google.com/macros/s/AKfycbzb0sBBOvornl0hh0Bt_WH_h8Nz9csh9j9_sCvMZdQZO_XduolcQM1Q2FVEC-4Lb6salw/exec"; 
         
         try {
-            // Uncomment next lines for real submission
             // await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
             console.log("Submitting to Sheet: " + targetSheetName, data);
             
@@ -827,7 +835,7 @@
             btn.innerHTML = "Submit Registration";
         }
     }
-
+    
     function restoreLocal() { localStorage.removeItem('helperFormData'); }
 
     window.onload = function() {
