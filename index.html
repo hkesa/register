@@ -4,23 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horizon Employment Agency Online Registration</title>
-    <!-- Tailwind CSS for Styling and RWD -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
     <style>
         /* 1. Global 18px Font Size Requirement */
-        body, div, span, h1, h2, h3, h4, h5, h6, p, a, button, input, select, textarea, label, li {
+        body, div, span, h2, h3, h4, h5, h6, p, a, button, input, select, textarea, label, li {
             font-size: 18px !important;
             line-height: 1.6;
             font-family: 'Noto Sans', sans-serif;
         }
 
-        /* Specific header size override */
-        .header-large {
+        /* Large Font Override (21px) */
+        .font-large {
             font-size: 21px !important;
+        }
+
+        /* Main Title (Only on Welcome Page) */
+        .main-title {
+            font-size: 24px !important;
+            font-weight: bold;
+            color: #1e40af; /* blue-800 */
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         /* Vertical Layout & Spacing */
@@ -47,7 +56,7 @@
 
         .checkbox-option {
             display: flex;
-            align-items: flex-start; /* Align top for multiline text */
+            align-items: flex-start;
             gap: 10px;
             cursor: pointer;
         }
@@ -61,19 +70,14 @@
             box-sizing: border-box;
         }
         
-        /* Expandable text area */
-        textarea.expandable {
-            resize: vertical;
-            min-height: 80px;
-        }
+        textarea.expandable { resize: vertical; min-height: 80px; }
 
-        /* Custom Checkbox Styling */
         input[type="checkbox"], input[type="radio"] {
             width: 20px;
             height: 20px;
             transform: scale(1.2);
             margin-right: 8px;
-            margin-top: 4px; /* Align with text */
+            margin-top: 4px;
             flex-shrink: 0;
         }
 
@@ -91,24 +95,13 @@
             margin-top: 20px;
             transition: background 0.3s;
         }
-        .btn-primary:hover {
-            background-color: #1d4ed8;
-        }
+        .btn-primary:hover { background-color: #1d4ed8; }
 
-        .btn-submit {
-            background-color: #16a34a;
-        }
-        .btn-submit:hover {
-            background-color: #15803d;
-        }
+        .btn-submit { background-color: #16a34a; }
+        .btn-submit:hover { background-color: #15803d; }
 
-        .btn-prev {
-            background-color: #6b7280; /* Gray */
-            margin-top: 10px;
-        }
-        .btn-prev:hover {
-            background-color: #4b5563;
-        }
+        .btn-prev { background-color: #6b7280; margin-top: 20px; } 
+        .btn-prev:hover { background-color: #4b5563; }
 
         /* Language Switcher */
         .lang-switcher {
@@ -116,25 +109,22 @@
             gap: 10px;
             justify-content: center;
             margin-bottom: 20px;
-            background: #f0f9ff;
-            padding: 10px;
-            border-radius: 8px;
         }
         .lang-btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: 1px solid #2563eb;
             border-radius: 20px;
             background: white;
             color: #2563eb;
             cursor: pointer;
             font-weight: bold;
+            font-size: 21px !important;
         }
         .lang-btn.active {
             background: #2563eb;
             color: white;
         }
 
-        /* Alert Box */
         .alert-box {
             background-color: #fee2e2;
             color: #991b1b;
@@ -143,6 +133,36 @@
             margin-top: 5px;
             font-weight: bold;
             font-size: 16px !important;
+        }
+
+        /* Validation Error Style */
+        .error-msg {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            font-weight: bold;
+            font-size: 16px !important;
+            display: none;
+        }
+        .error-msg.visible { display: block; }
+        .input-error { border: 2px solid #ef4444 !important; }
+
+        /* Highlighted Header Style */
+        .highlight-header {
+            background-color: #fee2e2;
+            color: #991b1b !important;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        /* Member Label Highlight */
+        .member-label-highlight {
+            background-color: #fee2e2; /* Light Red */
+            color: #991b1b; /* Dark Red */
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         .hidden { display: none !important; }
@@ -158,130 +178,173 @@
         
         body { background-color: #f3f4f6; }
         
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-        .nav-buttons button {
-            flex: 1;
-        }
+        .nav-buttons { display: flex; gap: 10px; width: 100%; margin-top: 20px; }
+        .nav-buttons button { flex: 1; margin-top: 0; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
-    <!-- LANGUAGE SWITCHER -->
-    <div class="lang-switcher">
-        <button class="lang-btn active" onclick="setLanguage('en')">🇵🇭 English</button>
-        <button class="lang-btn" onclick="setLanguage('id')">🇮🇩 Indonesian</button>
+
+    <!-- NEW PAGE: WELCOME / NATIONALITY SELECTION -->
+    <div id="pageWelcome" class="page-section">
+        <!-- Language Buttons -->
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLanguage('en')">🇵🇭 English</button>
+            <button class="lang-btn" onclick="setLanguage('id')">🇮🇩 Indonesian</button>
+        </div>
+
+        <h1 class="main-title" id="welcomeTitle">Online Registration of Horizon Employment Agency</h1>
+        
+        <!-- Q1: Nationality -->
+        <div class="question-block">
+            <label class="question-label" data-i18n="seeker_nat_q">Job Seeker's Nationality?</label>
+            <div class="checkbox-group" id="welcome_nat_group" onfocusout="validateGroup(this)">
+                <label class="checkbox-option"><input type="radio" name="seeker_nationality" value="Filipino"> <span data-i18n="nat_filipino">Filipino</span></label>
+                <label class="checkbox-option"><input type="radio" name="seeker_nationality" value="Indonesian"> <span data-i18n="nat_indonesian">Indonesian</span></label>
+                <label class="checkbox-option"><input type="radio" name="seeker_nationality" value="Other"> <span data-i18n="nat_other">Other</span></label>
+            </div>
+            <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+        </div>
+
+        <!-- Q2: Apply For -->
+        <div class="question-block">
+            <label class="question-label" data-i18n="apply_q">What Do You Want to Apply?</label>
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
+                <label class="checkbox-option"><input type="radio" name="apply_for" value="Domestic Helper"> <span data-i18n="apply_helper">Apply as domestic helper</span></label>
+                <label class="checkbox-option"><input type="radio" name="apply_for" value="Driver"> <span data-i18n="apply_driver">Apply as Hong Kong driver</span></label>
+            </div>
+            <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+        </div>
+
+        <!-- Q3: Special Skills -->
+        <div class="question-block">
+            <label class="question-label" data-i18n="skills_q">Your Special Skills?</label>
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
+                <label class="checkbox-option"><input type="checkbox" name="skills" value="Nurse"> <span data-i18n="skill_nurse">Nurse experience</span></label>
+                <label class="checkbox-option"><input type="checkbox" name="skills" value="Teacher"> <span data-i18n="skill_teacher">Teacher experience</span></label>
+                <label class="checkbox-option"><input type="checkbox" name="skills" value="Elderly Home"> <span data-i18n="skill_elderly_home">Elderly home experience</span></label>
+                <label class="checkbox-option"><input type="checkbox" name="skills" value="Hotel"> <span data-i18n="skill_hotel">Hotel experience</span></label>
+                <label class="checkbox-option"><input type="checkbox" name="skills" value="Restaurant"> <span data-i18n="skill_restaurant">Restaurant cooking experience</span></label>
+                <label class="checkbox-option"><input type="checkbox" name="skills" value="Gardening"> <span data-i18n="skill_gardening">Gardening experience</span></label>
+                <label class="checkbox-option"><input type="checkbox" name="skills" value="Carpentry"> <span data-i18n="skill_carpentry">Carpentry experience</span></label>
+                <label class="checkbox-option"><input type="checkbox" name="skills" value="None"> <span data-i18n="skill_none">None of the above</span></label>
+                
+                <label class="checkbox-option flex-col !items-start">
+                    <div class="flex items-center">
+                        <input type="checkbox" name="skills" value="Other" onchange="toggleInput('skill_other_input', this.checked)"> 
+                        <span data-i18n="skill_other">Other experience</span>
+                    </div>
+                    <input type="text" id="skill_other_input" class="hidden w-full p-1 border rounded mt-2" placeholder="Fill-in other experience" onblur="validateField(this)">
+                </label>
+            </div>
+            <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+        </div>
+
+        <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.7</div>
     </div>
 
-    <h1 class="text-2xl font-bold text-center mb-6 text-blue-800" data-i18n="main_title">Horizon Employment Agency Online Registration</h1>
-
-    <div id="loading" class="hidden text-center p-10">Loading...</div>
-
-    <!-- PAGE 1: DOMESTIC HELPERS BASIC INFORMATION -->
-    <div id="page1" class="page-section">
+    <!-- PAGE 1: BASIC INFO -->
+    <div id="page1" class="page-section hidden">
         <h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2" data-i18n="basic_info_title">Domestic Helpers Basic Information</h2>
 
-        <!-- Helper Gender -->
         <div class="question-block">
             <label class="question-label" data-i18n="gender_q">Helper Gender?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="gender" value="Female" onclick="singleSelect(this, 'gender')"> <span data-i18n="female">Female</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="gender" value="Male" onclick="singleSelect(this, 'gender')"> <span data-i18n="male">Male</span></label>
             </div>
+            <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Helper Full Name -->
         <div class="question-block">
             <label class="question-label" data-i18n="fullname_q">Helper Full Name?</label>
-            <input type="text" id="fullName" placeholder="">
+            <input type="text" id="fullName" onblur="validateField(this)">
+            <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Where Are You Now -->
         <div class="question-block">
             <label class="question-label" data-i18n="where_now_q">Where Are You Now?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="location" value="Hong Kong" onclick="singleSelect(this, 'location'); toggleHKStatus(true)"> <span data-i18n="loc_hk">Now in Hong Kong</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="location" value="Philippines" onclick="singleSelect(this, 'location'); toggleHKStatus(false)"> <span data-i18n="loc_ph">Now in Philippines</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="location" value="Indonesia" onclick="singleSelect(this, 'location'); toggleHKStatus(false)"> <span data-i18n="loc_id">Now in Indonesia</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="location" value="Other" onclick="singleSelect(this, 'location'); toggleHKStatus(false)"> <span data-i18n="loc_other">Now in other Country</span></label>
             </div>
+            <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Helper Nationality -->
         <div class="question-block">
             <label class="question-label" data-i18n="nationality_q">Helper Nationality?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="nationality" value="Filipino" onclick="singleSelect(this, 'nationality'); toggleInput('nat_other_input', false)"> <span data-i18n="nat_filipino">Filipino</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="nationality" value="Indonesian" onclick="singleSelect(this, 'nationality'); toggleInput('nat_other_input', false)"> <span data-i18n="nat_indonesian">Indonesian</span></label>
-                <label class="checkbox-option"><input type="checkbox" name="nationality" value="Other" onclick="singleSelect(this, 'nationality'); toggleInput('nat_other_input', true)"> <span data-i18n="nat_other">Other</span></label>
-                <input type="text" id="nat_other_input" class="hidden" placeholder="Please specify">
+                <label class="checkbox-option"><input type="checkbox" name="nationality" value="Other" onclick="singleSelect(this, 'nationality'); toggleInput('nat_other_input', true)"> <span data-i18n="nat_other_opt">Other Nationality</span></label>
+                <input type="text" id="nat_other_input" class="hidden" placeholder="Fill-in nationality" onblur="validateField(this)">
             </div>
+            <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- HK Contract Status (Conditional) -->
         <div id="hk_status_container" class="hidden">
             <div class="question-block">
                 <label class="question-label" data-i18n="hk_status_q">HK Contract Status?</label>
-                <div class="checkbox-group">
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
                     <label class="checkbox-option"><input type="checkbox" name="hk_contract" value="Finish contract" onclick="singleSelect(this, 'hk_contract')"> <span data-i18n="hk_finish">Finish contract</span></label>
                     <label class="checkbox-option"><input type="checkbox" name="hk_contract" value="Employer terminated me" onclick="singleSelect(this, 'hk_contract')"> <span data-i18n="hk_terminated">Employer terminated me already</span></label>
                     <label class="checkbox-option"><input type="checkbox" name="hk_contract" value="Breached contract" onclick="singleSelect(this, 'hk_contract')"> <span data-i18n="hk_breached">I breached contract already</span></label>
                     <label class="checkbox-option"><input type="checkbox" name="hk_contract" value="Break contract" onclick="singleSelect(this, 'hk_contract')"> <span data-i18n="hk_break">I will break contract if I find new employer</span></label>
                     <label class="checkbox-option"><input type="checkbox" name="hk_contract" value="Employer passed away" onclick="singleSelect(this, 'hk_contract')"> <span data-i18n="hk_passed">Current employer passed away</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="hk_contract" value="Employer relocation" onclick="singleSelect(this, 'hk_contract')"> <span data-i18n="hk_relocation">Current employer relocation</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="hk_contract" value="Employer relocation" onclick="singleSelect(this, 'hk_contract')"> <span data-i18n="hk_relocation">Current employer is relocating</span></label>
                     <label class="checkbox-option"><input type="checkbox" name="hk_contract" value="Financial problems" onclick="singleSelect(this, 'hk_contract')"> <span data-i18n="hk_financial">Current employer has financial problems</span></label>
                 </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
             </div>
-
             <div class="question-block">
                 <label class="question-label" data-i18n="finish_date_q">Finish Contract Date OR Last Working Date?</label>
-                <input type="date" id="finishContractDate">
+                <input type="text" id="finishContractDate" placeholder="dd-mm-yyyy" onfocus="(this.type='date')" onblur="(this.type='text')" onchange="validateField(this)">
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
             </div>
         </div>
 
-        <!-- Worked in HK Before -->
         <div class="question-block">
             <label class="question-label" data-i18n="worked_hk_q">Have You Worked in Hong Kong Before?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="worked_hk" value="Yes" onclick="singleSelect(this, 'worked_hk')"> <span data-i18n="yes_worked_hk">Yes, worked in HK before</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="worked_hk" value="No" onclick="singleSelect(this, 'worked_hk')"> <span data-i18n="no_first_time">No, 1st time</span></label>
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Dates -->
         <div class="question-block">
             <label class="question-label" data-i18n="passport_q">Your Passport Expiry Date?</label>
-            <input type="date" id="passportExpiry" onblur="validatePassport()">
+            <input type="text" id="passportExpiry" placeholder="dd-mm-yyyy" onfocus="(this.type='date')" onblur="(this.type='text'); validatePassport()" onchange="validateField(this)">
             <div id="passportAlert" class="alert-box hidden" data-i18n="passport_alert">Your passport is about to expire, please renew it as soon as possible</div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
         <div class="question-block">
             <label class="question-label" data-i18n="dob_q">Your Date of Birth?</label>
-            <input type="date" id="dob">
+            <input type="text" id="dob" placeholder="dd-mm-yyyy" onfocus="(this.type='date')" onblur="(this.type='text')" onchange="validateField(this)">
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Religion -->
         <div class="question-block">
             <label class="question-label" data-i18n="religion_q">Your Religion?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="religion" value="No religion" onclick="singleSelect(this, 'religion'); toggleInput('rel_other_input', false)"> <span data-i18n="rel_no">No religion</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="religion" value="Catholic" onclick="singleSelect(this, 'religion'); toggleInput('rel_other_input', false)"> <span data-i18n="rel_catholic">Catholic</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="religion" value="Christian" onclick="singleSelect(this, 'religion'); toggleInput('rel_other_input', false)"> <span data-i18n="rel_christian">Christian</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="religion" value="Muslim" onclick="singleSelect(this, 'religion'); toggleInput('rel_other_input', false)"> <span data-i18n="rel_muslim">Muslim</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="religion" value="Buddhist" onclick="singleSelect(this, 'religion'); toggleInput('rel_other_input', false)"> <span data-i18n="rel_buddhist">Buddhist</span></label>
-                <label class="checkbox-option"><input type="checkbox" name="religion" value="Other" onclick="singleSelect(this, 'religion'); toggleInput('rel_other_input', true)"> <span data-i18n="rel_other">Other</span></label>
-                <input type="text" id="rel_other_input" class="hidden" placeholder="Please specify">
+                <label class="checkbox-option"><input type="checkbox" name="religion" value="Other" onclick="singleSelect(this, 'religion'); toggleInput('rel_other_input', true)"> <span data-i18n="rel_other_opt">Other religion</span></label>
+                <input type="text" id="rel_other_input" class="hidden" placeholder="Fill-in religion" onblur="validateField(this)">
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Marital Status -->
         <div class="question-block">
             <label class="question-label" data-i18n="marital_q">Marital Status?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="marital" value="Unmarried" onclick="singleSelect(this, 'marital')"> <span data-i18n="mar_unmarried">Unmarried, single</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="marital" value="Unmarried partner" onclick="singleSelect(this, 'marital')"> <span data-i18n="mar_partner">Unmarried partner</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="marital" value="Living with partner" onclick="singleSelect(this, 'marital')"> <span data-i18n="mar_living">Living with partner</span></label>
@@ -291,156 +354,172 @@
                 <label class="checkbox-option"><input type="checkbox" name="marital" value="Single parent" onclick="singleSelect(this, 'marital')"> <span data-i18n="mar_singleparent">Single parent</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="marital" value="Widowed" onclick="singleSelect(this, 'marital')"> <span data-i18n="mar_widowed">Widowed</span></label>
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Education -->
         <div class="question-block">
             <label class="question-label" data-i18n="edu_q">Education?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="education" value="Primary" onclick="singleSelect(this, 'education')"> <span data-i18n="edu_pri">Primary school</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="education" value="Secondary" onclick="singleSelect(this, 'education')"> <span data-i18n="edu_sec">Secondary school</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="education" value="College" onclick="singleSelect(this, 'education')"> <span data-i18n="edu_col">College</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="education" value="Vocational" onclick="singleSelect(this, 'education')"> <span data-i18n="edu_voc">Vocational school</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="education" value="University" onclick="singleSelect(this, 'education')"> <span data-i18n="edu_uni">University</span></label>
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
         <div class="question-block">
             <label class="question-label" data-i18n="height_q">Your Height (cm)?</label>
-            <input type="number" id="height" onblur="validateHeight()">
+            <input type="number" id="height" onblur="validateField(this); validateHeight()">
             <div id="heightAlert" class="alert-box hidden" data-i18n="height_alert">Please check if your height was entered incorrectly</div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
         <div class="question-block">
             <label class="question-label" data-i18n="weight_q">Your Weight (kg)?</label>
-            <input type="number" id="weight">
+            <input type="number" id="weight" onblur="validateField(this)">
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
         <div class="question-block">
             <label class="question-label" data-i18n="spouse_name_q">Your Spouse Name?</label>
-            <input type="text" id="spouseName">
+            <input type="text" id="spouseName" onblur="validateField(this)">
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
         <div class="question-block">
             <label class="question-label" data-i18n="spouse_job_q">Spouse's Job Occupation?</label>
-            <input type="text" id="spouseJob">
+            <input type="text" id="spouseJob" onblur="validateField(this)">
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Siblings -->
         <div class="question-block">
             <label class="question-label" data-i18n="siblings_q">Number of Siblings?</label>
-            <select id="siblingsCount">
-                <option value="0" data-i18n="opt_onlyme">0 (only me)</option>
-                <script>for(let i=1;i<=13;i++) document.write(`<option value="${i}">${i} ${i==13?'+':''}</option>`);</script>
-            </select>
+            <select id="siblingsCount" class="dynamic-select" onblur="validateField(this)"></select>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
         <div class="question-block">
             <label class="question-label" data-i18n="sibling_pos_q">My Position Among Siblings?</label>
-            <select id="siblingPos">
-                <script>for(let i=1;i<=13;i++) document.write(`<option value="${i}">${i} ${i==13?'+':''}</option>`);</script>
-            </select>
+            <select id="siblingPos" class="dynamic-select" onblur="validateField(this)"></select>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Sons -->
         <div class="question-block">
             <label class="question-label" data-i18n="sons_q">How Many Sons Do You Have?</label>
-            <select id="sonsCount" onchange="renderChildAges('sons')">
-                <option value="0" data-i18n="opt_noson">No son</option>
-                <script>for(let i=1;i<=13;i++) document.write(`<option value="${i}">${i} ${i==13?'+':''}</option>`);</script>
-            </select>
+            <select id="sonsCount" class="dynamic-select" onchange="renderChildAges('sons'); validateField(this)" onblur="validateField(this)"></select>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
         <div id="sonsAgesContainer" class="question-block hidden">
             <label class="question-label" data-i18n="sons_age_q">How Old Are Your All Sons?</label>
             <div id="sonsInputs" class="flex flex-col gap-2"></div>
         </div>
 
-        <!-- Daughters -->
         <div class="question-block">
             <label class="question-label" data-i18n="daughters_q">How Many Daughters Do You Have?</label>
-            <select id="daughtersCount" onchange="renderChildAges('daughters')">
-                <option value="0" data-i18n="opt_nodaughter">No daughter</option>
-                <script>for(let i=1;i<=13;i++) document.write(`<option value="${i}">${i} ${i==13?'+':''}</option>`);</script>
-            </select>
+            <select id="daughtersCount" class="dynamic-select" onchange="renderChildAges('daughters'); validateField(this)" onblur="validateField(this)"></select>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
         <div id="daughtersAgesContainer" class="question-block hidden">
             <label class="question-label" data-i18n="daughters_age_q">How Old Are Your All Daughters?</label>
             <div id="daughtersInputs" class="flex flex-col gap-2"></div>
         </div>
 
-        <!-- Contacts -->
+        <!-- Contacts Split -->
         <div class="question-block">
             <label class="question-label" data-i18n="whatsapp_q">Your WhatsApp Number? Please Include Country Code</label>
-            <input type="number" id="whatsapp" placeholder="e.g. (+852) 96111003">
+            <div class="flex gap-2">
+                <input type="text" id="whatsapp_code" class="w-1/3" placeholder="Contoh +852" onblur="validateField(this)">
+                <input type="number" id="whatsapp_num" class="w-2/3" placeholder="Contoh 96111003" onblur="validateField(this)">
+            </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
         <div class="question-block">
             <label class="question-label" data-i18n="homephone_q">Your Home Country Mobile Phone Number? Please Include Country Code</label>
-            <input type="number" id="homePhone" placeholder="e.g. (+63) 96111003">
+            <div class="flex gap-2">
+                <input type="text" id="homePhone_code" class="w-1/3" placeholder="Contoh +62" onblur="validateField(this)">
+                <input type="number" id="homePhone_num" class="w-2/3" placeholder="Contoh 96111003" onblur="validateField(this)">
+            </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Referrer Logic Update -->
         <div class="question-block">
             <label class="question-label" data-i18n="referrer_q">Who Referred You To Our Agency? (if any)</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="radio" name="has_referrer" value="Yes" onclick="toggleReferrer(true)"> <span data-i18n="yes_referrer">Yes, I have referrer</span></label>
                 <label class="checkbox-option"><input type="radio" name="has_referrer" value="No" onclick="toggleReferrer(false)"> <span data-i18n="no_referrer">No</span></label>
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
         <div id="referrerDetails" class="hidden">
             <div class="question-block">
                 <label class="question-label" data-i18n="referrer_name_q">Name of Referrer</label>
-                <input type="text" id="referrerName">
+                <input type="text" id="referrerName" onblur="validateField(this)">
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
             </div>
             <div class="question-block">
                 <label class="question-label" data-i18n="referrer_phone_q">Referrer’s WhatsApp Number? Please Include Country Code</label>
-                <input type="number" id="referrerPhone" placeholder="e.g. (+852) 96111003">
+                <div class="flex gap-2">
+                    <input type="text" id="referrerPhone_code" class="w-1/3" placeholder="Contoh +63" onblur="validateField(this)">
+                    <input type="number" id="referrerPhone_num" class="w-2/3" placeholder="Contoh 96111003" onblur="validateField(this)">
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
             </div>
         </div>
 
         <div class="question-block">
             <label class="question-label" data-i18n="address_q">Your Home Address? (Only Write Province, State, City)</label>
-            <textarea id="address" class="expandable" rows="2"></textarea>
+            <textarea id="address" class="expandable" rows="2" onblur="validateField(this)"></textarea>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <button class="btn-primary" onclick="nextPage(1)" data-i18n="btn_next">Save And Next Page</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.1</div>
+        <div class="nav-buttons">
+            <button class="btn-primary btn-prev" onclick="goToPage('pageWelcome')" data-i18n="btn_prev">Previous Page</button>
+            <button class="btn-primary" onclick="nextPage(1)" data-i18n="btn_next">Save And Next Page</button>
+        </div>
     </div>
 
-    <!-- PAGE 2: SKILLS INFORMATION -->
+    <!-- PAGE 2: SKILLS -->
     <div id="page2" class="page-section hidden">
         <h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2" data-i18n="skills_title">Skills Information</h2>
         
-        <!-- Languages -->
         <div class="question-block">
             <label class="question-label" data-i18n="cantonese_q">Your Cantonese Language?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="cantonese" value="Learning" onclick="singleSelect(this, 'cantonese')"> <span data-i18n="lang_learning">Learning</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="cantonese" value="Average" onclick="singleSelect(this, 'cantonese')"> <span data-i18n="lang_average">Average</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="cantonese" value="Good" onclick="singleSelect(this, 'cantonese')"> <span data-i18n="lang_good">Good</span></label>
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
         <div class="question-block">
             <label class="question-label" data-i18n="english_q">Your English Language?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="english" value="Learning" onclick="singleSelect(this, 'english')"> <span data-i18n="lang_learning">Learning</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="english" value="Average" onclick="singleSelect(this, 'english')"> <span data-i18n="lang_average">Average</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="english" value="Good" onclick="singleSelect(this, 'english')"> <span data-i18n="lang_good">Good</span></label>
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
         <div class="question-block">
             <label class="question-label" data-i18n="mandarin_q">Your Mandarin Language?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="mandarin" value="Learning" onclick="singleSelect(this, 'mandarin')"> <span data-i18n="lang_learning">Learning</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="mandarin" value="Average" onclick="singleSelect(this, 'mandarin')"> <span data-i18n="lang_average">Average</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="mandarin" value="Good" onclick="singleSelect(this, 'mandarin')"> <span data-i18n="lang_good">Good</span></label>
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
         <div class="question-block">
             <label class="question-label" data-i18n="hk_years_q">How Many Years Have You Worked in Hong Kong? (Only Domestic Helper Experience)</label>
-            <input type="number" id="hkExperienceYears">
+            <select id="hkExperienceYears" class="dynamic-select" onblur="validateField(this)"></select>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
-        <!-- Willingness Yes/No -->
+        <!-- NEW COUNTRY EXPERIENCE QUESTIONS CONTAINER -->
+        <div id="otherCountryExpContainer"></div>
+
         <div id="skillsContainer"></div>
 
         <div class="nav-buttons">
@@ -449,148 +528,105 @@
         </div>
     </div>
 
-    <!-- DYNAMIC WORK PAGES CONTAINER -->
+    <!-- DYNAMIC WORK PAGES -->
     <div id="workPagesContainer"></div>
 
-    <!-- OTHER QUESTIONS PAGE (Final Questions) -->
+    <!-- FINAL PAGE -->
     <div id="pageFinal" class="page-section hidden">
         <h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2" data-i18n="other_q_title">Other Question</h2>
         
         <div id="finalQuestionsContainer"></div>
 
-        <!-- Visa Logic -->
         <div class="question-block">
             <label class="question-label" data-i18n="visa_q">When You Get Your New Visa, Can You Start Working First?</label>
-            <div class="checkbox-group">
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
                 <label class="checkbox-option"><input type="checkbox" name="visaStart" value="Yes" onclick="singleSelect(this, 'visaStart'); toggleVisaQ(true)"> <span data-i18n="visa_yes">Yes, I can start work first</span></label>
                 <label class="checkbox-option"><input type="checkbox" name="visaStart" value="No" onclick="singleSelect(this, 'visaStart'); toggleVisaQ(false)"> <span data-i18n="visa_no">No, I will go home first</span></label>
             </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
         <div id="vacationDate" class="question-block hidden">
             <label class="question-label" data-i18n="vacation_q">When Will You Go Home For Vacation?</label>
-            <select id="vacationMonth">
-                <option value="" data-i18n="opt_month">Select Month</option>
-                <script>["January","February","March","April","May","June","July","August","September","October","November","December"].forEach(m => document.write(`<option value="${m}">${m}</option>`));</script>
-            </select>
+            <select id="vacationMonth" class="dynamic-select" onblur="validateField(this)"></select>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
         <div id="stayHomeDuration" class="question-block hidden">
             <label class="question-label" data-i18n="stay_home_q">How Long Will You Stay Home, Then You Back to HK to Work?</label>
-            <select id="homeWeeks">
-                <script>for(let i=1;i<=13;i++) document.write(`<option value="${i} week${i>1?'s':''}">${i} week${i>1?'s':''}${i==13?'+':''}</option>`);</script>
-            </select>
+            <select id="homeWeeks" class="dynamic-select" onblur="validateField(this)"></select>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
         </div>
 
         <div id="yesNoContainer"></div>
 
         <div class="nav-buttons">
             <button class="btn-primary btn-prev" onclick="goBackFromFinal()" data-i18n="btn_prev">Previous Page</button>
-            <button class="btn-primary btn-submit" onclick="submitRegistration()" data-i18n="btn_submit">Save And Submit Registration</button>
+            <button class="btn-primary btn-submit" onclick="submitRegistration()" data-i18n="btn_submit">Submit Registration</button>
         </div>
     </div>
 
     <!-- SUCCESS PAGE -->
     <div id="pageSuccess" class="page-section hidden text-center">
-        <h2 class="text-2xl font-bold text-green-600 mb-5">Registration Submitted!</h2>
-        <p class="mb-5">You have successfully submitted your registration.</p>
+        <h2 class="text-2xl font-bold text-green-600 mb-5" id="successTitle">Registration Submitted!</h2>
+        <p class="mb-5" id="successMsg">You have successfully submitted your registration.</p>
         <div class="bg-yellow-100 p-5 rounded-lg border border-yellow-300">
-            <p class="font-bold mb-3">Now, you need to send us your half-body photo by clicking the button below on WhatsApp.</p>
+            <p class="font-bold mb-3" id="photoMsg"></p>
             <a href="https://wa.me/85296111003" class="inline-block bg-green-500 text-white p-3 rounded-lg font-bold hover:bg-green-600">
-                <i class="fab fa-whatsapp"></i> Send Photo on WhatsApp
+                <i class="fab fa-whatsapp"></i> <span id="whatsappBtnText">Send Photo on WhatsApp</span>
             </a>
+            <p class="mt-3 font-bold text-gray-700" id="agencyWaText">Our agency WhatsApp is (+852) 96111003</p>
         </div>
     </div>
 
 </div>
 
-<!-- FIREBASE SDK -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-
-    let firebaseConfig;
-    if (typeof __firebase_config !== 'undefined') {
-        firebaseConfig = JSON.parse(__firebase_config);
-    } else {
-        firebaseConfig = { apiKey: "YOUR_API_KEY", authDomain: "mock", projectId: "mock" };
-    }
-
-    let db;
-    try {
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        const auth = getAuth(app);
-        signInAnonymously(auth).catch(() => {});
-        
-        window.saveToFirebase = async (data) => {
-            if(firebaseConfig.apiKey === "YOUR_API_KEY") return true; 
-            try {
-                let col;
-                const appId = (typeof __app_id !== 'undefined') ? __app_id : 'default';
-                if (typeof __app_id !== 'undefined') {
-                     col = collection(db, 'artifacts', appId, 'public', 'data', 'registrations');
-                } else {
-                    col = collection(db, 'registrations'); 
-                }
-                await addDoc(col, { ...data, submittedAt: new Date() });
-                return true;
-            } catch (e) {
-                console.error("Firebase Error: ", e);
-                return false;
-            }
-        };
-    } catch (e) {
-        window.saveToFirebase = async () => true;
-    }
-</script>
-
-<!-- MAIN LOGIC & TRANSLATIONS -->
+<!-- SCRIPT -->
 <script>
-    // --- TRANSLATION DATA ---
+    // --- TRANSLATION & CONFIG ---
+    let currentLang = 'en';
+    let targetSheetName = 'Phil Number'; 
+    
+    // --- DICTIONARY ---
     const dict = {
         en: {
-            main_title: "Horizon Employment Agency Online Registration",
+            title_text: "Online Registration of Horizon Employment Agency",
+            error_msg: "Answer This Question",
+            
+            // Welcome
+            seeker_nat_q: "Job Seeker's Nationality?", btn_welcome_next: "I want to find a new employer. I am registering my information now",
+            apply_q: "What Do You Want to Apply?", apply_helper: "Apply as domestic helper", apply_driver: "Apply as Hong Kong driver",
+            skills_q: "Your Special Skills?", 
+            skill_nurse: "Nurse experience", skill_teacher: "Teacher experience", skill_elderly_home: "Elderly home experience",
+            skill_hotel: "Hotel experience", skill_gardening: "Gardening experience", skill_carpentry: "Carpentry experience",
+            skill_none: "None of the above", skill_other: "Other experience", ph_skill_other: "Fill-in other experience",
+            skill_restaurant: "Restaurant cooking experience",
+
             basic_info_title: "Domestic Helpers Basic Information",
-            gender_q: "Helper Gender?",
-            female: "Female", male: "Male",
+            gender_q: "Helper Gender?", female: "Female", male: "Male",
             fullname_q: "Helper Full Name?",
-            where_now_q: "Where Are You Now?",
-            loc_hk: "Now in Hong Kong", loc_ph: "Now in Philippines", loc_id: "Now in Indonesia", loc_other: "Now in other Country",
-            nationality_q: "Helper Nationality?",
-            nat_filipino: "Filipino", nat_indonesian: "Indonesian", nat_other: "Other",
-            hk_status_q: "HK Contract Status?",
-            hk_finish: "Finish contract", hk_terminated: "Employer terminated me already", hk_breached: "I breached contract already",
-            hk_break: "I will break contract if I find new employer", hk_passed: "Current employer passed away", hk_relocation: "Current employer relocation", hk_financial: "Current employer has financial problems",
+            where_now_q: "Where Are You Now?", loc_hk: "Now in Hong Kong", loc_ph: "Now in Philippines", loc_id: "Now in Indonesia", loc_other: "Now in other Country",
+            nationality_q: "Helper Nationality?", nat_filipino: "Filipino", nat_indonesian: "Indonesian", nat_other: "Other", nat_other_opt: "Other Nationality", ph_nat_other: "Fill-in nationality",
+            hk_status_q: "HK Contract Status?", hk_finish: "Finish contract", hk_terminated: "Employer terminated me already", hk_breached: "I breached contract already",
+            hk_break: "I will break contract if I find new employer", hk_passed: "Current employer passed away", hk_relocation: "Current employer is relocating", hk_financial: "Current employer has financial problems",
             finish_date_q: "Finish Contract Date OR Last Working Date?",
-            worked_hk_q: "Have You Worked in Hong Kong Before?",
-            yes_worked_hk: "Yes, worked in HK before", no_first_time: "No, 1st time",
-            passport_q: "Your Passport Expiry Date?",
-            passport_alert: "Your passport is about to expire, please renew it as soon as possible",
+            worked_hk_q: "Have You Worked in Hong Kong Before?", yes_worked_hk: "Yes, worked in HK before", no_first_time: "No, 1st time",
+            passport_q: "Your Passport Expiry Date?", passport_alert: "Your passport is about to expire, please renew it as soon as possible",
             dob_q: "Your Date of Birth?",
-            religion_q: "Your Religion?",
-            rel_no: "No religion", rel_catholic: "Catholic", rel_christian: "Christian", rel_muslim: "Muslim", rel_buddhist: "Buddhist", rel_other: "Other",
-            marital_q: "Marital Status?",
-            mar_unmarried: "Unmarried, single", mar_partner: "Unmarried partner", mar_living: "Living with partner", mar_married: "Married", mar_divorced: "Divorced", mar_separated: "Separated", mar_singleparent: "Single parent", mar_widowed: "Widowed",
-            edu_q: "Education?",
-            edu_pri: "Primary school", edu_sec: "Secondary school", edu_col: "College", edu_voc: "Vocational school", edu_uni: "University",
+            religion_q: "Your Religion?", rel_no: "No religion", rel_catholic: "Catholic", rel_christian: "Christian", rel_muslim: "Muslim", rel_buddhist: "Buddhist", rel_other: "Other", rel_other_opt: "Other religion", ph_rel_other: "Fill-in religion",
+            marital_q: "Marital Status?", mar_unmarried: "Unmarried, single", mar_partner: "Unmarried partner", mar_living: "Living with partner", mar_married: "Married", mar_divorced: "Divorced", mar_separated: "Separated", mar_singleparent: "Single parent", mar_widowed: "Widowed",
+            edu_q: "Education?", edu_pri: "Primary school", edu_sec: "Secondary school", edu_col: "College", edu_voc: "Vocational school", edu_uni: "University",
             height_q: "Your Height (cm)?", height_alert: "Please check if your height was entered incorrectly",
-            weight_q: "Your Weight (kg)?",
-            spouse_name_q: "Your Spouse Name?", spouse_job_q: "Spouse's Job Occupation?",
+            weight_q: "Your Weight (kg)?", spouse_name_q: "Your Spouse Name?", spouse_job_q: "Spouse's Job Occupation?",
             siblings_q: "Number of Siblings?", sibling_pos_q: "My Position Among Siblings?",
-            opt_onlyme: "0 (only me)",
             sons_q: "How Many Sons Do You Have?", sons_age_q: "How Old Are Your All Sons?", opt_noson: "No son",
             daughters_q: "How Many Daughters Do You Have?", daughters_age_q: "How Old Are Your All Daughters?", opt_nodaughter: "No daughter",
-            whatsapp_q: "Your WhatsApp Number? Please Include Country Code",
-            homephone_q: "Your Home Country Mobile Phone Number? Please Include Country Code",
-            referrer_q: "Who Referred You To Our Agency? (if any)",
-            yes_referrer: "Yes, I have referrer", no_referrer: "No",
+            whatsapp_q: "Your WhatsApp Number? Please Include Country Code", homephone_q: "Your Home Country Mobile Phone Number? Please Include Country Code",
+            referrer_q: "Who Referred You To Our Agency? (if any)", yes_referrer: "Yes, I have referrer", no_referrer: "No",
             referrer_name_q: "Name of Referrer", referrer_phone_q: "Referrer’s WhatsApp Number? Please Include Country Code",
             address_q: "Your Home Address? (Only Write Province, State, City)",
-            btn_next: "Save And Next Page", btn_prev: "Previous Page", btn_submit: "Save And Submit Registration",
+            btn_next: "Save And Next Page", btn_prev: "Previous Page", btn_submit: "Submit Registration",
             
-            // Skills
             skills_title: "Skills Information",
             cantonese_q: "Your Cantonese Language?", english_q: "Your English Language?", mandarin_q: "Your Mandarin Language?",
             lang_learning: "Learning", lang_average: "Average", lang_good: "Good",
@@ -603,30 +639,38 @@
             skill_cook: "Are You Willing to Cook?",
             yes_willing: "Yes, willing", no: "No",
 
-            // Work
-            work_latest_title: "Latest Work Experience (Only Domestic Helper Experience)",
-            work_other_title: "Other Work Experience",
-            work_country: "Country of Employment? (If Hong Kong, Write Location)",
-            work_start: "Start Work Year And Start Work Month?",
-            work_end: "End Work Year And End Work Month?",
+            // Country Exp
+            cnt_sg: "How Many Years Have You Worked in Singapore? (Only Domestic Helper Experience)",
+            cnt_tw: "How Many Years Have You Worked in Taiwan? (Only Domestic Helper Experience)",
+            cnt_my: "How Many Years Have You Worked in Malaysia? (Only Domestic Helper Experience)",
+            cnt_me: "How Many Years Have You Worked in Middle East? (Only Domestic Helper Experience)",
+            cnt_sa: "How Many Years Have You Worked in Saudi Arabia? (Only Domestic Helper Experience)",
+            cnt_id: "How Many Years Have You Worked in Indonesia? (Only Domestic Helper Experience)",
+            cnt_ph: "How Many Years Have You Worked in Philippines? (Only Domestic Helper Experience)",
+            cnt_other: "How Many Years Have You Worked in other Country? (Only Domestic Helper Experience)",
+            ph_cnt_other: "Fill-in other Country",
+
+            work_latest_title: "Latest Domestic Helper Work Experience (Including Working in Hong Kong, in Philippines, in Indonesia, in Other Countries, Only Domestic Helper Experience)", work_other_title: "Other Work Experience",
+            work_country: "Country of Employment? (If Hong Kong, Write Location, e.g. Causeway Bay)", work_emp_nat: "Employer's Nationality?",
+            work_start: "In This Employer, Start Work Year And Start Work Month?",
+            work_end: "In This Employer, End Work Year And End Work Month?",
             work_size: "Employer’s House Size? (e.g. 1000 square feet)",
             work_fam_count: "Number of Employer Family Members? (Living in The Same Home)",
+            work_fam_age: "Age of Employer Family Members",
             work_helpers: "Number of Helpers?",
             work_status: "Contract Status?",
             work_reason: "Reason for Leaving? (Clear And True Reason)",
+            work_dis_q: "In This Employer, Did You Take Care of Disabled Person?",
+            dis_no: "No", dis_bed: "Bedridden care", dis_dis: "Disability care", dis_tra: "Tracheostomy care", dis_wheel: "Wheelchair", dis_walk: "Walking slowly", dis_med: "Medication feeding", dis_bath: "Bathing assistance", dis_stroke: "Stroke", dis_alz: "Alzheimer's disease", dis_park: "Parkinson's disease", dis_other1: "Other disabled person (1)", dis_other2: "Other disabled person (2)",
             work_pets: "Employer’s Pets?",
-            pet_no: "No pets", pet_s_dog: "Small dog", pet_m_dog: "Medium dog", pet_b_dog: "Big dog", pet_cat: "Cat", pet_rabbit: "Rabbit", pet_other: "Others",
+            pet_no: "No pets", pet_s_dog: "Small dog", pet_m_dog: "Medium dog", pet_b_dog: "Big dog", pet_cat: "Cat", pet_rabbit: "Rabbit", pet_other: "Other pet (1)", pet_other2: "Other pet (2)", pet_other3: "Other pet (3)",
             work_resp: "Job Responsibilities?",
-            resp_car: "Car wash", resp_clean: "House cleaning", resp_wash: "Hand washing clothes", resp_market: "I go to supermarket to buy food", resp_room: "I sharing room with other", resp_cook_c: "Cook Chinese food", resp_cook_w: "Cook Western food", resp_other: "Other",
-            work_more_q: "Do You Still Have Other Employer Work Experience in HK, Other countries, Philippines, Indonesia? (Only Domestic Helper Work)?",
-            work_more_yes: "Yes, still have", 
-            work_more_no_1: "No, only one employer experience",
-            work_more_no_2: "No, only 2 employer experience",
-            work_more_no_3: "No, only 3 employer experience",
-            work_more_no_4: "No, only 4 employer experience",
-            work_more_no_5: "No, only 5 employer experience",
+            resp_car: "Car wash", resp_clean: "House cleaning", resp_wash: "Hand washing clothes", resp_market: "I go to supermarket to buy food", resp_wet_market: "I go to Chinese wet-market to buy food", resp_room: "I sharing room with other", resp_cook_c: "Cook Chinese food", resp_cook_w: "Cook Western food", resp_other: "Other", resp_other2: "Other responsibilities (2)", resp_other3: "Other responsibilities (3)",
+            work_more_q: "Do You Still Have Other Domestic Helper Work Experience in HK OR in Other Countries OR in Philippines OR in Indonesia? (Only Domestic Helper Experience)?",
+            work_more_yes: "Yes, still have other", 
+            work_more_no_1: "No, only one employer experience", work_more_no_2: "No, only 2 employer experience", work_more_no_3: "No, only 3 employer experience", work_more_no_4: "No, only 4 employer experience", work_more_no_5: "No, only 5 employer experience",
+            work_status_resigned: "I resigned already", work_status_nocontract: "Not contract and can leave anytime",
 
-            // Final
             other_q_title: "Other Question",
             q_like_cooking: "Do You Like Cooking?", q_like_cooking_yes: "Yes, I like",
             q_learn_yt: "Can You Learn New Dishes by Yourself From YouTube?", q_learn_yt_yes: "Yes, I can",
@@ -634,61 +678,74 @@
             q_sing: "Can You Sing a Song OR Tell a Story to Lull The Child to Sleep?", q_sing_yes: "Yes, I can",
             q_tutor: "Do You Have Experience Tutoring Children With Their Homework?", q_tutor_yes: "Yes, I have experience",
             visa_q: "When You Get Your New Visa, Can You Start Working First?", visa_yes: "Yes, I can start work first", visa_no: "No, I will go home first",
-            vacation_q: "When Will You Go Home For Vacation?",
-            stay_home_q: "How Long Will You Stay Home, Then You Back to HK to Work?",
+            vacation_q: "When Will You Go Home For Vacation?", stay_home_q: "How Long Will You Stay Home, Then You Back to HK to Work?",
             q_dog: "Are You Afraid of Dogs?", q_cat: "Are You Afraid of Cats?", q_afraid_yes: "Yes, afraid",
-            q_tattoo: "Do You Have Any Tattoos?", q_tattoo_yes: "Yes, I have",
+            q_tattoo: "Do You Have Any Tattoos?", q_tattoo_yes: "Yes, I have", tattoo_msg: "If you have tattoos, please send us the photos later",
             q_smoke: "Do You Have Smoking OR Drinking Habits?",
             q_allergy: "Do You Have Any Allergies, illnesses, Diseases, Skin Irritations, Infectious Diseases, or Other Conditions?",
             q_chronic: "Do You Have Any Chronic illnesses, Require Injections, Take Medication, Need Follow-up Appointments, Diabetes, Heart Disease, or Other Serious illnesses?",
             q_consent: "Have you read, understood, agreed to, acknowledged, and authorized our Company’s Personal Information Collection Statement, and do you not object to it?", q_consent_yes: "Yes, I agree",
             
-            // Dynamic Placeholders
-            ph_qty: "Enter quantity",
-            ph_pet: "Enter pet",
-            ph_resp: "Enter Responsibilities"
+            // New Question
+            q_fingers: "Are Your Fingers And Toes Normal, No More And No Less?", q_fingers_yes: "Yes, normal", q_fingers_no: "No, I have more or fewer",
+
+            ph_qty: "Enter quantity", ph_pet: "Enter pet", ph_resp: "Enter Responsibilities",
+            
+            // OPTIONS TEXT
+            opt_select: "Select", opt_month: "Month", opt_year: "Year",
+            opt_sibling_suf: "sibling", opt_sibling_pos_pre: "Number",
+            opt_week: "week", opt_weeks: "weeks",
+            opt_emp_nat_local: "Local people", opt_emp_nat_foreigner: "Foreigner", opt_emp_nat_chinese: "Chinese", opt_emp_nat_hk: "Hong Kong people", opt_emp_nat_asian: "Asian",
+            opt_only_emp: "Only employer", opt_emp_plus: "employer +",
+            opt_only_me: "1 (only me)", opt_me_plus: "me +",
+            opt_role_adult: "Adult", opt_role_boy: "Boy", opt_role_girl: "Girl", opt_role_twins: "Twins", opt_role_triplets: "Triplets", opt_role_grandpa: "Grandpa", opt_role_grandma: "Grandma",
+            opt_age_start: "Age when you started (From)", opt_age_leave: "Age when you leave (until)",
+            opt_preg: "Female employer is pregnant",
+            opt_never_hk: "0 (Never been to Hong Kong)",
+            opt_20_years: "0 to 20 years",
+            
+            photo_msg_part1: "Now, please send us your ", 
+            photo_msg_highlight: "“half-body” photo",
+            photo_msg_part2: " by clicking the WhatsApp button below",
+            agency_wa: "Our agency WhatsApp is (+852) 96111003"
         },
         id: {
-            main_title: "Pendaftaran Online Agensi Pekerjaan Horizon",
+            title_text: "Pendaftaran Online Horizon Employment Agency",
+            error_msg: "Jawab Pertanyaan Ini",
+
+            seeker_nat_q: "Kewarganegaraan Pencari Kerja?", btn_welcome_next: "Saya ingin mencari majikan baru. Saya sedang mendaftar sekarang",
+            apply_q: "Ingin melamar apa?", apply_helper: "Melamar sebagai PRT", apply_driver: "Melamar sebagai sopir Hong Kong",
+            skills_q: "Keahlian khusus Anda?", 
+            skill_nurse: "Pengalaman perawat", skill_teacher: "Pengalaman guru", skill_elderly_home: "Pengalaman panti jompo",
+            skill_hotel: "Pengalaman hotel", skill_gardening: "Pengalaman berkebun", skill_carpentry: "Pengalaman pertukangan",
+            skill_none: "Tidak ada", skill_other: "Pengalaman lainnya", ph_skill_other: "Isi pengalaman lainnya",
+            skill_restaurant: "Pengalaman memasak di restoran",
+
             basic_info_title: "Informasi Dasar Pekerja Rumah Tangga",
-            gender_q: "Jenis Kelamin?",
-            female: "Wanita", male: "Pria",
+            gender_q: "Jenis Kelamin?", female: "Wanita", male: "Pria",
             fullname_q: "Nama Lengkap?",
-            where_now_q: "Dimana Anda Sekarang?",
-            loc_hk: "Sekarang di Hong Kong", loc_ph: "Sekarang di Filipina", loc_id: "Sekarang di Indonesia", loc_other: "Sekarang di Negara Lain",
-            nationality_q: "Kewarganegaraan?",
-            nat_filipino: "Filipina", nat_indonesian: "Indonesia", nat_other: "Lainnya",
-            hk_status_q: "Status Kontrak HK?",
-            hk_finish: "Selesai kontrak", hk_terminated: "Majikan sudah memutus kontrak", hk_breached: "Saya sudah melanggar kontrak",
+            where_now_q: "Dimana Anda Sekarang?", loc_hk: "Sekarang di Hong Kong", loc_ph: "Sekarang di Filipina", loc_id: "Sekarang di Indonesia", loc_other: "Sekarang di Negara Lain",
+            nationality_q: "Kewarganegaraan?", nat_filipino: "Filipina", nat_indonesian: "Indonesia", nat_other: "Lainnya", nat_other_opt: "Lainnya Kewarganegaraan", ph_nat_other: "Mengisi kewarganegaraan",
+            hk_status_q: "Status Kontrak HK?", hk_finish: "Selesai kontrak", hk_terminated: "Majikan sudah memutus kontrak", hk_breached: "Saya sudah melanggar kontrak",
             hk_break: "Saya akan memutus kontrak jika mendapat majikan baru", hk_passed: "Majikan saat ini meninggal", hk_relocation: "Majikan pindah negara", hk_financial: "Majikan ada masalah keuangan",
             finish_date_q: "Tanggal Selesai Kontrak ATAU Hari Kerja Terakhir?",
-            worked_hk_q: "Pernah Bekerja di Hong Kong Sebelumnya?",
-            yes_worked_hk: "Ya, pernah bekerja di HK", no_first_time: "Tidak, ini pertama kali",
-            passport_q: "Tanggal Habis Masa Berlaku Paspor?",
-            passport_alert: "Paspor Anda akan segera habis masa berlakunya, harap segera diperbarui",
+            worked_hk_q: "Pernah Bekerja di Hong Kong Sebelumnya?", yes_worked_hk: "Ya, pernah bekerja di HK", no_first_time: "Tidak, ini pertama kali",
+            passport_q: "Tanggal Habis Masa Berlaku Paspor?", passport_alert: "Paspor Anda akan segera habis masa berlakunya, harap segera diperbarui",
             dob_q: "Tanggal Lahir Anda?",
-            religion_q: "Agama Anda?",
-            rel_no: "Tidak beragama", rel_catholic: "Katolik", rel_christian: "Kristen", rel_muslim: "Muslim", rel_buddhist: "Buddha", rel_other: "Lainnya",
-            marital_q: "Status Pernikahan?",
-            mar_unmarried: "Belum menikah, lajang", mar_partner: "Pasangan belum menikah", mar_living: "Tinggal bersama pasangan", mar_married: "Menikah", mar_divorced: "Cerai hidup", mar_separated: "Pisah ranjang", mar_singleparent: "Orang tua tunggal", mar_widowed: "Janda/Duda",
-            edu_q: "Pendidikan?",
-            edu_pri: "SD", edu_sec: "SMP/SMA", edu_col: "Diploma", edu_voc: "Sekolah Kejuruan", edu_uni: "Universitas",
+            religion_q: "Agama Anda?", rel_no: "Tidak beragama", rel_catholic: "Katolik", rel_christian: "Kristen", rel_muslim: "Muslim", rel_buddhist: "Buddha", rel_other: "Lainnya", rel_other_opt: "Lainnya agama", ph_rel_other: "Mengisi agama",
+            marital_q: "Status Pernikahan?", mar_unmarried: "Belum menikah, lajang", mar_partner: "Pasangan belum menikah", mar_living: "Tinggal bersama pasangan", mar_married: "Menikah", mar_divorced: "Cerai hidup", mar_separated: "Pisah ranjang", mar_singleparent: "Orang tua tunggal", mar_widowed: "Janda/Duda",
+            edu_q: "Pendidikan?", edu_pri: "SD", edu_sec: "SMP/SMA", edu_col: "Diploma", edu_voc: "Sekolah Kejuruan", edu_uni: "Universitas",
             height_q: "Tinggi Badan (cm)?", height_alert: "Harap periksa apakah tinggi badan Anda salah dimasukkan",
-            weight_q: "Berat Badan (kg)?",
-            spouse_name_q: "Nama Pasangan?", spouse_job_q: "Pekerjaan Pasangan?",
-            siblings_q: "Jumlah Saudara Kandung?", sibling_pos_q: "Posisi Saya dalam Saudara Kandung?",
-            opt_onlyme: "0 (anak tunggal)",
+            weight_q: "Berat Badan (kg)?", spouse_name_q: "Nama Pasangan?", spouse_job_q: "Pekerjaan Pasangan?",
+            siblings_q: "Jumlah Saudara?", sibling_pos_q: "Posisi Saya dalam Saudara Kandung?",
             sons_q: "Berapa Jumlah Anak Laki-laki?", sons_age_q: "Berapa Umur Semua Anak Laki-laki?", opt_noson: "Tidak ada",
             daughters_q: "Berapa Jumlah Anak Perempuan?", daughters_age_q: "Berapa Umur Semua Anak Perempuan?", opt_nodaughter: "Tidak ada",
-            whatsapp_q: "Nomor WhatsApp Anda? Harap Sertakan Kode Negara",
-            homephone_q: "Nomor HP Negara Asal Anda? Harap Sertakan Kode Negara",
-            referrer_q: "Siapa yang Mereferensikan Anda ke Agensi Kami? (jika ada)",
-            yes_referrer: "Ya, saya punya referensi", no_referrer: "Tidak",
+            whatsapp_q: "Nomor WhatsApp Anda? Harap Sertakan Kode Negara", homephone_q: "Nomor HP Negara Asal Anda? Harap Sertakan Kode Negara",
+            referrer_q: "Siapa yang Mereferensikan Anda ke Agensi Kami? (jika ada)", yes_referrer: "Ya, saya punya referensi", no_referrer: "Tidak",
             referrer_name_q: "Nama Referensi", referrer_phone_q: "Nomor WhatsApp Referensi? Harap Sertakan Kode Negara",
             address_q: "Alamat Rumah Anda? (Tulis Provinsi, Negara Bagian, Kota Saja)",
             btn_next: "Simpan Dan Halaman Berikutnya", btn_prev: "Halaman Sebelumnya", btn_submit: "Simpan Dan Kirim Pendaftaran",
             
-            // Skills
             skills_title: "Informasi Keahlian",
             cantonese_q: "Bahasa Kantonis Anda?", english_q: "Bahasa Inggris Anda?", mandarin_q: "Bahasa Mandarin Anda?",
             lang_learning: "Sedang Belajar", lang_average: "Rata-rata", lang_good: "Bagus",
@@ -701,30 +758,38 @@
             skill_cook: "Apakah Anda Bersedia Memasak?",
             yes_willing: "Ya, bersedia", no: "Tidak",
 
-            // Work
-            work_latest_title: "Pengalaman Kerja Terbaru (Hanya Pengalaman PRT)",
-            work_other_title: "Pengalaman Kerja Lainnya",
-            work_country: "Negara Tempat Bekerja? (Jika Hong Kong, Tulis Lokasi)",
-            work_start: "Tahun Mulai Kerja Dan Bulan Mulai Kerja?",
-            work_end: "Tahun Selesai Kerja Dan Bulan Selesai Kerja?",
+            // Country Exp
+            cnt_sg: "Berapa Tahun Anda Bekerja di Singapura? (Hanya Pengalaman PRT)",
+            cnt_tw: "Berapa Tahun Anda Bekerja di Taiwan? (Hanya Pengalaman PRT)",
+            cnt_my: "Berapa Tahun Anda Bekerja di Malaysia? (Hanya Pengalaman PRT)",
+            cnt_me: "Berapa Tahun Anda Bekerja di Timur Tengah? (Hanya Pengalaman PRT)",
+            cnt_sa: "Berapa Tahun Anda Bekerja di Arab Saudi? (Hanya Pengalaman PRT)",
+            cnt_id: "Berapa Tahun Anda Bekerja di Indonesia? (Hanya Pengalaman PRT)",
+            cnt_ph: "Berapa Tahun Anda Bekerja di Filipina? (Hanya Pengalaman PRT)",
+            cnt_other: "Berapa Tahun Anda Bekerja di negara-negara lain? (Hanya Pengalaman PRT)",
+            ph_cnt_other: "Isi Negara Lain",
+
+            work_latest_title: "PRT Pengalaman Kerja Terakhir (Termasuk Hong Kong, Filipina, Indonesia, Negara Lain, hanya PRT)", work_other_title: "Pengalaman Kerja Lainnya",
+            work_country: "Negara Tempat Bekerja? (Jika Hong Kong, Tulis Lokasi, Misalnya Causeway Bay)", work_emp_nat: "Kewarganegaraan Majikan?",
+            work_start: "Di Majikan Ini, Tahun Mulai Kerja Dan Bulan Mulai Kerja?",
+            work_end: "Di Majikan Ini, Tahun Selesai Kerja Dan Bulan Selesai Kerja?",
             work_size: "Ukuran Rumah Majikan? (contoh 1000 kaki persegi)",
             work_fam_count: "Jumlah Anggota Keluarga Majikan? (Tinggal di Rumah yang Sama)",
+            work_fam_age: "Umur Anggota Keluarga Majikan",
             work_helpers: "Jumlah Pembantu?",
             work_status: "Status Kontrak?",
             work_reason: "Alasan Keluar? (Alasan Jelas Dan Benar)",
+            work_dis_q: "Di majikan ini, apakah Anda mengurus orang disabilitas?",
+            dis_no: "Tidak", dis_bed: "Perawatan pasien terbaring", dis_dis: "Perawatan disabilitas", dis_tra: "Perawatan trakeostomi", dis_wheel: "Kursi roda", dis_walk: "Berjalan perlahan", dis_med: "Pemberian obat", dis_bath: "Bantuan mandi", dis_stroke: "Stroke", dis_alz: "Alzheimer", dis_park: "Parkinson", dis_other1: "Penyandang disabilitas lainnya (1)", dis_other2: "Penyandang disabilitas lainnya (2)",
             work_pets: "Hewan Peliharaan Majikan?",
-            pet_no: "Tidak ada", pet_s_dog: "Anjing kecil", pet_m_dog: "Anjing sedang", pet_b_dog: "Anjing besar", pet_cat: "Kucing", pet_rabbit: "Kelinci", pet_other: "Lainnya",
+            pet_no: "Tidak ada", pet_s_dog: "Anjing kecil", pet_m_dog: "Anjing sedang", pet_b_dog: "Anjing besar", pet_cat: "Kucing", pet_rabbit: "Kelinci", pet_other: "Hewan Lain (1)", pet_other2: "Hewan Lain (2)", pet_other3: "Hewan Lain (3)",
             work_resp: "Tanggung Jawab Pekerjaan?",
-            resp_car: "Cuci mobil", resp_clean: "Bersih-bersih rumah", resp_wash: "Cuci baju tangan", resp_market: "Pergi ke pasar beli makanan", resp_room: "Berbagi kamar dengan orang lain", resp_cook_c: "Masak makanan Cina", resp_cook_w: "Masak makanan Barat", resp_other: "Lainnya",
-            work_more_q: "Apakah Anda Masih Memiliki Pengalaman Kerja Majikan Lain di HK, Negara lain, Filipina, Indonesia? (Hanya Pekerjaan PRT)?",
-            work_more_yes: "Ya, masih ada", 
-            work_more_no_1: "Tidak, hanya 1 pengalaman majikan",
-            work_more_no_2: "Tidak, hanya 2 pengalaman majikan",
-            work_more_no_3: "Tidak, hanya 3 pengalaman majikan",
-            work_more_no_4: "Tidak, hanya 4 pengalaman majikan",
-            work_more_no_5: "Tidak, hanya 5 pengalaman majikan",
+            resp_car: "Cuci mobil", resp_clean: "Bersih-bersih rumah", resp_wash: "Cuci baju tangan", resp_market: "Pergi ke pasar beli makanan", resp_wet_market: "Saya pergi ke pasar basah Cina untuk membeli makanan", resp_room: "Berbagi kamar dengan orang lain", resp_cook_c: "Masak makanan Cina", resp_cook_w: "Masak makanan Barat", resp_other: "Lainnya", resp_other2: "Tanggung jawab lainnya (2)", resp_other3: "Tanggung jawab lainnya (3)",
+            work_more_q: "Apakah Anda Masih Memiliki Pengalaman Kerja PRT Lain di HK, Negara lain, Filipina, Indonesia? (Hanya Pekerjaan PRT)?",
+            work_more_yes: "Ya, masih ada yang lain", 
+            work_more_no_1: "Tidak, hanya 1 pengalaman majikan", work_more_no_2: "Tidak, hanya 2 pengalaman majikan", work_more_no_3: "Tidak, hanya 3 pengalaman majikan", work_more_no_4: "Tidak, hanya 4 pengalaman majikan", work_more_no_5: "Tidak, hanya 5 pengalaman majikan",
+            work_status_resigned: "Saya mengundurkan diri", work_status_nocontract: "Tidak ada kontrak, bisa keluar kapan saja",
 
-            // Final
             other_q_title: "Pertanyaan Lain",
             q_like_cooking: "Apakah Anda Suka Memasak?", q_like_cooking_yes: "Ya, saya suka",
             q_learn_yt: "Bisakah Anda Belajar Masakan Baru Sendiri Dari YouTube?", q_learn_yt_yes: "Ya, saya bisa",
@@ -732,466 +797,434 @@
             q_sing: "Bisakah Anda Menyanyikan Lagu ATAU Bercerita untuk Menidurkan Anak?", q_sing_yes: "Ya, saya bisa",
             q_tutor: "Apakah Anda Punya Pengalaman Mengajari Anak-anak PR Mereka?", q_tutor_yes: "Ya, saya berpengalaman",
             visa_q: "Saat Anda Mendapatkan Visa Baru, Bisakah Anda Mulai Bekerja Dulu?", visa_yes: "Ya, saya bisa mulai kerja dulu", visa_no: "Tidak, saya pulang dulu",
-            vacation_q: "Kapan Anda Akan Pulang Untuk Liburan?",
-            stay_home_q: "Berapa Lama Anda Akan Tinggal di Rumah, Lalu Kembali ke HK untuk Bekerja?",
+            vacation_q: "Kapan Anda Akan Pulang Untuk Liburan?", stay_home_q: "Berapa Lama Anda Akan Tinggal di Rumah, Lalu Kembali ke HK untuk Bekerja?",
             q_dog: "Apakah Anda Takut Anjing?", q_cat: "Apakah Anda Takut Kucing?", q_afraid_yes: "Ya, takut",
-            q_tattoo: "Apakah Anda Memiliki Tato?", q_tattoo_yes: "Ya, saya punya",
+            q_tattoo: "Apakah Anda Memiliki Tato?", q_tattoo_yes: "Ya, saya punya", tattoo_msg: "Jika Anda memiliki tato, silakan kirim foto-fotonya kepada kami nanti",
             q_smoke: "Apakah Anda Memiliki Kebiasaan Merokok ATAU Minum Alkohol?",
             q_allergy: "Apakah Anda Memiliki Alergi, Penyakit, Iritasi Kulit, Penyakit Menular, atau Kondisi Lainnya?",
             q_chronic: "Apakah Anda Memiliki Penyakit Kronis, Perlu Suntikan, Minum Obat, Perlu Janji Temu Lanjutan, Diabetes, Penyakit Jantung, atau Penyakit Serius Lainnya?",
             q_consent: "Apakah Anda sudah membaca, memahami, menyetujui, mengakui, dan memberikan wewenang pada Pernyataan Pengumpulan Informasi Pribadi Perusahaan kami, dan Anda tidak keberatan?", q_consent_yes: "Ya, saya setuju",
+            
+            // New Question
+            q_fingers: "Apakah jari tangan dan jari kaki Anda normal, tidak lebih dan tidak kurang?", q_fingers_yes: "Ya, normal", q_fingers_no: "Tidak, saya punya lebih atau kurang",
 
-            ph_qty: "Masukkan jumlah",
-            ph_pet: "Masukkan hewan",
-            ph_resp: "Masukkan Tanggung Jawab"
+            ph_qty: "Masukkan jumlah", ph_pet: "Mohon sebutkan", ph_resp: "Mohon sebutkan",
+            
+            // OPTIONS TEXT
+            opt_select: "Pilih", opt_month: "Bulan", opt_year: "Tahun",
+            opt_sibling_suf: "saudara", opt_sibling_pos_pre: "Anak pertama",
+            opt_week: "minggu", opt_weeks: "minggu",
+            opt_emp_nat_local: "Orang Lokal", opt_emp_nat_foreigner: "Orang Asing", opt_emp_nat_chinese: "Orang Cina", opt_emp_nat_hk: "Orang Hong Kong", opt_emp_nat_asian: "Orang Asia",
+            opt_only_emp: "Hanya majikan", opt_emp_plus: "Majikan +",
+            opt_only_me: "1 (Saya sendiri)", opt_me_plus: "saya +",
+            opt_role_adult: "Dewasa", opt_role_boy: "Anak Laki-laki", opt_role_girl: "Anak Perempuan", opt_role_twins: "Anak Kembar", opt_role_triplets: "Kembar Tiga", opt_role_grandpa: "Kakek", opt_role_grandma: "Nenek",
+            opt_age_start: "Usia mulai (Dari)", opt_age_leave: "Usia selesai (Sampai)",
+            opt_preg: "Majikan perempuan sedang hamil",
+            opt_never_hk: "0 (Belum pernah ke Hong Kong)",
+            opt_20_years: "0 sampai 20 tahun",
+            
+            photo_msg_part1: "Sekarang, kirim ",
+            photo_msg_highlight: "foto \"setengah badan\"",
+            photo_msg_part2: " Anda dengan klik tombol WhatsApp di bawah",
+            agency_wa: "Agensi kami WhatsApp adalah (+852) 96111003"
         }
     };
+    
+    // Custom arrays for Indo months
+    const indoMonths = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const engMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    let currentLang = 'en';
+    // --- VALIDATION LOGIC ---
+    const ENABLE_VALIDATION = false;
+
+    function validateField(input) {
+        if(!ENABLE_VALIDATION) return;
+        const parent = input.parentElement;
+        const errorMsg = parent.querySelector('.error-msg') || parent.parentElement.querySelector('.error-msg');
+        if(!input.value || input.value.trim() === '') {
+            if(errorMsg) errorMsg.classList.add('visible');
+            input.classList.add('input-error');
+        } else {
+            if(errorMsg) errorMsg.classList.remove('visible');
+            input.classList.remove('input-error');
+        }
+    }
+
+    function validateGroup(container) {
+        if(!ENABLE_VALIDATION) return;
+        const inputs = container.querySelectorAll('input');
+        let checked = false;
+        inputs.forEach(i => { if(i.checked) checked = true; });
+        const parent = container.parentElement;
+        const errorMsg = parent.querySelector('.error-msg');
+        if(!checked) { if(errorMsg) errorMsg.classList.add('visible'); } 
+        else { if(errorMsg) errorMsg.classList.remove('visible'); }
+    }
 
     function setLanguage(lang) {
         currentLang = lang;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
         document.querySelector(`.lang-btn[onclick="setLanguage('${lang}')"]`).classList.add('active');
+        document.getElementById('welcomeTitle').textContent = dict[lang].title_text;
+        updateUI();
+        regenerateAllSelects();
+    }
 
-        // Translate static elements
+    function updateUI() {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if(dict[lang][key]) el.textContent = dict[lang][key];
+            if(dict[currentLang][key]) el.textContent = dict[currentLang][key];
         });
-
-        // Translate placeholders
-        const phMap = {
-            'ph_qty': '.pet-qty',
-            'ph_pet': '.pet-other-input',
-            'ph_resp': '.resp-other-input'
+        
+        const phMap = { 
+            'ph_qty': '.pet-qty', 
+            'ph_pet': '.pet-other-input, #nat_other_input, #rel_other_input', 
+            'ph_resp': '.resp-other-input',
+            'ph_nat_other': '#nat_other_input',
+            'ph_rel_other': '#rel_other_input',
+            'ph_skill_other': '#skill_other_input',
+            'ph_cnt_other': '#otherCountryInput',
+            'opt_select': '#whatsapp_code, #homePhone_code, #referrerPhone_code, #whatsapp_num, #homePhone_num, #referrerPhone_num'
         };
-        for(let key in phMap) {
-            document.querySelectorAll(phMap[key]).forEach(el => {
-                el.placeholder = dict[lang][key];
-            });
-        }
-    }
-
-    function t(key) {
-        return dict[currentLang][key] || dict['en'][key]; // Fallback to EN
-    }
-
-    // --- WORK EXPERIENCE TEMPLATE GENERATOR ---
-    const workPagesContainer = document.getElementById('workPagesContainer');
-    const MAX_JOBS = 5;
-
-    function createWorkPage(index) {
-        const div = document.createElement('div');
-        div.id = `pageWork${index}`;
-        div.className = 'page-section hidden';
         
-        const titleKey = index === 1 ? 'work_latest_title' : 'work_other_title';
-        const titleClass = index === 1 ? 'header-large' : '';
-        const titleText = index === 1 ? '' : ` (${index})`;
+        document.querySelectorAll('.pet-qty').forEach(el => el.placeholder = dict[currentLang].ph_qty);
+        if(document.getElementById('nat_other_input')) document.getElementById('nat_other_input').placeholder = dict[currentLang].ph_nat_other;
+        if(document.getElementById('rel_other_input')) document.getElementById('rel_other_input').placeholder = dict[currentLang].ph_rel_other;
+        if(document.getElementById('skill_other_input')) document.getElementById('skill_other_input').placeholder = dict[currentLang].ph_skill_other;
+        if(document.getElementById('otherCountryInput')) document.getElementById('otherCountryInput').placeholder = dict[currentLang].ph_cnt_other;
+        
+        document.querySelectorAll('.resp-other-input').forEach(el => el.placeholder = dict[currentLang].ph_resp);
+        document.querySelectorAll('.pet-other-input').forEach(el => el.placeholder = dict[currentLang].ph_pet);
+        
+        const prefix = currentLang === 'id' ? 'Contoh' : 'e.g.';
+        ['whatsapp_code', 'referrerPhone_code'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.placeholder = prefix + " +852"; 
+        });
+        const homeCode = document.getElementById('homePhone_code');
+        if(homeCode) homeCode.placeholder = currentLang === 'id' ? "Contoh +62" : "e.g. +63";
 
-        const noOptionKey = `work_more_no_${index}`;
-
-        let html = `
-            <h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2 ${titleClass}"><span data-i18n="${titleKey}"></span>${titleText}</h2>
-            
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_country">Country of Employment? (If Hong Kong, Write Location)</label>
-                <input type="text" id="w${index}_country">
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_start">Start Work Year And Start Work Month?</label>
-                <div class="flex gap-2">
-                    <select id="w${index}_startMonth" class="w-1/2">
-                        <option value="">Month</option>
-                        ${['January','February','March','April','May','June','July','August','September','October','November','December'].map(m=>`<option value="${m}">${m}</option>`).join('')}
-                    </select>
-                    <select id="w${index}_startYear" class="w-1/2">
-                         <option value="">Year</option>
-                        ${Array.from({length: 31}, (_, i) => 2000 + i).map(y=>`<option value="${y}">${y}</option>`).join('')}
-                    </select>
-                </div>
-            </div>
-
-             <div class="question-block">
-                <label class="question-label" data-i18n="work_end">End Work Year And End Work Month?</label>
-                <div class="flex gap-2">
-                    <select id="w${index}_endMonth" class="w-1/2">
-                        <option value="">Month</option>
-                        ${['January','February','March','April','May','June','July','August','September','October','November','December'].map(m=>`<option value="${m}">${m}</option>`).join('')}
-                    </select>
-                    <select id="w${index}_endYear" class="w-1/2">
-                         <option value="">Year</option>
-                        ${Array.from({length: 31}, (_, i) => 2000 + i).map(y=>`<option value="${y}">${y}</option>`).join('')}
-                    </select>
-                </div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_size">Employer’s House Size? (e.g. 1000 square feet)</label>
-                <input type="number" id="w${index}_houseSize">
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_fam_count">Number of Employer Family Members? (Living in The Same Home)</label>
-                <select id="w${index}_famCount" onchange="renderFamMembers(${index})">
-                    <option value="1">Only employer</option>
-                    ${Array.from({length: 12}, (_, i) => i + 2).map(n=>`<option value="${n}">${n} (employer + ${n-1} more)</option>`).join('')}
-                     <option value="13+">13+</option>
-                </select>
-            </div>
-            
-            <div id="w${index}_famDetails" class="question-block hidden">
-                <label class="question-label">Employer Family Members Details</label>
-                <div id="w${index}_famRows" class="flex flex-col gap-3"></div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_helpers">Number of Helpers?</label>
-                 <select id="w${index}_helpers">
-                    <option value="1">1 (only me)</option>
-                    ${Array.from({length: 12}, (_, i) => i + 2).map(n=>`<option value="${n}">${n} (me + ${n-1} more)</option>`).join('')}
-                     <option value="13+">13+</option>
-                </select>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_status">Contract Status?</label>
-                <div class="checkbox-group">
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Finished contract" onclick="singleSelect(this, 'w${index}_status')"> <span data-i18n="hk_finish">Finished contract</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Employer terminated me already" onclick="singleSelect(this, 'w${index}_status')"> <span data-i18n="hk_terminated">Employer terminated me already</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="I resigned already" onclick="singleSelect(this, 'w${index}_status')"> <span>I resigned already</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Not contract and can leave anytime" onclick="singleSelect(this, 'w${index}_status')"> <span>Not contract and can leave anytime</span></label>
-                </div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_reason">Reason for Leaving? (Clear And True Reason)</label>
-                <textarea id="w${index}_reason" class="expandable" rows="3"></textarea>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_pets">Employer’s Pets?</label>
-                <div class="checkbox-group">
-                     ${[
-                         {id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, 
-                         {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}
-                     ].map(p => `
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" class="pet-check" data-pet="${p.val}" onchange="togglePetQty(this, 'w${index}_${p.val.replace(/\s/g,'')}_qty')"> 
-                            <span data-i18n="${p.id}">${p.val}</span>
-                            <input type="number" id="w${index}_${p.val.replace(/\s/g,'')}_qty" class="hidden w-32 p-1 border rounded pet-qty" placeholder="Enter quantity">
-                        </div>
-                     `).join('')}
-                     
-                     <div class="flex items-center gap-2">
-                        <input type="checkbox" class="pet-check" data-pet="Others" onchange="togglePetQty(this, 'w${index}_Others_qty')"> 
-                        <span data-i18n="pet_other">Others</span>
-                        <div id="w${index}_Others_qty" class="hidden flex gap-2 w-full">
-                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity">
-                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_resp">Job Responsibilities?</label>
-                <div class="checkbox-group">
-                    ${[
-                        {id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'},
-                        {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_room', val: 'I sharing room with other'},
-                        {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}
-                    ].map(r => `
-                         <label class="checkbox-option"><input type="checkbox" name="w${index}_resp" value="${r.val}"> <span data-i18n="${r.id}">${r.val}</span></label>
-                    `).join('')}
-                    
-                    <label class="checkbox-option flex-col !items-start">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="w${index}_resp" value="Other" onchange="toggleInput('w${index}_resp_other_input', this.checked)"> 
-                            <span data-i18n="resp_other">Other</span>
-                        </div>
-                        <input type="text" id="w${index}_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities">
-                    </label>
-                </div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_more_q">Do You Still Have Other Employer Work Experience?</label>
-                <div class="checkbox-group">
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_more" value="Yes" onclick="singleSelect(this, 'w${index}_more')"> <span data-i18n="work_more_yes">Yes, still have</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_more" value="No" onclick="singleSelect(this, 'w${index}_more')"> <span data-i18n="${noOptionKey}">No, only one employer experience</span></label>
-                </div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="btn-primary btn-prev" onclick="handleWorkPrev(${index})" data-i18n="btn_prev">Previous Page</button>
-                <button class="btn-primary" onclick="handleWorkNext(${index})" data-i18n="btn_next">Save And Next Page</button>
-            </div>
-        `;
-        div.innerHTML = html;
-        workPagesContainer.appendChild(div);
-    }
-
-    // --- RENDER DYNAMIC SECTIONS ---
-    
-    // Skills Page Generation
-    const skillsContainer = document.getElementById('skillsContainer');
-    const skills = [
-        {id: "newborn", key: "skill_newborn"}, {id: "children", key: "skill_children"},
-        {id: "elderly", key: "skill_elderly"}, {id: "disabled", key: "skill_disabled"},
-        {id: "pets", key: "skill_pets"}, {id: "cook", key: "skill_cook"}
-    ];
-    skills.forEach(s => {
-        skillsContainer.innerHTML += `
-            <div class="question-block">
-                <label class="question-label" data-i18n="${s.key}"></label>
-                <div class="checkbox-group">
-                    <label class="checkbox-option"><input type="checkbox" name="${s.id}" value="Yes" onclick="singleSelect(this, '${s.id}')"> <span data-i18n="yes_willing">Yes, willing</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="${s.id}" value="No" onclick="singleSelect(this, '${s.id}')"> <span data-i18n="no">No</span></label>
-                </div>
-            </div>
-        `;
-    });
-
-    // Final Questions Generation
-    const finalQsContainer = document.getElementById('finalQuestionsContainer');
-    const finalQs = [
-        {id: "likeCooking", key: "q_like_cooking", yKey: "q_like_cooking_yes"},
-        {id: "learnYoutube", key: "q_learn_yt", yKey: "q_learn_yt_yes"},
-        {id: "cookConfident", key: "q_confident", yKey: "q_confident_yes"},
-        {id: "singSong", key: "q_sing", yKey: "q_sing_yes"},
-        {id: "tutor", key: "q_tutor", yKey: "q_tutor_yes"},
-    ];
-    finalQs.forEach(q => {
-        finalQsContainer.innerHTML += `
-            <div class="question-block">
-                <label class="question-label" data-i18n="${q.key}"></label>
-                <div class="checkbox-group">
-                    <label class="checkbox-option"><input type="checkbox" name="${q.id}" value="Yes" onclick="singleSelect(this, '${q.id}')"> <span data-i18n="${q.yKey}"></span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="${q.id}" value="No" onclick="singleSelect(this, '${q.id}')"> <span data-i18n="no">No</span></label>
-                </div>
-            </div>`;
-    });
-
-    const yesNoContainer = document.getElementById('yesNoContainer');
-    const yesNoQs = [
-        {id: "afraidDog", key: "q_dog", yKey: "q_afraid_yes", alert: false},
-        {id: "afraidCat", key: "q_cat", yKey: "q_afraid_yes", alert: false},
-        {id: "tattoos", key: "q_tattoo", yKey: "q_tattoo_yes", alert: true},
-        {id: "smokeDrink", key: "q_smoke", yKey: "q_tattoo_yes", alert: false}, // Reusing generic yes
-        {id: "allergies", key: "q_allergy", yKey: "q_tattoo_yes", alert: false},
-        {id: "chronic", key: "q_chronic", yKey: "q_tattoo_yes", alert: false},
-        {id: "consent", key: "q_consent", yKey: "q_consent_yes", alert: false, confirm: true}
-    ];
-
-    yesNoQs.forEach(q => {
-        yesNoContainer.innerHTML += `
-            <div class="question-block">
-                <label class="question-label" data-i18n="${q.key}"></label>
-                <div class="checkbox-group">
-                    <label class="checkbox-option"><input type="checkbox" name="${q.id}" value="Yes" onclick="singleSelect(this, '${q.id}'); ${q.alert ? `toggleTattooAlert(true)` : ''}"> <span data-i18n="${q.yKey}"></span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="${q.id}" value="No" onclick="singleSelect(this, '${q.id}'); ${q.alert ? `toggleTattooAlert(false)` : ''}"> <span data-i18n="no">No</span></label>
-                </div>
-                ${q.alert ? `<div id="tattooAlert" class="alert-box hidden">If You Have Tattoos, Later Send Tattoos Photo to us</div>` : ''}
-            </div>
-        `;
-    });
-
-    // Generate 5 work pages
-    for(let i=1; i<=MAX_JOBS; i++) {
-        createWorkPage(i);
-    }
-
-    // --- UTILITY FUNCTIONS ---
-
-    function singleSelect(checkbox, name) {
-        const checkboxes = document.getElementsByName(name);
-        checkboxes.forEach((item) => {
-            if (item !== checkbox) item.checked = false;
+         ['whatsapp_num', 'homePhone_num', 'referrerPhone_num'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.placeholder = prefix + " 96111003"; 
         });
     }
 
-    function toggleInput(id, show) {
-        const el = document.getElementById(id);
-        if(show) el.classList.remove('hidden');
-        else el.classList.add('hidden');
-    }
-
-    function toggleHKStatus(isHK) {
-        const el = document.getElementById('hk_status_container');
-        if(isHK) el.classList.remove('hidden');
-        else el.classList.add('hidden');
-    }
-
-    function toggleReferrer(isYes) {
-        const el = document.getElementById('referrerDetails');
-        if(isYes) el.classList.remove('hidden');
-        else el.classList.add('hidden');
-    }
-
-    function validatePassport() {
-        const input = document.getElementById('passportExpiry');
-        if(!input.value) return;
-        const date = new Date(input.value);
-        const today = new Date();
-        const diffTime = date - today;
-        const diffMonths = diffTime / (1000 * 60 * 60 * 24 * 30.44);
+    // --- DYNAMIC SELECT GENERATION ---
+    function regenerateAllSelects() {
+        generateSiblingSelects();
+        generateFamilySelects();
+        generateCountryExpSelects(); // New function
+        for(let i=1; i<=MAX_JOBS; i++) {
+            const p = document.getElementById(`pageWork${i}`);
+            if(p) updateWorkPageSelects(i);
+        }
         
-        const alert = document.getElementById('passportAlert');
-        if (diffMonths < 9) alert.classList.remove('hidden');
-        else alert.classList.add('hidden');
+        const hkSel = document.getElementById('hkExperienceYears');
+        if(hkSel) {
+            const val = hkSel.value;
+            hkSel.innerHTML = `<option value="0">${dict[currentLang].opt_never_hk}</option>`;
+            for(let i=1; i<=20; i++) hkSel.innerHTML += `<option value="${i}">${i}</option>`;
+            hkSel.innerHTML += `<option value="21+">21+</option>`;
+            hkSel.value = val;
+        }
     }
 
-    function validateHeight() {
-        const input = document.getElementById('height');
-        const alert = document.getElementById('heightAlert');
-        if(input.value && parseInt(input.value) < 145) alert.classList.remove('hidden');
-        else alert.classList.add('hidden');
-    }
-
-    function renderChildAges(type) {
-        const count = parseInt(document.getElementById(type + 'Count').value);
-        const container = document.getElementById(type + 'AgesContainer');
-        const inputContainer = document.getElementById(type + 'Inputs');
-        inputContainer.innerHTML = '';
+    function generateCountryExpSelects() {
+        // Build the HTML for the new questions in Page 2
+        const container = document.getElementById('otherCountryExpContainer');
+        // We use a list of definitions to rebuild this on lang change
+        const questions = [
+            { id: 'cnt_sg', type: 'select' },
+            { id: 'cnt_tw', type: 'select' },
+            { id: 'cnt_my', type: 'select' },
+            { id: 'cnt_me', type: 'select' },
+            { id: 'cnt_sa', type: 'select' },
+            { id: 'cnt_id', type: 'select' },
+            { id: 'cnt_ph', type: 'select' },
+            { id: 'cnt_other', type: 'input_select' }
+        ];
         
-        if (count > 0) {
-            container.classList.remove('hidden');
-            for(let i=1; i<=count; i++) {
-                inputContainer.innerHTML += `<input type="number" placeholder="Age of ${type.slice(0, -1)} ${i}" class="mb-2">`;
+        // Save current values if exist
+        const savedVals = {};
+        questions.forEach(q => {
+            const s = document.getElementById(q.id + '_select');
+            if(s) savedVals[q.id + '_select'] = s.value;
+            if(q.type === 'input_select') {
+                const i = document.getElementById('otherCountryInput');
+                if(i) savedVals['otherCountryInput'] = i.value;
             }
-        } else {
-            container.classList.add('hidden');
-        }
-    }
+        });
 
-    function toggleVisaQ(isYes) {
-        if(isYes) {
-            document.getElementById('vacationDate').classList.remove('hidden');
-            document.getElementById('stayHomeDuration').classList.add('hidden');
-        } else {
-            document.getElementById('vacationDate').classList.add('hidden');
-            document.getElementById('stayHomeDuration').classList.remove('hidden');
-        }
-    }
+        let html = '';
+        const rangeText = dict[currentLang].opt_20_years;
+        const zeroTo20Opts = Array.from({length: 21}, (_, i) => `<option value="${i}">${i}</option>`).join('');
 
-    function toggleTattooAlert(show) {
-        const el = document.getElementById('tattooAlert');
-        if(show) el.classList.remove('hidden');
-        else el.classList.add('hidden');
-    }
-
-    function renderFamMembers(index) {
-        const countStr = document.getElementById(`w${index}_famCount`).value;
-        const rows = document.getElementById(`w${index}_famRows`);
-        const container = document.getElementById(`w${index}_famDetails`);
-        rows.innerHTML = '';
-        
-        const count = countStr === '13+' ? 13 : parseInt(countStr);
-        
-        if (count > 0) {
-            container.classList.remove('hidden');
-            for(let i=1; i<=count; i++) {
-                rows.innerHTML += `
-                    <div class="p-2 border rounded bg-gray-50">
-                        <span class="font-bold">Member ${i}:</span>
-                        <select class="w-full mb-1">
-                            <option value="Adult">Adult</option>
-                            <option value="Boy">Boy</option>
-                            <option value="Girl">Girl</option>
-                            <option value="Twins">Twins</option>
-                            <option value="Triplets">Triplets</option>
-                            <option value="Grandpa">Grandpa</option>
-                            <option value="Grandma">Grandma</option>
-                        </select>
-                        <div class="flex gap-2">
-                             <input type="number" placeholder="Start Age" class="w-1/2">
-                             <input type="number" placeholder="End Age" class="w-1/2">
-                        </div>
-                    </div>
-                `;
-            }
-        } else {
-            container.classList.add('hidden');
-        }
-    }
-
-    function togglePetQty(checkbox, inputId) {
-        const inputContainer = document.getElementById(inputId);
-        if(checkbox.checked) {
-            inputContainer.classList.remove('hidden');
-        } else {
-            inputContainer.classList.add('hidden');
-             // Clear inputs inside
-            inputContainer.querySelectorAll('input').forEach(i => i.value = '');
-        }
-    }
-
-    // --- NAVIGATION & STORAGE ---
-
-    function saveLocal() {
-        const data = {};
-        document.querySelectorAll('input, select, textarea').forEach(el => {
-            if(el.type === 'checkbox' || el.type === 'radio') {
-                if(el.checked) {
-                    if(!data[el.name]) data[el.name] = [];
-                    data[el.name].push(el.value);
-                }
+        questions.forEach(q => {
+            html += `<div class="question-block">
+                <label class="question-label">${dict[currentLang][q.id]}</label>`;
+            
+            if(q.type === 'input_select') {
+                html += `<div class="flex gap-2">
+                    <input type="text" id="otherCountryInput" class="w-1/2" placeholder="${dict[currentLang].ph_cnt_other}" onblur="validateField(this)">
+                    <select id="${q.id}_select" class="w-1/2" onblur="validateField(this)">
+                        <option value="">${dict[currentLang].opt_select}</option>
+                        ${zeroTo20Opts}
+                    </select>
+                </div>`;
             } else {
-                if(el.id) data[el.id] = el.value;
+                html += `<select id="${q.id}_select" onblur="validateField(this)">
+                    <option value="">${dict[currentLang].opt_select}</option>
+                    ${zeroTo20Opts}
+                </select>`;
+            }
+            html += `<div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>`;
+        });
+        
+        container.innerHTML = html;
+        
+        // Restore values
+        questions.forEach(q => {
+            const s = document.getElementById(q.id + '_select');
+            if(s && savedVals[q.id + '_select']) s.value = savedVals[q.id + '_select'];
+            if(q.type === 'input_select') {
+                const i = document.getElementById('otherCountryInput');
+                if(i && savedVals['otherCountryInput']) i.value = savedVals['otherCountryInput'];
             }
         });
-        localStorage.setItem('helperFormData', JSON.stringify(data));
-        return data;
     }
 
-    function restoreLocal() {
-        const saved = localStorage.getItem('helperFormData');
-        if(saved) {
-            const data = JSON.parse(saved);
-            for(const key in data) {
-                if(Array.isArray(data[key])) {
-                    data[key].forEach(val => {
-                        const cb = document.querySelector(`input[name="${key}"][value="${val}"]`);
-                        if(cb) {
-                            cb.checked = true;
-                            // Trigger onclick events to restore UI state (hide/show fields)
-                            if(cb.onclick) cb.onclick.apply(cb);
-                            if(cb.onchange) cb.onchange.apply(cb);
-                        }
-                    });
-                } else {
-                    const el = document.getElementById(key);
-                    if(el) {
-                        el.value = data[key];
-                        // Trigger change events for selects/inputs
-                        if(el.onchange) el.onchange();
-                        if(el.onblur) el.onblur();
-                    }
-                }
-            }
+    function generateSiblingSelects() {
+        const sCount = document.getElementById('siblingsCount');
+        const sPos = document.getElementById('siblingPos');
+        const sCountVal = sCount.value;
+        const sPosVal = sPos.value;
+        const selTxt = dict[currentLang].opt_select;
+        const sibSuf = dict[currentLang].opt_sibling_suf;
+        
+        let html = `<option value="">${selTxt}</option>`;
+        html += `<option value="1">1 ${sibSuf}</option>`;
+        for(let i=2; i<=13; i++) html += `<option value="${i}">${i} ${i==13?'+':''}</option>`;
+        sCount.innerHTML = html; sCount.value = sCountVal;
+
+        html = `<option value="">${selTxt}</option>`;
+        html += currentLang === 'id' ? `<option value="1">Anak pertama</option>` : `<option value="1">Number 1</option>`;
+        for(let i=2; i<=13; i++) html += `<option value="${i}">${i} ${i==13?'+':''}</option>`;
+        sPos.innerHTML = html; sPos.value = sPosVal;
+    }
+
+    function generateFamilySelects() {
+        const selTxt = dict[currentLang].opt_select;
+        const noson = dict[currentLang].opt_noson;
+        const nodaughter = dict[currentLang].opt_nodaughter;
+        
+        const sons = document.getElementById('sonsCount');
+        const daughters = document.getElementById('daughtersCount');
+        const sV = sons.value; const dV = daughters.value;
+
+        let h = `<option value="">${selTxt}</option><option value="0">${noson}</option>`;
+        for(let i=1; i<=13; i++) h += `<option value="${i}">${i} ${i==13?'+':''}</option>`;
+        sons.innerHTML = h; sons.value = sV;
+
+        h = `<option value="">${selTxt}</option><option value="0">${nodaughter}</option>`;
+        for(let i=1; i<=13; i++) h += `<option value="${i}">${i} ${i==13?'+':''}</option>`;
+        daughters.innerHTML = h; daughters.value = dV;
+        
+        document.querySelectorAll('#sonsInputs input, #daughtersInputs input').forEach(inp => {
+             if(currentLang === 'id') {
+                 if(inp.placeholder.includes('Son') || inp.placeholder.includes('son')) inp.placeholder = "Umur anak laki-laki";
+                 if(inp.placeholder.includes('Daughter') || inp.placeholder.includes('daughter')) inp.placeholder = "Umur anak perempuan";
+             }
+        });
+        
+        const vac = document.getElementById('vacationMonth');
+        const vacV = vac.value;
+        const sh = document.getElementById('homeWeeks');
+        const shV = sh.value;
+        const months = currentLang === 'id' ? indoMonths : engMonths;
+        
+        h = `<option value="">${selTxt}</option>`;
+        months.forEach(m => h += `<option value="${m}">${m}</option>`);
+        vac.innerHTML = h; vac.value = vacV;
+
+        const w = dict[currentLang].opt_week;
+        const ws = dict[currentLang].opt_weeks;
+        h = `<option value="">${selTxt}</option>`;
+        for(let i=1; i<=13; i++) h += `<option value="${i}">${i} ${i>1?ws:w}${i==13?'+':''}</option>`;
+        sh.innerHTML = h; sh.value = shV;
+    }
+
+    function updateWorkPageSelects(i) {
+        const months = currentLang === 'id' ? indoMonths : engMonths;
+        const selTxt = dict[currentLang].opt_select;
+        
+        ['start','end'].forEach(type => {
+            const m = document.getElementById(`w${i}_${type}Month`);
+            const y = document.getElementById(`w${i}_${type}Year`);
+            if(!m) return;
+            const mV = m.value; const yV = y.value;
+            m.innerHTML = `<option value="">${dict[currentLang].opt_month}</option>` + months.map(x=>`<option value="${x}">${x}</option>`).join('');
+            y.innerHTML = `<option value="">${dict[currentLang].opt_year}</option>` + Array.from({length: 31}, (_, k) => 2000 + k).map(x=>`<option value="${x}">${x}</option>`).join('');
+            m.value = mV; y.value = yV;
+        });
+
+        const fc = document.getElementById(`w${i}_famCount`);
+        if(fc) {
+            const v = fc.value;
+            const only = dict[currentLang].opt_only_emp;
+            const plus = dict[currentLang].opt_emp_plus;
+            let h = `<option value="">${selTxt}</option><option value="1">${only}</option>`;
+            for(let k=2; k<=13; k++) h += `<option value="${k}">${k} (${plus} ${k-1})</option>`;
+            h += `<option value="13+">13+</option>`;
+            fc.innerHTML = h; fc.value = v;
         }
+
+        const hlp = document.getElementById(`w${i}_helpers`);
+        if(hlp) {
+            const v = hlp.value;
+            const only = dict[currentLang].opt_only_me;
+            const plus = dict[currentLang].opt_me_plus;
+            let h = `<option value="">${selTxt}</option><option value="1">${only}</option>`;
+            for(let k=2; k<=13; k++) h += `<option value="${k}">${k} (${plus} ${k-1})</option>`;
+            h += `<option value="13+">13+</option>`;
+            hlp.innerHTML = h; hlp.value = v;
+        }
+        
+        const natContainer = document.querySelector(`#pageWork${i} .checkbox-group`); 
+        if(natContainer) {
+             const labels = natContainer.querySelectorAll('label');
+             const map = {
+                 'Local people': dict[currentLang].opt_emp_nat_local,
+                 'Foreigner': dict[currentLang].opt_emp_nat_foreigner,
+                 'Chinese': dict[currentLang].opt_emp_nat_chinese,
+                 'Hong Kong people': dict[currentLang].opt_emp_nat_hk,
+                 'Asian': dict[currentLang].opt_emp_nat_asian
+             };
+             labels.forEach(l => {
+                 const inp = l.querySelector('input');
+                 if(inp && map[inp.value]) {
+                     l.lastChild.textContent = " " + map[inp.value];
+                 }
+             });
+        }
+        
+        // Contract Status Updates (for labels)
+        const statusGroup = document.querySelectorAll(`#pageWork${i} .checkbox-group`)[3]; // index 3 now (nat, dis, pet, status?) wait, HTML structure changed
+        // Need to target specific contract group. It is inside `w${i}_status` logic.
+        const statusInputs = document.querySelectorAll(`input[name="w${i}_status"]`);
+        if(statusInputs.length > 0) {
+             statusInputs.forEach(inp => {
+                 const label = inp.parentElement;
+                 if(inp.value.includes('resigned') || inp.value === 'I resigned already') label.lastChild.textContent = " " + dict[currentLang].work_status_resigned;
+                 if(inp.value.includes('Not contract') || inp.value === 'Not contract and can leave anytime') label.lastChild.textContent = " " + dict[currentLang].work_status_nocontract;
+             });
+        }
+
+        const famRows = document.getElementById(`w${i}_famRows`);
+        if(famRows) {
+             const rows = famRows.querySelectorAll('.member-row');
+             rows.forEach(r => {
+                 const roleSel = r.querySelector('select');
+                 const rV = roleSel.value;
+                 roleSel.innerHTML = `<option value="">${currentLang==='id'?'Pilih Peran':'Select Role'}</option>` + 
+                     ['Adult','Boy','Girl','Twins','Triplets','Grandpa','Grandma'].map(x => 
+                         `<option value="${x}">${dict[currentLang]['opt_role_'+x.toLowerCase()]}</option>`
+                     ).join('');
+                 roleSel.value = rV;
+                 
+                 const labs = r.querySelectorAll('label');
+                 if(labs[0]) labs[0].textContent = dict[currentLang].opt_age_start;
+                 if(labs[1]) labs[1].textContent = dict[currentLang].opt_age_leave;
+                 
+                 // Regenerate Options based on current role (requires checking value)
+                 const ageSels = r.querySelectorAll('.age-inputs select');
+                 ageSels.forEach(s => {
+                     const val = s.value;
+                     let opts = `<option value="">${selTxt}</option>`;
+                     if(rV === 'Grandpa' || rV === 'Grandma') {
+                         for(let k=60; k<=110; k++) opts += `<option value="${k}">${k}</option>`;
+                     } else {
+                         opts += `<option value="Start from female employer is pregnant">${dict[currentLang].opt_preg}</option>`;
+                         for(let k=0; k<=20; k+=0.5) opts += `<option value="${k}">${k}</option>`;
+                     }
+                     s.innerHTML = opts;
+                     s.value = val;
+                 });
+                 
+                 // Apply Highlight Class to "Member X" span
+                 const memSpan = r.querySelector('span.font-bold');
+                 if(memSpan) {
+                     memSpan.classList.add('member-label-highlight');
+                     if(memSpan.textContent.includes('Member')) memSpan.textContent = memSpan.textContent.replace('Member', dict[currentLang].opt_month === 'Bulan' ? 'Anggota' : 'Member');
+                 }
+             });
+        }
+    }
+
+    // --- NAVIGATION LOGIC ---
+
+    function handleWelcomeNext() {
+        if(ENABLE_VALIDATION) {
+            const group = document.getElementById('welcome_nat_group');
+            validateGroup(group);
+            if(group.parentElement.querySelector('.error-msg.visible')) return;
+        }
+
+        const selected = document.querySelector('input[name="seeker_nationality"]:checked');
+        if(!selected) { alert("Please select your nationality"); return; }
+
+        const val = selected.value;
+        if(val === 'Filipino') {
+            targetSheetName = 'Phil Number';
+            setLanguage('en');
+        } else if (val === 'Indonesian') {
+            targetSheetName = 'Indo Number';
+            setLanguage('id');
+        } else {
+            targetSheetName = 'Other Number';
+            setLanguage('en');
+        }
+        goToPage('page1');
     }
 
     function goToPage(pageId) {
         document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
         document.getElementById(pageId).classList.remove('hidden');
         window.scrollTo(0,0);
-        setLanguage(currentLang); // Ensure dynamic content is translated
+        updateUI(); 
     }
 
     function nextPage(currentPageNum) {
+        if(ENABLE_VALIDATION) {
+            let pId = currentPageNum === 1 ? 'page1' : 'page2';
+            const p = document.getElementById(pId);
+            const inputs = p.querySelectorAll('input:not(.hidden), select, textarea');
+            let valid = true;
+            inputs.forEach(i => { validateField(i); if(i.classList.contains('input-error')) valid = false; });
+            const groups = p.querySelectorAll('.checkbox-group');
+            groups.forEach(g => { validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
+            if(!valid) { alert("Please answer all questions"); return; }
+        }
+        
         saveLocal();
         if(currentPageNum === 1) goToPage('page2');
         else if (currentPageNum === 2) goToPage('pageWork1');
     }
 
     function handleWorkNext(index) {
+        if(ENABLE_VALIDATION) {
+            const p = document.getElementById(`pageWork${index}`);
+            const inputs = p.querySelectorAll('input:not(.hidden), select, textarea');
+            let valid = true;
+            inputs.forEach(i => { validateField(i); if(i.classList.contains('input-error')) valid = false; });
+            const groups = p.querySelectorAll('.checkbox-group');
+            groups.forEach(g => { validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
+            if(!valid) { alert("Please answer all questions"); return; }
+        }
+
         saveLocal();
         const more = document.querySelector(`input[name="w${index}_more"]:checked`);
-        if(more && more.value === 'Yes' && index < MAX_JOBS) {
+        if(more && (more.value === 'Yes' || more.value === 'Yes, still have other') && index < MAX_JOBS) {
             goToPage(`pageWork${index+1}`);
         } else {
             goToPage('pageFinal');
@@ -1205,48 +1238,476 @@
     }
 
     function goBackFromFinal() {
-        // We need to find the last active work page. 
-        // For simplicity, checking backwards or just going to work1 is tough without history.
-        // Simple logic: Go to pageWork1. Or ideally, check data. 
-        // Better: We check where the user "came from" based on filled data, 
-        // BUT for this linear flow, let's assume if they are at Final, they came from the last work page they filled.
-        // Let's iterate backwards to find the last "Yes" on more work.
-        
         let targetPage = 1;
         for(let i=1; i<MAX_JOBS; i++) {
              const more = document.querySelector(`input[name="w${i}_more"]:checked`);
-             if(more && more.value === 'Yes') targetPage = i + 1;
+             if(more && (more.value === 'Yes' || more.value === 'Yes, still have other')) targetPage = i + 1;
              else break;
         }
         goToPage(`pageWork${targetPage}`);
     }
 
+    // --- HELPER LOGIC ---
+
+    function singleSelect(checkbox, name) {
+        document.getElementsByName(name).forEach((item) => {
+            if (item !== checkbox) item.checked = false;
+        });
+    }
+    function toggleInput(id, show) {
+        const el = document.getElementById(id);
+        if(show) el.classList.remove('hidden'); else el.classList.add('hidden');
+    }
+    function toggleHKStatus(isHK) {
+        const el = document.getElementById('hk_status_container');
+        if(isHK) el.classList.remove('hidden'); else el.classList.add('hidden');
+    }
+    function toggleReferrer(isYes) {
+        const el = document.getElementById('referrerDetails');
+        if(isYes) el.classList.remove('hidden'); else el.classList.add('hidden');
+    }
+    function validatePassport() {
+        const input = document.getElementById('passportExpiry');
+        if(!input.value) return;
+        // Simple logic for d-m-y text input parsing if standard date input used
+        // Since we are using type="text" hack, parsing depends on browser. 
+        // With date hack, value property is usually yyyy-mm-dd if supported.
+        const diffMonths = (new Date(input.value) - new Date()) / (1000 * 60 * 60 * 24 * 30.44);
+        const alert = document.getElementById('passportAlert');
+        if (diffMonths < 9) alert.classList.remove('hidden'); else alert.classList.add('hidden');
+    }
+    function validateHeight() {
+        const input = document.getElementById('height');
+        const alert = document.getElementById('heightAlert');
+        if(input.value && parseInt(input.value) < 145) alert.classList.remove('hidden'); else alert.classList.add('hidden');
+    }
+    function renderChildAges(type) {
+        const count = parseInt(document.getElementById(type + 'Count').value);
+        const container = document.getElementById(type + 'AgesContainer');
+        const inputContainer = document.getElementById(type + 'Inputs');
+        inputContainer.innerHTML = '';
+        if (count > 0) {
+            container.classList.remove('hidden');
+            for(let i=1; i<=count; i++) {
+                let ph = type === 'sons' ? (currentLang === 'id' ? "Umur anak laki-laki" : "Age of son") : (currentLang === 'id' ? "Umur anak perempuan" : "Age of daughter");
+                ph += ` ${i}`;
+                inputContainer.innerHTML += `<input type="number" placeholder="${ph}" class="mb-2" onblur="validateField(this)">`;
+            }
+        } else container.classList.add('hidden');
+    }
+    function toggleVisaQ(isYes) {
+        if(isYes) {
+            document.getElementById('vacationDate').classList.remove('hidden');
+            document.getElementById('stayHomeDuration').classList.add('hidden');
+        } else {
+            document.getElementById('vacationDate').classList.add('hidden');
+            document.getElementById('stayHomeDuration').classList.remove('hidden');
+        }
+    }
+    function toggleTattooAlert(show) {
+        const el = document.getElementById('tattooAlert');
+        if(show) el.classList.remove('hidden'); else el.classList.add('hidden');
+    }
+    function togglePetQty(checkbox, inputId) {
+        const inputContainer = document.getElementById(inputId);
+        const petName = checkbox.getAttribute('data-pet');
+        if(petName === 'No pets') {} else {
+            if(checkbox.checked) inputContainer.classList.remove('hidden');
+            else {
+                inputContainer.classList.add('hidden');
+                inputContainer.querySelectorAll('input').forEach(i => i.value = '');
+            }
+        }
+    }
+
+    function renderFamMembers(index) {
+        const countStr = document.getElementById(`w${index}_famCount`).value;
+        const rows = document.getElementById(`w${index}_famRows`);
+        const container = document.getElementById(`w${index}_famDetails`);
+        rows.innerHTML = '';
+        
+        const count = countStr === '13+' ? 13 : parseInt(countStr);
+        if (count > 0) {
+            container.classList.remove('hidden');
+            const roleTxt = currentLang === 'id' ? 'Pilih Peran' : 'Select Role';
+            const ageSt = dict[currentLang].opt_age_start;
+            const ageLv = dict[currentLang].opt_age_leave;
+            const preg = dict[currentLang].opt_preg;
+            const memTxt = currentLang === 'id' ? 'Anggota' : 'Member';
+            
+            let ageOpts = `<option value="">${dict[currentLang].opt_select}</option>`;
+            ageOpts += `<option value="Start from female employer is pregnant">${preg}</option>`;
+            for(let k=0; k<=20; k+=0.5) ageOpts += `<option value="${k}">${k}</option>`;
+            
+            const roles = ['Adult','Boy','Girl','Twins','Triplets','Grandpa','Grandma'];
+            let roleOpts = `<option value="">${roleTxt}</option>` + roles.map(x => `<option value="${x}">${dict[currentLang]['opt_role_'+x.toLowerCase()]}</option>`).join('');
+
+            for(let i=1; i<=count; i++) {
+                rows.innerHTML += `
+                    <div class="p-2 border rounded bg-gray-50 member-row">
+                        <span class="font-bold member-label-highlight">${memTxt} ${i}:</span>
+                        <select class="w-full mb-1" onchange="handleRoleChange(this)" onblur="validateField(this)">
+                            ${roleOpts}
+                        </select>
+                        <div class="flex flex-col gap-2 age-inputs mt-2">
+                             <div class="w-full">
+                                <label class="text-xs font-bold">${ageSt}</label>
+                                <select class="w-full" onblur="validateField(this)">${ageOpts}</select>
+                             </div>
+                             <div class="w-full">
+                                <label class="text-xs font-bold">${ageLv}</label>
+                                <select class="w-full" onblur="validateField(this)">${ageOpts}</select>
+                             </div>
+                        </div>
+                    </div>`;
+            }
+        } else container.classList.add('hidden');
+    }
+
+    window.handleRoleChange = function(select) {
+        const ageInputsDiv = select.parentElement.querySelector('.age-inputs');
+        const role = select.value;
+        
+        if(role === 'Adult') {
+            ageInputsDiv.classList.add('hidden');
+        } else {
+            ageInputsDiv.classList.remove('hidden');
+            const selects = ageInputsDiv.querySelectorAll('select');
+            let opts = `<option value="">${dict[currentLang].opt_select}</option>`;
+            
+            if(role === 'Grandpa' || role === 'Grandma') {
+                for(let k=60; k<=110; k++) opts += `<option value="${k}">${k}</option>`;
+            } else {
+                opts += `<option value="Start from female employer is pregnant">${dict[currentLang].opt_preg}</option>`;
+                for(let k=0; k<=20; k+=0.5) opts += `<option value="${k}">${k}</option>`;
+            }
+            selects.forEach(s => s.innerHTML = opts);
+        }
+    }
+
+    // Helper for Work Pages
+    const workPagesContainer = document.getElementById('workPagesContainer');
+    const MAX_JOBS = 5;
+
+    function createWorkPage(index) {
+        const div = document.createElement('div');
+        div.id = `pageWork${index}`;
+        div.className = 'page-section hidden';
+        
+        const titleKey = index === 1 ? 'work_latest_title' : 'work_other_title';
+        const titleClass = index === 1 ? 'highlight-header' : '';
+        const titleText = index === 1 ? '' : ` (${index})`;
+        const noOptionKey = `work_more_no_${index}`;
+
+        div.innerHTML = `
+            <h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2 ${titleClass}"><span data-i18n="${titleKey}"></span>${titleText}</h2>
+            
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_country">Country of Employment?</label>
+                <input type="text" id="w${index}_country" onblur="validateField(this)">
+                <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+                
+                <label class="question-label mt-3" data-i18n="work_emp_nat">Employer's Nationality?</label>
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
+                    ${['Local people', 'Foreigner', 'Chinese', 'Hong Kong people', 'Asian'].map(o => 
+                        `<label class="checkbox-option"><input type="radio" name="w${index}_emp_nat" value="${o}"> ${o}</label>`
+                    ).join('')}
+                </div>
+                <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_start">Start Date?</label>
+                <div class="flex gap-2">
+                    <select id="w${index}_startMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
+                    <select id="w${index}_startYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+             <div class="question-block">
+                <label class="question-label" data-i18n="work_end">End Date?</label>
+                <div class="flex gap-2">
+                    <select id="w${index}_endMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
+                    <select id="w${index}_endYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_size">House Size?</label>
+                <input type="number" id="w${index}_houseSize" onblur="validateField(this)">
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_fam_count">Family Members Count?</label>
+                <select id="w${index}_famCount" onchange="renderFamMembers(${index}); validateField(this)" onblur="validateField(this)"></select>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+            
+            <div id="w${index}_famDetails" class="question-block hidden">
+                <label class="question-label" data-i18n="work_fam_age">Age of Employer Family Members</label>
+                <div id="w${index}_famRows" class="flex flex-col gap-3"></div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_helpers">Number of Helpers?</label>
+                 <select id="w${index}_helpers" onblur="validateField(this)"></select>
+                  <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_status">Contract Status?</label>
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Finished contract" onclick="singleSelect(this, 'w${index}_status')"> <span data-i18n="hk_finish">Finished contract</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Employer terminated me already" onclick="singleSelect(this, 'w${index}_status')"> <span data-i18n="hk_terminated">Employer terminated me already</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="I resigned already" onclick="singleSelect(this, 'w${index}_status')"> <span>I resigned already</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Not contract and can leave anytime" onclick="singleSelect(this, 'w${index}_status')"> <span>Not contract and can leave anytime</span></label>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_reason">Reason for Leaving?</label>
+                <textarea id="w${index}_reason" class="expandable" rows="3" onblur="validateField(this)"></textarea>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <!-- DISABLED CARE SECTION (NEW) -->
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_dis_q">In This Employer, Did You Take Care of Disabled Person?</label>
+                <div class="checkbox-group">
+                    ${[
+                        {id:'dis_no', val:'No'}, {id:'dis_bed', val:'Bedridden care'}, {id:'dis_dis', val:'Disability care'}, 
+                        {id:'dis_tra', val:'Tracheostomy care'}, {id:'dis_wheel', val:'Wheelchair'}, {id:'dis_walk', val:'Walking slowly'},
+                        {id:'dis_med', val:'Medication feeding'}, {id:'dis_bath', val:'Bathing assistance'}, {id:'dis_stroke', val:'Stroke'},
+                        {id:'dis_alz', val:'Alzheimer\'s disease'}, {id:'dis_park', val:'Parkinson\'s disease'},
+                        {id:'dis_other1', val:'Other disabled person (1)'}, {id:'dis_other2', val:'Other disabled person (2)'}
+                    ].map(d => `<label class="checkbox-option"><input type="checkbox" name="w${index}_disabled" value="${d.val}"> <span data-i18n="${d.id}">${d.val}</span></label>`).join('')}
+                </div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_pets">Employer’s Pets?</label>
+                <div class="checkbox-group">
+                     ${[
+                         {id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, 
+                         {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}
+                     ].map(p => `
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" class="pet-check" data-pet="${p.val}" onchange="togglePetQty(this, 'w${index}_${p.val.replace(/\s/g,'')}_qty')"> 
+                            <span data-i18n="${p.id}">${p.val}</span>
+                            <input type="number" id="w${index}_${p.val.replace(/\s/g,'')}_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
+                        </div>
+                     `).join('')}
+                     
+                     <div class="flex items-center gap-2">
+                        <input type="checkbox" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, 'w${index}_Others_qty')"> 
+                        <span data-i18n="pet_other">Other pet (1)</span>
+                        <div id="w${index}_Others_qty" class="hidden flex gap-2 w-full">
+                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
+                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
+                        </div>
+                    </div>
+                     <div class="flex items-center gap-2">
+                        <input type="checkbox" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, 'w${index}_Others2_qty')"> 
+                        <span data-i18n="pet_other2">Other pet (2)</span>
+                        <div id="w${index}_Others2_qty" class="hidden flex gap-2 w-full">
+                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
+                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
+                        </div>
+                    </div>
+                     <div class="flex items-center gap-2">
+                        <input type="checkbox" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, 'w${index}_Others3_qty')"> 
+                        <span data-i18n="pet_other3">Other pet (3)</span>
+                        <div id="w${index}_Others3_qty" class="hidden flex gap-2 w-full">
+                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
+                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_resp">Job Responsibilities?</label>
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
+                    ${[
+                        {id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'},
+                        {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_wet_market', val: 'I go to Chinese wet-market to buy food'},
+                        {id: 'resp_room', val: 'I sharing room with other'},
+                        {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}
+                    ].map(r => `
+                         <label class="checkbox-option"><input type="checkbox" name="w${index}_resp" value="${r.val}"> <span data-i18n="${r.id}">${r.val}</span></label>
+                    `).join('')}
+                    <label class="checkbox-option flex-col !items-start">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="w${index}_resp" value="Other" onchange="toggleInput('w${index}_resp_other_input', this.checked)"> 
+                            <span data-i18n="resp_other">Other</span>
+                        </div>
+                        <input type="text" id="w${index}_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
+                    </label>
+                    <label class="checkbox-option flex-col !items-start">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="w${index}_resp" value="Other2" onchange="toggleInput('w${index}_resp_other2_input', this.checked)"> 
+                            <span data-i18n="resp_other2">Other responsibilities (2)</span>
+                        </div>
+                        <input type="text" id="w${index}_resp_other2_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
+                    </label>
+                    <label class="checkbox-option flex-col !items-start">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="w${index}_resp" value="Other3" onchange="toggleInput('w${index}_resp_other3_input', this.checked)"> 
+                            <span data-i18n="resp_other3">Other responsibilities (3)</span>
+                        </div>
+                        <input type="text" id="w${index}_resp_other3_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
+                    </label>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="question-block">
+                <label class="question-label" data-i18n="work_more_q">Do You Still Have Other Employer Work Experience?</label>
+                <div class="checkbox-group" onfocusout="validateGroup(this)">
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_more" value="Yes" onclick="singleSelect(this, 'w${index}_more')"> <span data-i18n="work_more_yes">Yes, still have other</span></label>
+                    <label class="checkbox-option"><input type="checkbox" name="w${index}_more" value="No" onclick="singleSelect(this, 'w${index}_more')"> <span data-i18n="${noOptionKey}">No, only one employer experience</span></label>
+                </div>
+                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-primary btn-prev" onclick="handleWorkPrev(${index})" data-i18n="btn_prev">Previous Page</button>
+                <button class="btn-primary" onclick="handleWorkNext(${index})" data-i18n="btn_next">Save And Next Page</button>
+            </div>
+        `;
+        workPagesContainer.appendChild(div);
+    }
+    
+    for(let i=1; i<=MAX_JOBS; i++) createWorkPage(i);
+
+    // ... rest of init code ...
+    document.getElementById('skillsContainer').innerHTML = [
+        {id: "newborn", key: "skill_newborn"}, {id: "children", key: "skill_children"},
+        {id: "elderly", key: "skill_elderly"}, {id: "disabled", key: "skill_disabled"},
+        {id: "pets", key: "skill_pets"}, {id: "cook", key: "skill_cook"}
+    ].map(s => `
+        <div class="question-block">
+            <label class="question-label" data-i18n="${s.key}"></label>
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
+                <label class="checkbox-option"><input type="checkbox" name="${s.id}" value="Yes" onclick="singleSelect(this, '${s.id}')"> <span data-i18n="yes_willing">Yes, willing</span></label>
+                <label class="checkbox-option"><input type="checkbox" name="${s.id}" value="No" onclick="singleSelect(this, '${s.id}')"> <span data-i18n="no">No</span></label>
+            </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+        </div>`).join('');
+
+    // ... Final Qs ...
+    document.getElementById('finalQuestionsContainer').innerHTML = [
+        {id: "likeCooking", key: "q_like_cooking", yKey: "q_like_cooking_yes"},
+        {id: "learnYoutube", key: "q_learn_yt", yKey: "q_learn_yt_yes"},
+        {id: "cookConfident", key: "q_confident", yKey: "q_confident_yes"},
+        {id: "singSong", key: "q_sing", yKey: "q_sing_yes"},
+        {id: "tutor", key: "q_tutor", yKey: "q_tutor_yes"},
+    ].map(q => `
+        <div class="question-block">
+            <label class="question-label" data-i18n="${q.key}"></label>
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
+                <label class="checkbox-option"><input type="checkbox" name="${q.id}" value="Yes" onclick="singleSelect(this, '${q.id}')"> <span data-i18n="${q.yKey}"></span></label>
+                <label class="checkbox-option"><input type="checkbox" name="${q.id}" value="No" onclick="singleSelect(this, '${q.id}')"> <span data-i18n="no">No</span></label>
+            </div>
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+        </div>`).join('');
+
+    document.getElementById('yesNoContainer').innerHTML = [
+        {id: "afraidDog", key: "q_dog", yKey: "q_afraid_yes", alert: false},
+        {id: "afraidCat", key: "q_cat", yKey: "q_afraid_yes", alert: false},
+        {id: "tattoos", key: "q_tattoo", yKey: "q_tattoo_yes", alert: true, alertMsgKey: "tattoo_msg"},
+        {id: "smokeDrink", key: "q_smoke", yKey: "q_tattoo_yes", alert: false},
+        {id: "allergies", key: "q_allergy", yKey: "q_tattoo_yes", alert: false},
+        {id: "chronic", key: "q_chronic", yKey: "q_tattoo_yes", alert: false},
+        {id: "consent", key: "q_consent", yKey: "q_consent_yes", alert: false, confirm: true},
+        {id: "fingers", key: "q_fingers", yKey: "q_fingers_yes", noKey: "q_fingers_no", alert: false} 
+    ].map(q => `
+        <div class="question-block">
+            <label class="question-label" data-i18n="${q.key}"></label>
+            <div class="checkbox-group" onfocusout="validateGroup(this)">
+                <label class="checkbox-option"><input type="checkbox" name="${q.id}" value="Yes" onclick="singleSelect(this, '${q.id}'); ${q.alert ? `toggleTattooAlert(true)` : ''}"> <span data-i18n="${q.yKey}"></span></label>
+                <label class="checkbox-option"><input type="checkbox" name="${q.id}" value="No" onclick="singleSelect(this, '${q.id}'); ${q.alert ? `toggleTattooAlert(false)` : ''}"> <span data-i18n="${q.noKey || 'no'}">No</span></label>
+            </div>
+            ${q.alert ? `<div id="tattooAlert" class="alert-box hidden" data-i18n="${q.alertMsgKey}"></div>` : ''}
+             <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
+        </div>`).join('');
+
+    function saveLocal() {
+        const data = {};
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            if(el.type === 'checkbox' || el.type === 'radio') {
+                if(el.checked) {
+                    if(!data[el.name]) data[el.name] = [];
+                    data[el.name].push(el.value);
+                }
+            } else if(el.id) {
+                data[el.id] = el.value;
+            }
+        });
+        localStorage.setItem('helperFormData', JSON.stringify(data));
+        return data;
+    }
+    
+    function restoreLocal() { localStorage.removeItem('helperFormData'); }
+
     async function submitRegistration() {
+        if(ENABLE_VALIDATION) {
+            const pf = document.getElementById('pageFinal');
+            const groups = pf.querySelectorAll('.checkbox-group');
+            let valid = true;
+            groups.forEach(g => { validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
+            if(!valid) { alert("Please answer all questions"); return; }
+        }
+        
         const btn = document.querySelector('.btn-submit');
-        const origText = btn.textContent;
         btn.innerHTML = 'Submitting...';
         btn.disabled = true;
 
         const data = saveLocal();
+        data.targetSheetName = targetSheetName;
+        data.submissionLanguage = currentLang;
         
-        if(window.saveToFirebase) {
-            const success = await window.saveToFirebase(data);
-            if(success) {
-                goToPage('pageSuccess');
-                localStorage.removeItem('helperFormData');
+        console.log("Submitting to Sheet: " + targetSheetName, data);
+        
+        setTimeout(() => {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
+            document.getElementById('pageSuccess').classList.remove('hidden');
+
+            const sTitle = document.getElementById('successTitle');
+            const sMsg = document.getElementById('successMsg');
+            const pMsg = document.getElementById('photoMsg');
+            const wBtn = document.getElementById('whatsappBtnText');
+            const waText = document.getElementById('agencyWaText');
+
+            const d = dict[currentLang];
+            if(currentLang === 'id') {
+                sTitle.textContent = "Pendaftaran Anda berhasil";
+                sMsg.textContent = ""; 
+                sMsg.style.display = 'none';
+                pMsg.innerHTML = `${d.photo_msg_part1}<span class="font-large">${d.photo_msg_highlight}</span>${d.photo_msg_part2}`;
+                wBtn.textContent = "Kirim Foto via WhatsApp";
+                waText.textContent = d.agency_wa;
             } else {
-                btn.innerHTML = origText;
-                btn.disabled = false;
+                sTitle.textContent = "Registration Submitted!";
+                sMsg.style.display = 'none'; 
+                pMsg.innerHTML = `${d.photo_msg_part1}<span class="font-large">${d.photo_msg_highlight}</span>${d.photo_msg_part2}`;
+                wBtn.textContent = "Send Photo on WhatsApp";
+                waText.textContent = d.agency_wa;
             }
-        }
+        }, 1500);
     }
 
     // Init
     window.onload = function() {
         restoreLocal();
-        setLanguage('en'); // Default english
+        document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
+        document.getElementById('pageWelcome').classList.remove('hidden');
+        setLanguage('en'); 
     };
-
 </script>
 
 </body>
