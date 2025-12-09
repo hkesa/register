@@ -29,12 +29,9 @@
         .lang-btn { padding: 10px 20px; border: 1px solid #2563eb; border-radius: 20px; background: white; color: #2563eb; cursor: pointer; font-weight: bold; font-size: 21px !important; }
         .lang-btn.active { background: #2563eb; color: white; }
         .alert-box { background-color: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin-top: 5px; font-weight: bold; font-size: 16px !important; }
-        
-        /* Validation Styles */
         .error-msg { background-color: #fee2e2; color: #991b1b; padding: 5px 10px; border-radius: 5px; margin-top: 5px; font-weight: bold; font-size: 16px !important; display: none; }
         .error-msg.visible { display: block; }
         .input-error { border: 2px solid #ef4444 !important; background-color: #fef2f2; }
-
         .highlight-header { background-color: #fee2e2; color: #991b1b !important; padding: 10px; border-radius: 8px; }
         .member-label-highlight { background-color: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; }
         .hidden { display: none !important; }
@@ -42,6 +39,7 @@
         body { background-color: #f3f4f6; }
         .nav-buttons { display: flex; gap: 10px; width: 100%; margin-top: 20px; }
         .nav-buttons button { flex: 1; margin-top: 0; }
+        .msg-text p { margin-bottom: 15px; text-align: justify; }
     </style>
 </head>
 <body>
@@ -99,7 +97,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.30 (Fixed)</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.38</div>
     </div>
 
     <!-- PAGE 1 -->
@@ -160,8 +158,10 @@
         <div class="question-block"><label class="question-label" data-i18n="mandarin_q">Your Mandarin Language?</label><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="checkbox" name="mandarin" value="Learning" onclick="singleSelect(this, 'mandarin')"> <span data-i18n="lang_learning">Learning</span></label><label class="checkbox-option"><input type="checkbox" name="mandarin" value="Average" onclick="singleSelect(this, 'mandarin')"> <span data-i18n="lang_average">Average</span></label><label class="checkbox-option"><input type="checkbox" name="mandarin" value="Good" onclick="singleSelect(this, 'mandarin')"> <span data-i18n="lang_good">Good</span></label></div><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>
         
         <div class="question-block"><label class="question-label" data-i18n="hk_years_q">How Many Years Have You Worked in Hong Kong? (Only Domestic Helper Experience)</label><select id="hkExperienceYears" class="dynamic-select" onblur="validateField(this)"></select><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>
-        <!-- Country Exp -->
+        
+        <!-- NEW OTHER COUNTRY LOGIC -->
         <div id="otherCountryExpContainer"></div>
+
         <!-- Skills -->
         <div id="skillsContainer"></div>
 
@@ -188,6 +188,23 @@
             <button class="btn-primary btn-submit" onclick="submitRegistration()" data-i18n="btn_submit">Submit Registration</button>
         </div>
     </div>
+    
+    <!-- OVERSEAS MESSAGE PAGE -->
+    <div id="pageOverseasMsg" class="page-section hidden">
+        <div class="msg-text p-4 bg-blue-50 rounded border border-blue-200">
+            <h2 class="text-xl font-bold mb-4" style="color:#1e40af" data-i18n="os_msg_title">Please read below message for all Overseas helpers and applicants:</h2>
+            <div data-i18n="os_msg_content">
+                <p>You pay Zero peso, 0 piso, no salary deduction, you no need to pay any Philippine fees, such as the training fee, medical fee</p>
+                <p>You only need to be responsible for the accommodation and air tickets and transportation go to our Manila agency (in Makati City) for training, medical, other processes and getting your flight from Manila to Hong Kong</p>
+                <p>You need to calculate how much money you need to prepare and you will need to go to Manila agency 2 times, I think usually around 9000 peso, but depending on how far you are from Manila. You pay 9000 peso is for your accommodation and transportation to go to Manila agency 2 times from your hometown</p>
+                <p>If you don't have enough money to pay for transportation, food and accommodation, please start working and prepare the money now. You need to go to the Manila agency 2 times and stay in Manila for a few days each time</p>
+                <p>1st time you go to the Manila agency is when you get hired by our Employer. You go Manila for reporting, do medical and others, stay 6-9 days, after that you can go home to wait Hong Kong visa OR you can find a job work in Manila to wait Hong Kong visa</p>
+                <p>After 6-8 weeks, 2nd time go to Manila agency. When all documents is finished, I will tell you, then you go to Manila stay 2-3 days for getting your flight from Manila to Hong Kong</p>
+                <p>The Hong Kong visa application process to come to Hong Kong takes about 2-3 months, so you need to start working from now until you can fly to Hong Kong. Otherwise, you won't have the financial to support your family's living expenses for these few months and cover the costs of air tickets and accommodation for the flight to Manila for processing</p>
+            </div>
+            <button class="btn-primary mt-6" onclick="handleOverseasNext()" data-i18n="btn_understand">Understand and Next Page</button>
+        </div>
+    </div>
 
     <!-- SUCCESS -->
     <div id="pageSuccess" class="page-section hidden text-center">
@@ -202,7 +219,7 @@
 </div>
 
 <script>
-    // --- 1. GLOBAL VARIABLES ---
+    // --- 1. GLOBALS ---
     var MAX_JOBS = 5; 
     var ENABLE_VALIDATION = true; // VALIDATION ENABLED
     var currentLang = 'en';
@@ -225,23 +242,27 @@
             passport_q: "Your Passport Expiry Date?", passport_alert: "Your passport is about to expire, please renew it as soon as possible", dob_q: "Your Date of Birth?",
             religion_q: "Your Religion?", rel_no: "No religion", rel_catholic: "Catholic", rel_christian: "Christian", rel_muslim: "Muslim", rel_buddhist: "Buddhist", rel_other: "Other", rel_other_opt: "Other religion", ph_rel_other: "Fill-in religion",
             marital_q: "Marital Status?", mar_unmarried: "Unmarried, single", mar_partner: "Unmarried partner", mar_living: "Living with partner", mar_married: "Married", mar_divorced: "Divorced", mar_separated: "Separated", mar_singleparent: "Single parent", mar_widowed: "Widowed",
-            edu_q: "Education?", edu_pri: "Primary school", edu_sec: "Secondary school", edu_col: "College", edu_voc: "Vocational school", edu_uni: "University",
+            edu_q: "Education?", edu_pri: "Primary school", edu_sec: "Secondary school", edu_col: "College", edu_voc: "Vocational school", edu_uni: "Universitas",
             height_q: "Your Height (cm)?", height_alert: "Please check if your height was entered incorrectly", weight_q: "Your Weight (kg)?", spouse_name_q: "Your Spouse Name?", spouse_job_q: "Spouse's Job Occupation?",
             siblings_q: "Number of Siblings?", sibling_pos_q: "My Position Among Siblings?", sons_q: "How Many Sons Do You Have?", sons_age_q: "How Old Are Your All Sons?", opt_noson: "No son", daughters_q: "How Many Daughters Do You Have?", daughters_age_q: "How Old Are Your All Daughters?", opt_nodaughter: "No daughter",
             whatsapp_q: "Your WhatsApp Number? Please Include Country Code", homephone_q: "Your Home Country Mobile Phone Number? Please Include Country Code", referrer_q: "Who Referred You To Our Agency? (if any)", yes_referrer: "Yes, I have referrer", no_referrer: "No", referrer_name_q: "Name of Referrer", referrer_phone_q: "Referrer’s WhatsApp Number? Please Include Country Code", address_q: "Your Home Address? (Only Write Province, State, City)",
             btn_next: "Save And Next Page", btn_prev: "Previous Page", btn_submit: "Submit Registration",
-            skills_title: "Skills Information", cantonese_q: "Your Cantonese Language?", english_q: "Your English Language?", mandarin_q: "Your Mandarin Language?", lang_learning: "Learning", lang_average: "Average", lang_good: "Good", hk_years_q: "How Many Years Have You Worked in Hong Kong? (Only Domestic Helper Experience)",
-            skill_newborn: "Are You Willing to Take Care of Newborn Babies?", skill_children: "Are You Willing to Take Care of Children?", skill_elderly: "Are You Willing to Take Care of Elderly?", skill_disabled: "Are You Willing to Take Care of Disabled Persons?", skill_pets: "Are You Willing to Take Care of Pets?", skill_cook: "Are You Willing to Cook?", yes_willing: "Yes, willing", no: "No",
+            skills_title: "Skills Information", cantonese_q: "Your Cantonese Language?", english_q: "Your English Language?", mandarin_q: "Your Mandarin Language?", lang_learning: "Sedang Belajar", lang_average: "Rata-rata", lang_good: "Bagus", hk_years_q: "Berapa Tahun Anda Bekerja di Hong Kong? (Hanya Pengalaman PRT)",
+            skill_newborn: "Apakah Anda Bersedia Merawat Bayi Baru Lahir?", skill_children: "Apakah Anda Bersedia Merawat Anak-anak?", skill_elderly: "Apakah Anda Bersedia Merawat Lansia?", skill_disabled: "Apakah Anda Bersedia Merawat Orang Cacat?", skill_pets: "Apakah Anda Bersedia Merawat Hewan Peliharaan?", skill_cook: "Apakah Anda Bersedia Memasak?", yes_willing: "Ya, bersedia", no: "Tidak",
             cnt_sg: "How Many Years Have You Worked in Singapore? (Only Domestic Helper Experience)", cnt_tw: "How Many Years Have You Worked in Taiwan? (Only Domestic Helper Experience)", cnt_my: "How Many Years Have You Worked in Malaysia? (Only Domestic Helper Experience)", cnt_me: "How Many Years Have You Worked in Middle East? (Only Domestic Helper Experience)", cnt_sa: "How Many Years Have You Worked in Saudi Arabia? (Only Domestic Helper Experience)", cnt_id: "How Many Years Have You Worked in Indonesia? (Only Domestic Helper Experience)", cnt_ph: "How Many Years Have You Worked in Philippines? (Only Domestic Helper Experience)", cnt_other: "How Many Years Have You Worked in other Country? (Only Domestic Helper Experience)", ph_cnt_other: "Fill-in other Country",
+            cnt_other_q_check: "How Many Years Have You Worked in other Country? (Only Domestic Helper Experience)", cnt_yes_worked: "Yes, I have worked in other country", cnt_no_worked: "No other country",
             work_latest_title: "Latest Domestic Helper Work Experience (Including Working in Hong Kong, in Philippines, in Indonesia, in Other Countries, Only Domestic Helper Experience)", work_other_title: "Other Domestic Helper Experience", work_country: "Country of Employment? (If Hong Kong, Write Location, e.g. Causeway Bay)", work_emp_nat: "Employer's Nationality?", work_start: "In This Employer, Start Work Year And Start Work Month?", work_end: "In This Employer, End Work Year And End Work Month?", work_size: "Employer’s House Size? (e.g. 1000 square feet)", work_fam_count: "Number of Employer Family Members? (Living in The Same Home)", work_fam_age: "Age of Employer Family Members", work_helpers: "Number of Helpers?", work_status: "Contract Status?", work_reason: "Reason for Leaving? (Clear And True Reason)",
             work_dis_q: "In This Employer, Did You Take Care of Disabled Person?", dis_no: "No", dis_bed: "Bedridden care", dis_dis: "Disability care", dis_tra: "Tracheostomy care", dis_wheel: "Wheelchair", dis_walk: "Walking slowly", dis_med: "Medication feeding", dis_bath: "Bathing assistance", dis_stroke: "Stroke", dis_alz: "Alzheimer's disease", dis_park: "Parkinson's disease", dis_other1: "Other disabled person (1)", dis_other2: "Other disabled person (2)", ph_dis_other1: "Fill-in details", ph_dis_other2: "Fill-in details",
             work_pets: "Employer’s Pets?", pet_no: "No pets", pet_s_dog: "Small dog", pet_m_dog: "Medium dog", pet_b_dog: "Big dog", pet_cat: "Cat", pet_rabbit: "Rabbit", pet_other: "Other pet (1)", pet_other2: "Other pet (2)", pet_other3: "Other pet (3)",
             work_resp: "Job Responsibilities?", resp_car: "Car wash", resp_clean: "House cleaning", resp_wash: "Hand washing clothes", resp_market: "I go to supermarket to buy food", resp_wet_market: "I go to Chinese wet-market to buy food", resp_room: "I sharing room with other", resp_cook_c: "Cook Chinese food", resp_cook_w: "Cook Western food", resp_other: "Other responsibilities (1)", resp_other2: "Other responsibilities (2)", resp_other3: "Other responsibilities (3)",
             work_more_q: "Do You Still Have Other Domestic Helper Work Experience in HK OR in Other Countries OR in Philippines OR in Indonesia? (Only Domestic Helper Experience)?", work_more_yes: "Yes, still have other employer", work_more_no_1: "No, only one employer experience", work_more_no_2: "No, only 2 employer experience", work_more_no_3: "No, only 3 employer experience", work_more_no_4: "No, only 4 employer experience", work_more_no_5: "No, only 5 employer experience", work_status_resigned: "I resigned already", work_status_nocontract: "Not contract and can leave anytime",
-            other_q_title: "Other Question", q_like_cooking: "Do You Like Cooking?", q_like_cooking_yes: "Yes, I like", q_learn_yt: "Can You Learn New Dishes by Yourself From YouTube?", q_learn_yt_yes: "Yes, I can", q_confident: "Are You Confident in Your Cooking?", q_confident_yes: "Yes, I am confident", q_sing: "Can You Sing a Song OR Tell a Story to Lull The Child to Sleep?", q_sing_yes: "Yes, I can", q_tutor: "Do You Have Experience Tutoring Children With Their Homework?", q_tutor_yes: "Yes, I have experience", visa_q: "When You Get Your New Visa, Can You Start Working First?", visa_yes: "Yes, I can start work first", visa_no: "No, I will go home first", vacation_q: "When Will You Go Home For Vacation?", stay_home_q: "How Long Will You Stay Home, Then You Back to HK to Work?", q_dog: "Are You Afraid of Dogs?", q_cat: "Are You Afraid of Cats?", q_afraid_yes: "Yes, afraid", q_tattoo: "Do You Have Any Tattoos?", q_tattoo_yes: "Yes, I have", tattoo_msg: "If you have tattoos, please send us the photos later", q_smoke: "Do You Have Smoking OR Drinking Habits?", q_allergy: "Do You Have Any Allergies, illnesses, Diseases, Skin Irritations, Infectious Diseases, or Other Conditions?", q_chronic: "Do You Have Any Chronic illnesses, Require Injections, Take Medication, Need Follow-up Appointments, Diabetes, Heart Disease, or Other Serious illnesses?", q_consent: "Have you read, understood, agreed to, acknowledged, and authorized our Company’s Personal Information Collection Statement, and do you not object to it?", q_consent_yes: "Yes, I agree", q_fingers: "Are Your Fingers And Toes Normal, No More And No Less?", q_fingers_yes: "Yes, normal", q_fingers_no: "No, I have more or fewer",
+            other_q_title: "Other Question", q_like_cooking: "Do You Like Cooking?", q_like_cooking_yes: "Yes, I like", q_learn_yt: "Can You Learn New Dishes by Yourself From YouTube?", q_learn_yt_yes: "Yes, I can", q_confident: "Are You Confident in Your Cooking?", q_confident_yes: "Yes, I am confident", q_sing: "Can You Sing a Song OR Tell a Story to Lull The Child to Sleep?", q_sing_yes: "Yes, I can", q_tutor: "Do You Have Experience Tutoring Children With Their Homework?", q_tutor_yes: "Yes, I have experience", visa_q: "When You Get Your New Visa, Can You Start Working First?", visa_yes: "Yes, I can start work first", visa_no: "No, I will go home first", vacation_q: "When Will You Go Home For Vacation?", stay_home_q: "How Long Will You Stay Home, Then You Back to HK to Work?", q_dog: "Are You Afraid of Dogs?", q_cat: "Are You Afraid of Cats?", q_afraid_yes: "Yes, afraid", q_tattoo: "Do You Have Any Tattoos?", q_tattoo_yes: "Yes, I have", tattoo_msg: "If you have tattoos, please send us the photos later", q_smoke: "Do You Have Smoking OR Drinking Habits?", q_allergy: "Do You Have Any Allergies, illnesses, Diseases, Skin Irritations, Infectious Diseases, or Other Conditions?", q_chronic: "Do You Have Any Chronic illnesses, Require Injections, Take Medication, Need Follow-up Appointments, Diabetes, Heart Disease, or Other Serious illnesses?", q_consent: "Have you read, understood, agreed to, acknowledged, and authorized our Company’s Personal Information Collection Statement, and do you not object to it?", q_consent_yes: "Yes, I agree", q_fingers: "Are Your Fingers And Toes Normal, No More And No Less?", q_fingers_yes: "Yes, normal", q_fingers_no: "No, I have more or fewer", q_confirm: "I confirm that all of the above information is correct, complete, and true. And I will take full responsibility for any errors or omissions. And I also agree to have the Horizon Employment Agency send and use the above my information to all prospective employers?", q_confirm_yes: "I have read, understand, confirm and agree", q_confirm_no: "No",
             ph_qty: "Enter quantity", ph_pet: "Enter pet", ph_resp: "Enter Responsibilities",
             opt_select: "Select", opt_month: "Month", opt_year: "Year", opt_sibling_suf: "sibling", opt_sibling_pos_pre: "Number", opt_week: "week", opt_weeks: "weeks", opt_emp_nat_local: "Local people", opt_emp_nat_foreigner: "Foreigner", opt_emp_nat_chinese: "Chinese", opt_emp_nat_hk: "Hong Kong people", opt_emp_nat_asian: "Asian", opt_only_emp: "Only employer", opt_emp_plus: "employer +", opt_only_me: "1 (only me)", opt_me_plus: "me +", opt_role_adult: "Adult", opt_role_boy: "Boy", opt_role_girl: "Girl", opt_role_twins: "Twins", opt_role_triplets: "Triplets", opt_role_grandpa: "Grandpa", opt_role_grandma: "Grandma", opt_age_start: "Age when you started (From)", opt_age_leave: "Age when you leave (until)", opt_preg: "Female employer is pregnant", opt_never_hk: "0 (Never been to Hong Kong)", opt_20_years: "0 to 20 years", opt_1_son: "1 son", opt_1_daughter: "1 daughter", opt_1_year: "1 year",
-            photo_msg_part1: "Now, please send us your ", photo_msg_highlight: "“half-body” photo", photo_msg_part2: " by clicking the WhatsApp button below", agency_wa: "Our agency WhatsApp is (+852) 96111003"
+            photo_msg_part1: "Now, please send us your ", photo_msg_highlight: "“half-body” photo", photo_msg_part2: " by clicking the WhatsApp button below", agency_wa: "Our agency WhatsApp is (+852) 96111003",
+            os_msg_title: "Please read below message for all Overseas helpers and applicants:",
+            os_msg_content: "<p class='mb-4'>You pay Zero peso, 0 piso, no salary deduction, you no need to pay any Philippine fees, such as the training fee, medical fee</p><p class='mb-4'>You only need to be responsible for the accommodation and air tickets and transportation go to our Manila agency (in Makati City) for training, medical, other processes and getting your flight from Manila to Hong Kong</p><p class='mb-4'>You need to calculate how much money you need to prepare and you will need to go to Manila agency 2 times, I think usually around 9000 peso, but depending on how far you are from Manila. You pay 9000 peso is for your accommodation and transportation to go to Manila agency 2 times from your hometown</p><p class='mb-4'>If you don't have enough money to pay for transportation, food and accommodation, please start working and prepare the money now. You need to go to the Manila agency 2 times and stay in Manila for a few days each time</p><p class='mb-4'>1st time you go to the Manila agency is when you get hired by our Employer. You go Manila for reporting, do medical and others, stay 6-9 days, after that you can go home to wait Hong Kong visa OR you can find a job work in Manila to wait Hong Kong visa</p><p class='mb-4'>After 6-8 weeks, 2nd time go to Manila agency. When all documents is finished, I will tell you, then you go to Manila stay 2-3 days for getting your flight from Manila to Hong Kong</p><p class='mb-4'>The Hong Kong visa application process to come to Hong Kong takes about 2-3 months, so you need to start working from now until you can fly to Hong Kong. Otherwise, you won't have the financial to support your family's living expenses for these few months and cover the costs of air tickets and accommodation for the flight to Manila for processing</p>",
+            btn_understand: "Understand and Next Page"
         },
         id: {
             title_text: "Pendaftaran Online Horizon Employment Agency", error_msg: "Jawab Pertanyaan Ini",
@@ -267,14 +288,17 @@
             work_pets: "Hewan Peliharaan Majikan?", pet_no: "Tidak ada", pet_s_dog: "Anjing kecil", pet_m_dog: "Anjing sedang", pet_b_dog: "Anjing besar", pet_cat: "Kucing", pet_rabbit: "Kelinci", pet_other: "Hewan Lain (1)", pet_other2: "Hewan Lain (2)", pet_other3: "Hewan Lain (3)",
             work_resp: "Tanggung Jawab Pekerjaan?", resp_car: "Cuci mobil", resp_clean: "Bersih-bersih rumah", resp_wash: "Cuci baju tangan", resp_market: "Pergi ke pasar beli makanan", resp_wet_market: "Saya pergi ke pasar basah Cina untuk membeli makanan", resp_room: "Berbagi kamar dengan orang lain", resp_cook_c: "Masak makanan Cina", resp_cook_w: "Masak makanan Barat", resp_other: "Tanggung jawab lainnya (1)", resp_other2: "Tanggung jawab lainnya (2)", resp_other3: "Tanggung jawab lainnya (3)",
             work_more_q: "Apakah Anda Masih Memiliki Pengalaman Kerja PRT Lain di HK, Negara lain, Filipina, Indonesia? (Hanya Pekerjaan PRT)?", work_more_yes: "Ya, masih punya majikan lain", work_more_no_1: "Tidak, hanya 1 pengalaman majikan", work_more_no_2: "Tidak, hanya 2 pengalaman majikan", work_more_no_3: "Tidak, hanya 3 pengalaman majikan", work_more_no_4: "Tidak, hanya 4 pengalaman majikan", work_more_no_5: "Tidak, hanya 5 pengalaman majikan", work_status_resigned: "Saya mengundurkan diri", work_status_nocontract: "Tidak ada kontrak, bisa keluar kapan saja",
-            other_q_title: "Pertanyaan Lain", q_like_cooking: "Apakah Anda Suka Memasak?", q_like_cooking_yes: "Ya, saya suka", q_learn_yt: "Bisakah Anda Belajar Masakan Baru Sendiri Dari YouTube?", q_learn_yt_yes: "Ya, saya bisa", q_confident: "Apakah Anda Percaya Diri dengan Masakan Anda?", q_confident_yes: "Ya, saya percaya diri", q_sing: "Bisakah Anda Menyanyikan Lagu ATAU Bercerita untuk Menidurkan Anak?", q_sing_yes: "Ya, saya bisa", q_tutor: "Apakah Anda Punya Pengalaman Mengajari Anak-anak PR Mereka?", q_tutor_yes: "Ya, saya berpengalaman", visa_q: "Saat Anda Mendapatkan Visa Baru, Bisakah Anda Mulai Bekerja Dulu?", visa_yes: "Ya, saya bisa mulai kerja dulu", visa_no: "Tidak, saya pulang dulu", vacation_q: "Kapan Anda Akan Pulang Untuk Liburan?", stay_home_q: "Berapa Lama Anda Akan Tinggal di Rumah, Lalu Kembali ke HK untuk Bekerja?", q_dog: "Apakah Anda Takut Anjing?", q_cat: "Apakah Anda Takut Kucing?", q_afraid_yes: "Ya, takut", q_tattoo: "Apakah Anda Memiliki Tato?", q_tattoo_yes: "Ya, saya punya", tattoo_msg: "Jika Anda memiliki tato, silakan kirim foto-fotonya kepada kami nanti", q_smoke: "Apakah Anda Memiliki Kebiasaan Merokok ATAU Minum Alkohol?", q_allergy: "Apakah Anda Memiliki Alergi, Penyakit, Iritasi Kulit, Penyakit Menular, atau Kondisi Lainnya?", q_chronic: "Apakah Anda Memiliki Penyakit Kronis, Perlu Suntikan, Minum Obat, Perlu Janji Temu Lanjutan, Diabetes, Penyakit Jantung, atau Penyakit Serius Lainnya?", q_consent: "Apakah Anda sudah membaca, memahami, menyetujui, mengakui, dan memberikan wewenang pada Pernyataan Pengumpulan Informasi Pribadi Perusahaan kami, dan Anda tidak keberatan?", q_consent_yes: "Ya, saya setuju", q_fingers: "Apakah jari tangan dan jari kaki Anda normal, tidak lebih dan tidak kurang?", q_fingers_yes: "Ya, normal", q_fingers_no: "Tidak, saya punya lebih atau kurang",
+            other_q_title: "Pertanyaan Lain", q_like_cooking: "Apakah Anda Suka Memasak?", q_like_cooking_yes: "Ya, saya suka", q_learn_yt: "Bisakah Anda Belajar Masakan Baru Sendiri Dari YouTube?", q_learn_yt_yes: "Ya, saya bisa", q_confident: "Apakah Anda Percaya Diri dengan Masakan Anda?", q_confident_yes: "Ya, saya percaya diri", q_sing: "Bisakah Anda Menyanyikan Lagu ATAU Bercerita untuk Menidurkan Anak?", q_sing_yes: "Ya, saya bisa", q_tutor: "Apakah Anda Punya Pengalaman Mengajari Anak-anak PR Mereka?", q_tutor_yes: "Ya, saya berpengalaman", visa_q: "Saat Anda Mendapatkan Visa Baru, Bisakah Anda Mulai Bekerja Dulu?", visa_yes: "Ya, saya bisa mulai kerja dulu", visa_no: "Tidak, saya pulang dulu", vacation_q: "Kapan Anda Akan Pulang Untuk Liburan?", stay_home_q: "Berapa Lama Anda Akan Tinggal di Rumah, Lalu Kembali ke HK untuk Bekerja?", q_dog: "Apakah Anda Takut Anjing?", q_cat: "Apakah Anda Takut Kucing?", q_afraid_yes: "Ya, takut", q_tattoo: "Apakah Anda Memiliki Tato?", q_tattoo_yes: "Ya, saya punya", tattoo_msg: "Jika Anda memiliki tato, silakan kirim foto-fotonya kepada kami nanti", q_smoke: "Apakah Anda Memiliki Kebiasaan Merokok ATAU Minum Alkohol?", q_allergy: "Apakah Anda Memiliki Alergi, Penyakit, Iritasi Kulit, Penyakit Menular, atau Kondisi Lainnya?", q_chronic: "Apakah Anda Memiliki Penyakit Kronis, Perlu Suntikan, Minum Obat, Perlu Janji Temu Lanjutan, Diabetes, Penyakit Jantung, atau Penyakit Serius Lainnya?", q_consent: "Apakah Anda sudah membaca, memahami, menyetujui, mengakui, dan memberikan wewenang pada Pernyataan Pengumpulan Informasi Pribadi Perusahaan kami, dan Anda tidak keberatan?", q_consent_yes: "Ya, saya setuju", q_fingers: "Apakah jari tangan dan jari kaki Anda normal, tidak lebih dan tidak kurang?", q_fingers_yes: "Ya, normal", q_fingers_no: "Tidak, saya punya lebih atau kurang", q_confirm: "Saya mengonfirmasi bahwa semua informasi di atas benar, lengkap, dan benar. Saya akan bertanggung jawab penuh atas segala kesalahan atau kelalaian. Saya juga setuju agar Horizon Employment Agency mengirimkan dan menggunakan informasi saya di atas kepada semua calon pemberi kerja.", q_confirm_yes: "Saya telah membaca, memahami, mengonfirmasi dan menyetujui", q_confirm_no: "No",
             ph_qty: "Masukkan jumlah", ph_pet: "Mohon sebutkan", ph_resp: "Mohon sebutkan",
             opt_select: "Pilih", opt_month: "Bulan", opt_year: "Tahun", opt_sibling_suf: "saudara", opt_sibling_pos_pre: "Anak pertama", opt_week: "minggu", opt_weeks: "minggu", opt_emp_nat_local: "Orang Lokal", opt_emp_nat_foreigner: "Orang Asing", opt_emp_nat_chinese: "Orang Cina", opt_emp_nat_hk: "Orang Hong Kong", opt_emp_nat_asian: "Orang Asia", opt_only_emp: "Hanya majikan", opt_emp_plus: "Majikan +", opt_only_me: "1 (Saya sendiri)", opt_me_plus: "saya +", opt_role_adult: "Dewasa", opt_role_boy: "Anak Laki-laki", opt_role_girl: "Anak Perempuan", opt_role_twins: "Anak Kembar", opt_role_triplets: "Kembar Tiga", opt_role_grandpa: "Kakek", opt_role_grandma: "Nenek", opt_age_start: "Usia mulai (Dari)", opt_age_leave: "Usia selesai (Sampai)", opt_preg: "Majikan perempuan sedang hamil", opt_never_hk: "0 (Belum pernah ke Hong Kong)", opt_20_years: "0 sampai 20 tahun", opt_1_son: "1 putra", opt_1_daughter: "1 anak perempuan", opt_1_year: "1 tahun",
-            photo_msg_part1: "Sekarang, kirim ", photo_msg_highlight: "foto \"setengah badan\"", photo_msg_part2: " Anda dengan klik tombol WhatsApp di bawah", agency_wa: "Agensi kami WhatsApp adalah (+852) 96111003"
+            photo_msg_part1: "Sekarang, kirim ", photo_msg_highlight: "foto \"setengah badan\"", photo_msg_part2: " Anda dengan klik tombol WhatsApp di bawah", agency_wa: "Agensi kami WhatsApp adalah (+852) 96111003",
+            os_msg_title: "Please read below message for all Overseas helpers and applicants:",
+            os_msg_content: "<p class='mb-4'>You pay Zero peso, 0 piso, no salary deduction, you no need to pay any Philippine fees, such as the training fee, medical fee</p><p class='mb-4'>You only need to be responsible for the accommodation and air tickets and transportation go to our Manila agency (in Makati City) for training, medical, other processes and getting your flight from Manila to Hong Kong</p><p class='mb-4'>You need to calculate how much money you need to prepare and you will need to go to Manila agency 2 times, I think usually around 9000 peso, but depending on how far you are from Manila. You pay 9000 peso is for your accommodation and transportation to go to Manila agency 2 times from your hometown</p><p class='mb-4'>If you don't have enough money to pay for transportation, food and accommodation, please start working and prepare the money now. You need to go to the Manila agency 2 times and stay in Manila for a few days each time</p><p class='mb-4'>1st time you go to the Manila agency is when you get hired by our Employer. You go Manila for reporting, do medical and others, stay 6-9 days, after that you can go home to wait Hong Kong visa OR you can find a job work in Manila to wait Hong Kong visa</p><p class='mb-4'>After 6-8 weeks, 2nd time go to Manila agency. When all documents is finished, I will tell you, then you go to Manila stay 2-3 days for getting your flight from Manila to Hong Kong</p><p class='mb-4'>The Hong Kong visa application process to come to Hong Kong takes about 2-3 months, so you need to start working from now until you can fly to Hong Kong. Otherwise, you won't have the financial to support your family's living expenses for these few months and cover the costs of air tickets and accommodation for the flight to Manila for processing</p>",
+            btn_understand: "Understand and Next Page"
         }
     };
 
-    // --- 3. HELPER FUNCTIONS ---
+    // --- 3. UTILITY FUNCTIONS ---
     function saveLocal() {
         try {
             var data = {};
@@ -302,6 +326,14 @@
         var parent = input.parentElement;
         var errorMsg = parent ? (parent.querySelector('.error-msg') || parent.parentElement.querySelector('.error-msg')) : null;
         if(!errorMsg) return;
+        
+        // Skip validation if parent is hidden
+        if(input.offsetParent === null) {
+             errorMsg.classList.remove('visible');
+             input.classList.remove('input-error');
+             return;
+        }
+
         if(!input.value || input.value.trim() === '') {
             errorMsg.classList.add('visible');
             input.classList.add('input-error');
@@ -313,12 +345,15 @@
 
     function validateGroup(container) {
         if(!ENABLE_VALIDATION) return;
+        if(container.offsetParent === null) return; // Skip hidden
+        
         var inputs = container.querySelectorAll('input');
         var checked = false;
         for (var i = 0; i < inputs.length; i++) { if(inputs[i].checked) checked = true; }
         var parent = container.parentElement;
         var errorMsg = parent ? parent.querySelector('.error-msg') : null;
         if(!errorMsg) return;
+        
         if(!checked) { errorMsg.classList.add('visible'); } 
         else { errorMsg.classList.remove('visible'); }
     }
@@ -348,6 +383,14 @@
         var el = document.getElementById('referrerDetails');
         if(el) {
             if(isYes) el.classList.remove('hidden'); else el.classList.add('hidden');
+        }
+    }
+
+    function toggleOtherCountryInput(isYes) {
+        var detailContainer = document.getElementById('cnt_other_details');
+        if(detailContainer) {
+            if(isYes) detailContainer.classList.remove('hidden');
+            else detailContainer.classList.add('hidden');
         }
     }
 
@@ -394,7 +437,7 @@
             for(var i=1; i<=count; i++) {
                 var ph = type === 'sons' ? (currentLang === 'id' ? "Umur anak laki-laki" : "Age of son") : (currentLang === 'id' ? "Umur anak perempuan" : "Age of daughter");
                 ph += ' ' + i;
-                inputContainer.innerHTML += '<input type="number" placeholder="'+ph+'" class="mb-2" onblur="validateField(this)">';
+                inputContainer.innerHTML += '<input type="number" placeholder="'+ph+'" class="mb-2" onblur="validateField(this)" required>';
             }
         } else container.classList.add('hidden');
     }
@@ -443,7 +486,7 @@
             var roleOpts = '<option value="">'+roleTxt+'</option>' + roles.map(function(x){ return '<option value="'+x+'">'+dict[currentLang]['opt_role_'+x.toLowerCase()]+'</option>'; }).join('');
 
             for(var i=1; i<=count; i++) {
-                rows.innerHTML += '<div class="p-2 border rounded bg-gray-50 member-row"><span class="font-bold member-label-highlight">'+memTxt+' '+i+':</span><select class="w-full mb-1" onchange="handleRoleChange(this)" onblur="validateField(this)">'+roleOpts+'</select><div class="flex flex-col gap-2 age-inputs mt-2"><div class="w-full"><label class="text-xs font-bold">'+ageSt+'</label><select class="w-full" onblur="validateField(this)">'+ageOpts+'</select></div><div class="w-full"><label class="text-xs font-bold">'+ageLv+'</label><select class="w-full" onblur="validateField(this)">'+ageOpts+'</select></div></div></div>';
+                rows.innerHTML += '<div class="p-2 border rounded bg-gray-50 member-row"><span class="font-bold member-label-highlight">'+memTxt+' '+i+':</span><select class="w-full mb-1" onchange="handleRoleChange(this)" onblur="validateField(this)">'+roleOpts+'</select><div class="flex flex-col gap-2 age-inputs mt-2"><div class="w-full"><label class="text-xs font-bold">'+ageSt+'</label><select class="w-full" onblur="validateField(this)">'+ageOpts+'</select></div><div class="w-full"><label class="text-xs font-bold">'+ageLv+'</label><select class="w-full" onblur="validateField(this)">'+ageOpts+'</select></div></div><div class="error-msg" data-i18n="error_msg" style="display:none">Answer This Question</div></div>';
             }
         } else container.classList.add('hidden');
     }
@@ -482,7 +525,7 @@
 
         var ync = document.getElementById('yesNoContainer');
         if(ync) ync.innerHTML = [
-            {id: "afraidDog", key: "q_dog", yKey: "q_afraid_yes", alert: false}, {id: "afraidCat", key: "q_cat", yKey: "q_afraid_yes", alert: false}, {id: "tattoos", key: "q_tattoo", yKey: "q_tattoo_yes", alert: true, alertMsgKey: "tattoo_msg"}, {id: "smokeDrink", key: "q_smoke", yKey: "q_tattoo_yes", alert: false}, {id: "allergies", key: "q_allergy", yKey: "q_tattoo_yes", alert: false}, {id: "chronic", key: "q_chronic", yKey: "q_tattoo_yes", alert: false}, {id: "consent", key: "q_consent", yKey: "q_consent_yes", alert: false, confirm: true}, {id: "fingers", key: "q_fingers", yKey: "q_fingers_yes", noKey: "q_fingers_no", alert: false} 
+            {id: "afraidDog", key: "q_dog", yKey: "q_afraid_yes", alert: false}, {id: "afraidCat", key: "q_cat", yKey: "q_afraid_yes", alert: false}, {id: "tattoos", key: "q_tattoo", yKey: "q_tattoo_yes", alert: true, alertMsgKey: "tattoo_msg"}, {id: "smokeDrink", key: "q_smoke", yKey: "q_tattoo_yes", alert: false}, {id: "allergies", key: "q_allergy", yKey: "q_tattoo_yes", alert: false}, {id: "chronic", key: "q_chronic", yKey: "q_tattoo_yes", alert: false}, {id: "consent", key: "q_consent", yKey: "q_consent_yes", alert: false, confirm: true}, {id: "fingers", key: "q_fingers", yKey: "q_fingers_yes", noKey: "q_fingers_no", alert: false}, {id: "confirm", key: "q_confirm", yKey: "q_confirm_yes", noKey: "q_confirm_no", alert: false}
         ].map(function(q){ return '<div class="question-block"><label class="question-label" data-i18n="'+q.key+'"></label><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="checkbox" name="'+q.id+'" value="Yes" onclick="singleSelect(this, \''+q.id+'\'); '+(q.alert ? 'toggleTattooAlert(true)' : '')+'"> <span data-i18n="'+q.yKey+'"></span></label><label class="checkbox-option"><input type="checkbox" name="'+q.id+'" value="No" onclick="singleSelect(this, \''+q.id+'\'); '+(q.alert ? 'toggleTattooAlert(false)' : '')+'"> <span data-i18n="'+(q.noKey || 'no')+'">No</span></label></div>'+(q.alert ? '<div id="tattooAlert" class="alert-box hidden" data-i18n="'+q.alertMsgKey+'"></div>' : '')+'<div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>'; }).join('');
     }
 
@@ -494,43 +537,69 @@
         var titleText = index === 1 ? '' : ' (' + index + ')';
         var noOptionKey = 'work_more_no_' + index;
 
-        // Note: Using concatenated strings for safety in older parsers if backticks fail
-        var html = '<h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2 highlight-header"><span data-i18n="'+titleKey+'"></span>'+titleText+'</h2>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_country"></label><input type="text" id="w'+index+'_country" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg"></div>' +
-            '<label class="question-label mt-3" data-i18n="work_emp_nat"></label><div class="checkbox-group" onfocusout="validateGroup(this)">' +
-            ['Local people', 'Foreigner', 'Chinese', 'Hong Kong people', 'Asian'].map(function(o){ return '<label class="checkbox-option"><input type="radio" name="w'+index+'_emp_nat" value="'+o+'"> '+o+'</label>'; }).join('') +
-            '</div><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_start"></label><div class="flex gap-2"><select id="w'+index+'_startMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select><select id="w'+index+'_startYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_end"></label><div class="flex gap-2"><select id="w'+index+'_endMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select><select id="w'+index+'_endYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_size"></label><input type="number" id="w'+index+'_houseSize" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_fam_count"></label><select id="w'+index+'_famCount" onchange="renderFamMembers('+index+'); validateField(this)" onblur="validateField(this)"></select><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div id="w'+index+'_famDetails" class="question-block hidden"><label class="question-label" data-i18n="work_fam_age"></label><div id="w'+index+'_famRows" class="flex flex-col gap-3"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_helpers"></label><select id="w'+index+'_helpers" onblur="validateField(this)"></select><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_status"></label><div class="checkbox-group" onfocusout="validateGroup(this)">' +
-            '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Finished contract" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="hk_finish"></span></label>' +
-            '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Employer terminated me already" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="hk_terminated"></span></label>' +
-            '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="I resigned already" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="work_status_resigned"></span></label>' +
-            '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Not contract and can leave anytime" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="work_status_nocontract"></span></label></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_reason"></label><textarea id="w'+index+'_reason" class="expandable" rows="3" onblur="validateField(this)"></textarea><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_dis_q"></label><div class="checkbox-group">' +
-            [{id:'dis_no', val:'No'}, {id:'dis_bed', val:'Bedridden care'}, {id:'dis_dis', val:'Disability care'}, {id:'dis_tra', val:'Tracheostomy care'}, {id:'dis_wheel', val:'Wheelchair'}, {id:'dis_walk', val:'Walking slowly'}, {id:'dis_med', val:'Medication feeding'}, {id:'dis_bath', val:'Bathing assistance'}, {id:'dis_stroke', val:'Stroke'}, {id:'dis_alz', val:'Alzheimer\'s disease'}, {id:'dis_park', val:'Parkinson\'s disease'}]
-            .map(function(d){ return '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_disabled" value="'+d.val+'"> <span data-i18n="'+d.id+'">'+d.val+'</span></label>'; }).join('') +
-            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (1)" onchange="toggleInput(\'w'+index+'_disabled_other1_input\', this.checked)"> <span data-i18n="dis_other1">Other disabled person (1)</span></div><input type="text" id="w'+index+'_disabled_other1_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"></label>' +
-            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (2)" onchange="toggleInput(\'w'+index+'_disabled_other2_input\', this.checked)"> <span data-i18n="dis_other2">Other disabled person (2)</span></div><input type="text" id="w'+index+'_disabled_other2_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"></label></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group">' +
-            [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.replace(/\s/g,'')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.replace(/\s/g,'')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('') +
-            '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div>' +
-            '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div>' +
-            '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_resp"></label><div class="checkbox-group" onfocusout="validateGroup(this)">' +
-            [{id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'}, {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_wet_market', val: 'I go to Chinese wet-market to buy food'}, {id: 'resp_room', val: 'I sharing room with other'}, {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}]
-            .map(function(r){ return '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_resp" value="'+r.val+'"> <span data-i18n="'+r.id+'">'+r.val+'</span></label>'; }).join('') +
-            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other" onchange="toggleInput(\'w'+index+'_resp_other_input\', this.checked)"> <span data-i18n="resp_other">Other responsibilities (1)</span></div><input type="text" id="w'+index+'_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label>' +
-            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other2" onchange="toggleInput(\'w'+index+'_resp_other2_input\', this.checked)"> <span data-i18n="resp_other2">Other responsibilities (2)</span></div><input type="text" id="w'+index+'_resp_other2_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label>' +
-            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other3" onchange="toggleInput(\'w'+index+'_resp_other3_input\', this.checked)"> <span data-i18n="resp_other3">Other responsibilities (3)</span></div><input type="text" id="w'+index+'_resp_other3_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="question-block"><label class="question-label" data-i18n="work_more_q"></label><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="checkbox" name="w'+index+'_more" value="Yes" onclick="singleSelect(this, \'w'+index+'_more\')"> <span data-i18n="work_more_yes"></span></label><label class="checkbox-option"><input type="checkbox" name="w'+index+'_more" value="No" onclick="singleSelect(this, \'w'+index+'_more\')"> <span data-i18n="'+noOptionKey+'"></span></label></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
-            '<div class="nav-buttons"><button class="btn-primary btn-prev" onclick="handleWorkPrev('+index+')" data-i18n="btn_prev"></button><button class="btn-primary" onclick="handleWorkNext('+index+')" data-i18n="btn_next"></button></div>';
+        var html = '';
+        html += '<h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2 highlight-header"><span data-i18n="'+titleKey+'"></span>'+titleText+'</h2>';
         
+        // Country
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_country"></label><input type="text" id="w'+index+'_country" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg"></div>';
+        html += '<label class="question-label mt-3" data-i18n="work_emp_nat"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
+        html += ['Local people', 'Foreigner', 'Chinese', 'Hong Kong people', 'Asian'].map(function(o){ return '<label class="checkbox-option"><input type="radio" name="w'+index+'_emp_nat" value="'+o+'"> '+o+'</label>'; }).join('');
+        html += '</div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Start Date
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_start"></label><div class="flex gap-2"><select id="w'+index+'_startMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select><select id="w'+index+'_startYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select></div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // End Date
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_end"></label><div class="flex gap-2"><select id="w'+index+'_endMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select><select id="w'+index+'_endYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select></div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Size
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_size"></label><input type="number" id="w'+index+'_houseSize" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Fam Count
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_fam_count"></label><select id="w'+index+'_famCount" onchange="renderFamMembers('+index+'); validateField(this)" onblur="validateField(this)"></select><div class="error-msg" data-i18n="error_msg"></div></div>';
+        html += '<div id="w'+index+'_famDetails" class="question-block hidden"><label class="question-label" data-i18n="work_fam_age"></label><div id="w'+index+'_famRows" class="flex flex-col gap-3"></div></div>';
+        
+        // Helpers
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_helpers"></label><select id="w'+index+'_helpers" onblur="validateField(this)"></select><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Status
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_status"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
+        html += '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Finished contract" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="hk_finish"></span></label>';
+        html += '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Employer terminated me already" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="hk_terminated"></span></label>';
+        html += '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="I resigned already" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="work_status_resigned"></span></label>';
+        html += '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Not contract and can leave anytime" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="work_status_nocontract"></span></label></div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Reason
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_reason"></label><textarea id="w'+index+'_reason" class="expandable" rows="3" onblur="validateField(this)"></textarea><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Disabled
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_dis_q"></label><div class="checkbox-group">';
+        html += [{id:'dis_no', val:'No'}, {id:'dis_bed', val:'Bedridden care'}, {id:'dis_dis', val:'Disability care'}, {id:'dis_tra', val:'Tracheostomy care'}, {id:'dis_wheel', val:'Wheelchair'}, {id:'dis_walk', val:'Walking slowly'}, {id:'dis_med', val:'Medication feeding'}, {id:'dis_bath', val:'Bathing assistance'}, {id:'dis_stroke', val:'Stroke'}, {id:'dis_alz', val:'Alzheimer\'s disease'}, {id:'dis_park', val:'Parkinson\'s disease'}]
+            .map(function(d){ return '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_disabled" value="'+d.val+'"> <span data-i18n="'+d.id+'">'+d.val+'</span></label>'; }).join('');
+        html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (1)" onchange="toggleInput(\'w'+index+'_disabled_other1_input\', this.checked)"> <span data-i18n="dis_other1">Other disabled person (1)</span></div><input type="text" id="w'+index+'_disabled_other1_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"></label>';
+        html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (2)" onchange="toggleInput(\'w'+index+'_disabled_other2_input\', this.checked)"> <span data-i18n="dis_other2">Other disabled person (2)</span></div><input type="text" id="w'+index+'_disabled_other2_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"></label></div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Pets
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group">';
+        html += [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.split(' ').join('')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.split(' ').join('')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('');
+        html += '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div>';
+        html += '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div>';
+        html += '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div></div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Resp
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_resp"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
+        html += [{id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'}, {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_wet_market', val: 'I go to Chinese wet-market to buy food'}, {id: 'resp_room', val: 'I sharing room with other'}, {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}]
+            .map(function(r){ return '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_resp" value="'+r.val+'"> <span data-i18n="'+r.id+'">'+r.val+'</span></label>'; }).join('');
+        html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other" onchange="toggleInput(\'w'+index+'_resp_other_input\', this.checked)"> <span data-i18n="resp_other">Other responsibilities (1)</span></div><input type="text" id="w'+index+'_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label>';
+        html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other2" onchange="toggleInput(\'w'+index+'_resp_other2_input\', this.checked)"> <span data-i18n="resp_other2">Other responsibilities (2)</span></div><input type="text" id="w'+index+'_resp_other2_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label>';
+        html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other3" onchange="toggleInput(\'w'+index+'_resp_other3_input\', this.checked)"> <span data-i18n="resp_other3">Other responsibilities (3)</span></div><input type="text" id="w'+index+'_resp_other3_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label></div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // More
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_more_q"></label><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="checkbox" name="w'+index+'_more" value="Yes" onclick="singleSelect(this, \'w'+index+'_more\')"> <span data-i18n="work_more_yes"></span></label><label class="checkbox-option"><input type="checkbox" name="w'+index+'_more" value="No" onclick="singleSelect(this, \'w'+index+'_more\')"> <span data-i18n="'+noOptionKey+'"></span></label></div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        
+        // Buttons
+        html += '<div class="nav-buttons"><button class="btn-primary btn-prev" onclick="handleWorkPrev('+index+')" data-i18n="btn_prev"></button><button class="btn-primary" onclick="handleWorkNext('+index+')" data-i18n="btn_next"></button></div>';
+
         div.innerHTML = html;
         document.getElementById('workPagesContainer').appendChild(div);
     }
@@ -619,11 +688,13 @@
             var labelText = dict[currentLang][q.id] || "Missing";
             html += '<div class="question-block"><label class="question-label">'+labelText+'</label>';
             if(q.type === 'input_select') {
-                html += '<div class="flex gap-2"><input type="text" id="otherCountryInput" class="w-1/2" placeholder="'+dict[currentLang].ph_cnt_other+'" onblur="validateField(this)"><select id="'+q.id+'_select" class="w-1/2" onblur="validateField(this)"><option value="">'+dict[currentLang].opt_select+'</option>'+opts+'</select></div>';
+                html += '<div class="flex gap-2"><div class="w-full flex flex-col"><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="radio" name="cnt_other_check" value="Yes" onclick="toggleOtherCountryInput(true)"> '+dict[currentLang].cnt_yes_worked+'</label><label class="checkbox-option"><input type="radio" name="cnt_other_check" value="No" onclick="toggleOtherCountryInput(false)"> '+dict[currentLang].cnt_no_worked+'</label></div><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>' + 
+                '<div id="cnt_other_details" class="flex gap-2 mt-2 hidden"><input type="text" id="otherCountryInput" class="w-1/2" placeholder="'+dict[currentLang].ph_cnt_other+'" onblur="validateField(this)"><select id="'+q.id+'_select" class="w-1/2" onblur="validateField(this)"><option value="">'+dict[currentLang].opt_select+'</option>'+opts+'</select></div>';
             } else {
                 html += '<select id="'+q.id+'_select" onblur="validateField(this)"><option value="">'+dict[currentLang].opt_select+'</option>'+opts+'</select>';
+                html += '<div class="error-msg" data-i18n="error_msg">Answer This Question</div>';
             }
-            html += '<div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>';
+            html += '</div>';
         });
         
         container.innerHTML = html;
@@ -665,7 +736,12 @@
         h += '<option value="1">'+dict[currentLang].opt_1_daughter+'</option>';
         for(var i=2; i<=13; i++) h += '<option value="'+i+'">'+i+' '+(i==13?'+':'')+'</option>';
         daughters.innerHTML = h; daughters.value = dV;
-        
+        document.querySelectorAll('#sonsInputs input, #daughtersInputs input').forEach(function(inp){
+             if(currentLang === 'id') {
+                 if(inp.placeholder.includes('Son') || inp.placeholder.includes('son')) inp.placeholder = "Umur anak laki-laki";
+                 if(inp.placeholder.includes('Daughter') || inp.placeholder.includes('daughter')) inp.placeholder = "Umur anak perempuan";
+             }
+        });
         var vac = document.getElementById('vacationMonth');
         var vacV = vac.value;
         var sh = document.getElementById('homeWeeks');
@@ -738,7 +814,7 @@
                  var roleSel = r.querySelector('select');
                  var rV = roleSel.value;
                  roleSel.innerHTML = '<option value="">'+(currentLang==='id'?'Pilih Peran':'Select Role')+'</option>' + 
-                     ['Adult','Boy','Girl','Twins','Triplets','Grandpa','Grandma'].map(function(x){ return '<option value="'+x+'">'+dict[currentLang]['opt_role_'+x.toLowerCase()]+'</option>'; }).join('');
+                     ['Adult','Boy','Girl','Twins','Triplets','Grandpa','Grandma'].map(function(x){ return '<option value="'+x+'">'+dict[currentLang]['opt_role_'+x.toLowerCase()] + '</option>'; }).join('');
                  roleSel.value = rV;
                  var labs = r.querySelectorAll('label');
                  if(labs[0]) labs[0].textContent = dict[currentLang].opt_age_start;
@@ -757,7 +833,7 @@
                  }
              });
         }
-        document.querySelectorAll('input[name="w'+i+'_disabled"]').forEach(function(inp){
+        document.querySelectorAll(`input[name="w${i}_disabled"]`).forEach(function(inp){
              var lbl = inp.parentElement;
              var val = inp.value;
              if(val.includes('Other disabled person (1)')) lbl.lastChild.textContent = " " + dict[currentLang].dis_other1;
@@ -774,6 +850,18 @@
             var group = document.getElementById('welcome_nat_group');
             validateGroup(group);
             if(group.parentElement.querySelector('.error-msg.visible')) return;
+
+            var applyGroup = document.querySelectorAll('input[name="apply_for"]');
+            var applyChecked = false;
+            applyGroup.forEach(function(i){ if(i.checked) applyChecked = true; });
+            var applyErr = applyGroup[0].closest('.question-block').querySelector('.error-msg');
+            if(!applyChecked) { applyErr.classList.add('visible'); return; } else { applyErr.classList.remove('visible'); }
+
+            var skillsGroup = document.querySelectorAll('input[name="skills"]');
+            var skillsChecked = false;
+            skillsGroup.forEach(function(i){ if(i.checked) skillsChecked = true; });
+            var skillsErr = skillsGroup[0].closest('.question-block').querySelector('.error-msg');
+            if(!skillsChecked) { skillsErr.classList.add('visible'); return; } else { skillsErr.classList.remove('visible'); }
         }
 
         var selected = document.querySelector('input[name="seeker_nationality"]:checked');
@@ -782,7 +870,7 @@
         var val = selected.value;
         if(val === 'Filipino') { targetSheetName = 'Phil'; setLanguage('en'); }
         else if (val === 'Indonesian') { targetSheetName = 'Indo'; setLanguage('id'); }
-        else { targetSheetName = 'Phil'; setLanguage('en'); }
+        else { targetSheetName = 'Other'; setLanguage('en'); }
         goToPage('page1');
     }
 
@@ -797,12 +885,27 @@
         if(ENABLE_VALIDATION) {
             var pId = currentPageNum === 1 ? 'page1' : 'page2';
             var p = document.getElementById(pId);
-            var inputs = p.querySelectorAll('input:not(.hidden), select, textarea');
-            var valid = true;
-            inputs.forEach(function(i){ validateField(i); if(i.classList.contains('input-error')) valid = false; });
+            
+            // Validate Groups first
             var groups = p.querySelectorAll('.checkbox-group');
-            groups.forEach(function(g){ validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
-            if(!valid) { alert("Please answer all questions"); return; }
+            var hasError = false;
+            
+            groups.forEach(function(g){ 
+                // Special Skip Logic
+                if(g.offsetParent === null) return; // Hidden
+                validateGroup(g); 
+                if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
+            });
+
+            // Validate Inputs
+            var inputs = p.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), select, textarea');
+            inputs.forEach(function(i){ 
+                if(i.offsetParent === null) return;
+                validateField(i); 
+                if(i.classList.contains('input-error')) hasError = true; 
+            });
+            
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
         
         saveLocal();
@@ -810,7 +913,7 @@
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
              else if(p1Nat.value === 'Indonesian') targetSheetName = 'Indo';
-             else targetSheetName = 'Phil'; 
+             else targetSheetName = 'Other'; 
         }
 
         if(currentPageNum === 1) goToPage('page2');
@@ -820,12 +923,22 @@
     function handleWorkNext(index) {
         if(ENABLE_VALIDATION) {
             var p = document.getElementById('pageWork'+index);
-            var inputs = p.querySelectorAll('input:not(.hidden), select, textarea');
-            var valid = true;
-            inputs.forEach(function(i){ validateField(i); if(i.classList.contains('input-error')) valid = false; });
+            var inputs = p.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), select, textarea');
+            var hasError = false;
+            inputs.forEach(function(i){ 
+                if(i.offsetParent === null) return;
+                validateField(i); 
+                if(i.classList.contains('input-error')) hasError = true; 
+            });
+            
             var groups = p.querySelectorAll('.checkbox-group');
-            groups.forEach(function(g){ validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
-            if(!valid) { alert("Please answer all questions"); return; }
+            groups.forEach(function(g){ 
+                 if(g.offsetParent === null) return;
+                 validateGroup(g); 
+                 if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
+            });
+
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
 
         saveLocal();
@@ -854,14 +967,24 @@
         }
         goToPage('pageWork' + targetPage);
     }
+    
+    function handleOverseasNext() {
+         document.querySelectorAll('.page-section').forEach(function(p){ p.classList.add('hidden'); });
+         document.getElementById('pageSuccess').classList.remove('hidden');
+         window.scrollTo(0,0);
+    }
 
     async function submitRegistration() {
         if(ENABLE_VALIDATION) {
             var pf = document.getElementById('pageFinal');
             var groups = pf.querySelectorAll('.checkbox-group');
-            var valid = true;
-            groups.forEach(function(g){ validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
-            if(!valid) { alert("Please answer all questions"); return; }
+            var hasError = false;
+            groups.forEach(function(g){ 
+                if(g.offsetParent === null) return;
+                validateGroup(g); 
+                if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
+            });
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
         
         var btn = document.querySelector('.btn-submit');
@@ -873,13 +996,12 @@
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
              else if(p1Nat.value === 'Indonesian') targetSheetName = 'Indo';
-             else targetSheetName = 'Phil'; 
+             else targetSheetName = 'Other'; 
         }
         
         data.targetSheetName = targetSheetName;
         data.submissionLanguage = currentLang;
         
-        // UPDATE WITH YOUR APPS SCRIPT URL HERE
         const scriptURL = "https://script.google.com/macros/s/AKfycbzb0sBBOvornl0hh0Bt_WH_h8Nz9csh9j9_sCvMZdQZO_XduolcQM1Q2FVEC-4Lb6salw/exec"; 
         
         try {
@@ -891,27 +1013,41 @@
             });
             console.log("Submitting to Sheet: " + targetSheetName, data);
             
+            // Logic for Overseas Message Page
+            var locInput = document.querySelector('input[name="location"]:checked');
+            var locVal = locInput ? locInput.value : '';
+            
             setTimeout(function() {
-                document.querySelectorAll('.page-section').forEach(function(p){ p.classList.add('hidden'); });
-                document.getElementById('pageSuccess').classList.remove('hidden');
+                // Determine next page based on logic
+                if (currentLang === 'en' && locVal !== 'Hong Kong') {
+                     document.querySelectorAll('.page-section').forEach(function(p){ p.classList.add('hidden'); });
+                     document.getElementById('pageOverseasMsg').classList.remove('hidden');
+                     window.scrollTo(0,0);
+                } else {
+                     document.querySelectorAll('.page-section').forEach(function(p){ p.classList.add('hidden'); });
+                     document.getElementById('pageSuccess').classList.remove('hidden');
+                }
+                
+                // Populate Success Page Text (regardless of when it shows)
                 var sTitle = document.getElementById('successTitle');
                 var sMsg = document.getElementById('successMsg');
                 var pMsg = document.getElementById('photoMsg');
                 var wBtn = document.getElementById('whatsappBtnText');
                 var waText = document.getElementById('agencyWaText');
                 var d = dict[currentLang];
+                
                 if(currentLang === 'id') {
                     sTitle.textContent = "Pendaftaran Anda berhasil";
                     sMsg.style.display = 'none';
                     pMsg.innerHTML = d.photo_msg_part1 + '<span class="font-large">' + d.photo_msg_highlight + '</span>' + d.photo_msg_part2;
-                    wBtn.textContent = "Kirim Foto via WhatsApp";
-                    waText.textContent = d.agency_wa;
+                    if(wBtn) wBtn.textContent = "Kirim Foto via WhatsApp";
+                    if(waText) waText.textContent = d.agency_wa;
                 } else {
                     sTitle.textContent = "Registration Submitted!";
                     sMsg.style.display = 'none'; 
                     pMsg.innerHTML = d.photo_msg_part1 + '<span class="font-large">' + d.photo_msg_highlight + '</span>' + d.photo_msg_part2;
-                    wBtn.textContent = "Send Photo on WhatsApp";
-                    waText.textContent = d.agency_wa;
+                    if(wBtn) wBtn.textContent = "Send Photo on WhatsApp";
+                    if(waText) waText.textContent = d.agency_wa;
                 }
             }, 1500);
         } catch(e) {
