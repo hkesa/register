@@ -96,7 +96,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.21</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.31</div>
     </div>
 
     <!-- PAGE 1 -->
@@ -199,35 +199,16 @@
 </div>
 
 <script>
-    // --- CONSTANTS ---
-    const MAX_JOBS = 5; 
-    const ENABLE_VALIDATION = false; 
-    
-    // --- VARIABLES ---
-    let currentLang = 'en';
-    let targetSheetName = 'Phil'; 
+    // --- 1. CONSTANTS & VARIABLES ---
+    var MAX_JOBS = 5; 
+    var ENABLE_VALIDATION = false; 
+    var currentLang = 'en';
+    var targetSheetName = 'Phil'; 
+    var indoMonths = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    var engMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    // --- UTILITY FUNCTIONS ---
-    function saveLocal() {
-        const data = {};
-        document.querySelectorAll('input, select, textarea').forEach(el => {
-            if(el.type === 'checkbox' || el.type === 'radio') {
-                if(el.checked) {
-                    if(!data[el.name]) data[el.name] = [];
-                    data[el.name].push(el.value);
-                }
-            } else if(el.id) {
-                data[el.id] = el.value;
-            }
-        });
-        localStorage.setItem('helperFormData', JSON.stringify(data));
-        return data;
-    }
-    
-    function restoreLocal() { localStorage.removeItem('helperFormData'); }
-
-    // --- DICTIONARY ---
-    const dict = {
+    // --- 2. DICTIONARY ---
+    var dict = {
         // ... Same dict content as previous ...
         en: {
             title_text: "Online Registration of Horizon Employment Agency", error_msg: "Answer This Question",
@@ -256,7 +237,8 @@
             work_more_q: "Do You Still Have Other Domestic Helper Work Experience in HK OR in Other Countries OR in Philippines OR in Indonesia? (Only Domestic Helper Experience)?", work_more_yes: "Yes, still have other employer", work_more_no_1: "No, only one employer experience", work_more_no_2: "No, only 2 employer experience", work_more_no_3: "No, only 3 employer experience", work_more_no_4: "No, only 4 employer experience", work_more_no_5: "No, only 5 employer experience", work_status_resigned: "I resigned already", work_status_nocontract: "Not contract and can leave anytime",
             other_q_title: "Other Question", q_like_cooking: "Do You Like Cooking?", q_like_cooking_yes: "Yes, I like", q_learn_yt: "Can You Learn New Dishes by Yourself From YouTube?", q_learn_yt_yes: "Yes, I can", q_confident: "Are You Confident in Your Cooking?", q_confident_yes: "Yes, I am confident", q_sing: "Can You Sing a Song OR Tell a Story to Lull The Child to Sleep?", q_sing_yes: "Yes, I can", q_tutor: "Do You Have Experience Tutoring Children With Their Homework?", q_tutor_yes: "Yes, I have experience", visa_q: "When You Get Your New Visa, Can You Start Working First?", visa_yes: "Yes, I can start work first", visa_no: "No, I will go home first", vacation_q: "When Will You Go Home For Vacation?", stay_home_q: "How Long Will You Stay Home, Then You Back to HK to Work?", q_dog: "Are You Afraid of Dogs?", q_cat: "Are You Afraid of Cats?", q_afraid_yes: "Yes, afraid", q_tattoo: "Do You Have Any Tattoos?", q_tattoo_yes: "Yes, I have", tattoo_msg: "If you have tattoos, please send us the photos later", q_smoke: "Do You Have Smoking OR Drinking Habits?", q_allergy: "Do You Have Any Allergies, illnesses, Diseases, Skin Irritations, Infectious Diseases, or Other Conditions?", q_chronic: "Do You Have Any Chronic illnesses, Require Injections, Take Medication, Need Follow-up Appointments, Diabetes, Heart Disease, or Other Serious illnesses?", q_consent: "Have you read, understood, agreed to, acknowledged, and authorized our Company’s Personal Information Collection Statement, and do you not object to it?", q_consent_yes: "Yes, I agree", q_fingers: "Are Your Fingers And Toes Normal, No More And No Less?", q_fingers_yes: "Yes, normal", q_fingers_no: "No, I have more or fewer",
             ph_qty: "Enter quantity", ph_pet: "Enter pet", ph_resp: "Enter Responsibilities",
-            opt_select: "Select", opt_month: "Month", opt_year: "Year", opt_sibling_suf: "sibling", opt_sibling_pos_pre: "Number", opt_week: "week", opt_weeks: "weeks", opt_emp_nat_local: "Local people", opt_emp_nat_foreigner: "Foreigner", opt_emp_nat_chinese: "Chinese", opt_emp_nat_hk: "Hong Kong people", opt_emp_nat_asian: "Asian", opt_only_emp: "Only employer", opt_emp_plus: "employer +", opt_only_me: "1 (only me)", opt_me_plus: "me +", opt_role_adult: "Adult", opt_role_boy: "Boy", opt_role_girl: "Girl", opt_role_twins: "Twins", opt_role_triplets: "Triplets", opt_role_grandpa: "Grandpa", opt_role_grandma: "Grandma", opt_age_start: "Age when you started (From)", opt_age_leave: "Age when you leave (until)", opt_preg: "Female employer is pregnant", opt_never_hk: "0 (Never been to Hong Kong)", opt_20_years: "0 to 20 years", opt_1_son: "1 son", opt_1_daughter: "1 daughter", opt_1_year: "1 year", photo_msg_part1: "Now, please send us your ", photo_msg_highlight: "“half-body” photo", photo_msg_part2: " by clicking the WhatsApp button below", agency_wa: "Our agency WhatsApp is (+852) 96111003"
+            opt_select: "Select", opt_month: "Month", opt_year: "Year", opt_sibling_suf: "sibling", opt_sibling_pos_pre: "Number", opt_week: "week", opt_weeks: "weeks", opt_emp_nat_local: "Local people", opt_emp_nat_foreigner: "Foreigner", opt_emp_nat_chinese: "Chinese", opt_emp_nat_hk: "Hong Kong people", opt_emp_nat_asian: "Asian", opt_only_emp: "Only employer", opt_emp_plus: "employer +", opt_only_me: "1 (only me)", opt_me_plus: "me +", opt_role_adult: "Adult", opt_role_boy: "Boy", opt_role_girl: "Girl", opt_role_twins: "Twins", opt_role_triplets: "Triplets", opt_role_grandpa: "Grandpa", opt_role_grandma: "Grandma", opt_age_start: "Age when you started (From)", opt_age_leave: "Age when you leave (until)", opt_preg: "Female employer is pregnant", opt_never_hk: "0 (Never been to Hong Kong)", opt_20_years: "0 to 20 years", opt_1_son: "1 son", opt_1_daughter: "1 daughter", opt_1_year: "1 year",
+            photo_msg_part1: "Now, please send us your ", photo_msg_highlight: "“half-body” photo", photo_msg_part2: " by clicking the WhatsApp button below", agency_wa: "Our agency WhatsApp is (+852) 96111003"
         },
         id: {
             title_text: "Pendaftaran Online Horizon Employment Agency", error_msg: "Jawab Pertanyaan Ini",
@@ -288,16 +270,34 @@
             photo_msg_part1: "Sekarang, kirim ", photo_msg_highlight: "foto \"setengah badan\"", photo_msg_part2: " Anda dengan klik tombol WhatsApp di bawah", agency_wa: "Agensi kami WhatsApp adalah (+852) 96111003"
         }
     };
-    
-    const indoMonths = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-    const engMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    // --- VALIDATION LOGIC ---
+    // --- 3. UTILITY FUNCTIONS ---
+    function saveLocal() {
+        try {
+            var data = {};
+            var inputs = document.querySelectorAll('input, select, textarea');
+            for (var i = 0; i < inputs.length; i++) {
+                var el = inputs[i];
+                if(el.type === 'checkbox' || el.type === 'radio') {
+                    if(el.checked) {
+                        if(!data[el.name]) data[el.name] = [];
+                        data[el.name].push(el.value);
+                    }
+                } else if(el.id) {
+                    data[el.id] = el.value;
+                }
+            }
+            localStorage.setItem('helperFormData', JSON.stringify(data));
+            return data;
+        } catch(e) { return {}; }
+    }
+    
+    function restoreLocal() { try { localStorage.removeItem('helperFormData'); } catch(e){} }
 
     function validateField(input) {
         if(!ENABLE_VALIDATION) return;
-        const parent = input.parentElement;
-        const errorMsg = parent.querySelector('.error-msg') || parent.parentElement.querySelector('.error-msg');
+        var parent = input.parentElement;
+        var errorMsg = parent ? (parent.querySelector('.error-msg') || parent.parentElement.querySelector('.error-msg')) : null;
         if(!errorMsg) return;
         if(!input.value || input.value.trim() === '') {
             errorMsg.classList.add('visible');
@@ -310,370 +310,467 @@
 
     function validateGroup(container) {
         if(!ENABLE_VALIDATION) return;
-        const inputs = container.querySelectorAll('input');
-        let checked = false;
-        inputs.forEach(i => { if(i.checked) checked = true; });
-        const parent = container.parentElement;
-        const errorMsg = parent.querySelector('.error-msg');
+        var inputs = container.querySelectorAll('input');
+        var checked = false;
+        for (var i = 0; i < inputs.length; i++) { if(inputs[i].checked) checked = true; }
+        var parent = container.parentElement;
+        var errorMsg = parent ? parent.querySelector('.error-msg') : null;
         if(!errorMsg) return;
         if(!checked) { errorMsg.classList.add('visible'); } 
         else { errorMsg.classList.remove('visible'); }
     }
 
+    function singleSelect(checkbox, name) {
+        var items = document.getElementsByName(name);
+        for (var i = 0; i < items.length; i++) {
+            if (items[i] !== checkbox) items[i].checked = false;
+        }
+    }
+
+    function toggleInput(id, show) {
+        var el = document.getElementById(id);
+        if(el) {
+            if(show) el.classList.remove('hidden'); else el.classList.add('hidden');
+        }
+    }
+
+    function toggleHKStatus(isHK) {
+        var el = document.getElementById('hk_status_container');
+        if(el) {
+            if(isHK) el.classList.remove('hidden'); else el.classList.add('hidden');
+        }
+    }
+    
+    function toggleReferrer(isYes) {
+        var el = document.getElementById('referrerDetails');
+        if(el) {
+            if(isYes) el.classList.remove('hidden'); else el.classList.add('hidden');
+        }
+    }
+
+    function togglePetQty(checkbox, inputId) {
+        var inputContainer = document.getElementById(inputId);
+        if(!inputContainer) return;
+        var petName = checkbox.getAttribute('data-pet');
+        if(petName === 'No pets') {} else {
+            if(checkbox.checked) inputContainer.classList.remove('hidden');
+            else {
+                inputContainer.classList.add('hidden');
+                var inputs = inputContainer.querySelectorAll('input');
+                for (var i=0; i<inputs.length; i++) inputs[i].value = '';
+            }
+        }
+    }
+
+    function toggleVisaQ(isYes) {
+        var v = document.getElementById('vacationDate');
+        var s = document.getElementById('stayHomeDuration');
+        if(v && s) {
+            if(isYes) { v.classList.remove('hidden'); s.classList.add('hidden'); } 
+            else { v.classList.add('hidden'); s.classList.remove('hidden'); }
+        }
+    }
+
+    function toggleTattooAlert(show) {
+        var el = document.getElementById('tattooAlert');
+        if(el) {
+            if(show) el.classList.remove('hidden'); else el.classList.add('hidden');
+        }
+    }
+
+    function renderChildAges(type) {
+        var countEl = document.getElementById(type + 'Count');
+        if(!countEl) return;
+        var count = parseInt(countEl.value);
+        var container = document.getElementById(type + 'AgesContainer');
+        var inputContainer = document.getElementById(type + 'Inputs');
+        if(!inputContainer || !container) return;
+        inputContainer.innerHTML = '';
+        if (count > 0) {
+            container.classList.remove('hidden');
+            for(var i=1; i<=count; i++) {
+                var ph = type === 'sons' ? (currentLang === 'id' ? "Umur anak laki-laki" : "Age of son") : (currentLang === 'id' ? "Umur anak perempuan" : "Age of daughter");
+                ph += ' ' + i;
+                inputContainer.innerHTML += '<input type="number" placeholder="'+ph+'" class="mb-2" onblur="validateField(this)">';
+            }
+        } else container.classList.add('hidden');
+    }
+
+    function validatePassport() {
+        var input = document.getElementById('passportExpiry');
+        if(!input || !input.value) return;
+        var parts = input.value.split('-');
+        if(parts.length === 3) {
+             var d = new Date(parts[0], parts[1]-1, parts[2]);
+             var diffMonths = (d - new Date()) / (1000 * 60 * 60 * 24 * 30.44);
+             var alert = document.getElementById('passportAlert');
+             if(alert) {
+                 if (diffMonths < 9) alert.classList.remove('hidden'); else alert.classList.add('hidden');
+             }
+        }
+    }
+
+    function validateHeight() {
+        var input = document.getElementById('height');
+        var alert = document.getElementById('heightAlert');
+        if(input && input.value && parseInt(input.value) < 145 && alert) alert.classList.remove('hidden'); else if(alert) alert.classList.add('hidden');
+    }
+
+    function renderFamMembers(index) {
+        var countStr = document.getElementById('w'+index+'_famCount').value;
+        var rows = document.getElementById('w'+index+'_famRows');
+        var container = document.getElementById('w'+index+'_famDetails');
+        if(!rows || !container) return;
+        rows.innerHTML = '';
+        
+        var count = countStr === '13+' ? 13 : parseInt(countStr);
+        if (count > 0) {
+            container.classList.remove('hidden');
+            var roleTxt = currentLang === 'id' ? 'Pilih Peran' : 'Select Role';
+            var ageSt = dict[currentLang].opt_age_start;
+            var ageLv = dict[currentLang].opt_age_leave;
+            var preg = dict[currentLang].opt_preg;
+            var memTxt = currentLang === 'id' ? 'Anggota' : 'Member';
+            
+            var ageOpts = '<option value="">'+dict[currentLang].opt_select+'</option>';
+            ageOpts += '<option value="Start from female employer is pregnant">'+preg+'</option>';
+            for(var k=0; k<=20; k+=0.5) ageOpts += '<option value="'+k+'">'+k+'</option>';
+            
+            var roles = ['Adult','Boy','Girl','Twins','Triplets','Grandpa','Grandma'];
+            var roleOpts = '<option value="">'+roleTxt+'</option>' + roles.map(function(x){ return '<option value="'+x+'">'+dict[currentLang]['opt_role_'+x.toLowerCase()]+'</option>'; }).join('');
+
+            for(var i=1; i<=count; i++) {
+                rows.innerHTML += '<div class="p-2 border rounded bg-gray-50 member-row"><span class="font-bold member-label-highlight">'+memTxt+' '+i+':</span><select class="w-full mb-1" onchange="handleRoleChange(this)" onblur="validateField(this)">'+roleOpts+'</select><div class="flex flex-col gap-2 age-inputs mt-2"><div class="w-full"><label class="text-xs font-bold">'+ageSt+'</label><select class="w-full" onblur="validateField(this)">'+ageOpts+'</select></div><div class="w-full"><label class="text-xs font-bold">'+ageLv+'</label><select class="w-full" onblur="validateField(this)">'+ageOpts+'</select></div></div></div>';
+            }
+        } else container.classList.add('hidden');
+    }
+
+    window.handleRoleChange = function(select) {
+        var ageInputsDiv = select.parentElement.querySelector('.age-inputs');
+        var role = select.value;
+        if(role === 'Adult') {
+            ageInputsDiv.classList.add('hidden');
+        } else {
+            ageInputsDiv.classList.remove('hidden');
+            var selects = ageInputsDiv.querySelectorAll('select');
+            var opts = '<option value="">'+dict[currentLang].opt_select+'</option>';
+            if(role === 'Grandpa' || role === 'Grandma') {
+                for(var k=60; k<=110; k++) opts += '<option value="'+k+'">'+k+'</option>';
+            } else {
+                opts += '<option value="Start from female employer is pregnant">'+dict[currentLang].opt_preg+'</option>';
+                for(var k=0; k<=20; k+=0.5) opts += '<option value="'+k+'">'+k+'</option>';
+            }
+            selects.forEach(function(s){ s.innerHTML = opts; });
+        }
+    }
+
+    // --- 4. NAVIGATION & GENERATORS ---
+
+    function renderDynamicSections() {
+        var sc = document.getElementById('skillsContainer');
+        if(sc) sc.innerHTML = [
+            {id: "newborn", key: "skill_newborn"}, {id: "children", key: "skill_children"}, {id: "elderly", key: "skill_elderly"}, {id: "disabled", key: "skill_disabled"}, {id: "pets", key: "skill_pets"}, {id: "cook", key: "skill_cook"}
+        ].map(function(s){ return '<div class="question-block"><label class="question-label" data-i18n="'+s.key+'"></label><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="checkbox" name="'+s.id+'" value="Yes" onclick="singleSelect(this, \''+s.id+'\')"> <span data-i18n="yes_willing">Yes, willing</span></label><label class="checkbox-option"><input type="checkbox" name="'+s.id+'" value="No" onclick="singleSelect(this, \''+s.id+'\')"> <span data-i18n="no">No</span></label></div><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>'; }).join('');
+
+        var fqc = document.getElementById('finalQuestionsContainer');
+        if(fqc) fqc.innerHTML = [
+            {id: "likeCooking", key: "q_like_cooking", yKey: "q_like_cooking_yes"}, {id: "learnYoutube", key: "q_learn_yt", yKey: "q_learn_yt_yes"}, {id: "cookConfident", key: "q_confident", yKey: "q_confident_yes"}, {id: "singSong", key: "q_sing", yKey: "q_sing_yes"}, {id: "tutor", key: "q_tutor", yKey: "q_tutor_yes"},
+        ].map(function(q){ return '<div class="question-block"><label class="question-label" data-i18n="'+q.key+'"></label><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="checkbox" name="'+q.id+'" value="Yes" onclick="singleSelect(this, \''+q.id+'\')"> <span data-i18n="'+q.yKey+'"></span></label><label class="checkbox-option"><input type="checkbox" name="'+q.id+'" value="No" onclick="singleSelect(this, \''+q.id+'\')"> <span data-i18n="no">No</span></label></div><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>'; }).join('');
+
+        var ync = document.getElementById('yesNoContainer');
+        if(ync) ync.innerHTML = [
+            {id: "afraidDog", key: "q_dog", yKey: "q_afraid_yes", alert: false}, {id: "afraidCat", key: "q_cat", yKey: "q_afraid_yes", alert: false}, {id: "tattoos", key: "q_tattoo", yKey: "q_tattoo_yes", alert: true, alertMsgKey: "tattoo_msg"}, {id: "smokeDrink", key: "q_smoke", yKey: "q_tattoo_yes", alert: false}, {id: "allergies", key: "q_allergy", yKey: "q_tattoo_yes", alert: false}, {id: "chronic", key: "q_chronic", yKey: "q_tattoo_yes", alert: false}, {id: "consent", key: "q_consent", yKey: "q_consent_yes", alert: false, confirm: true}, {id: "fingers", key: "q_fingers", yKey: "q_fingers_yes", noKey: "q_fingers_no", alert: false} 
+        ].map(function(q){ return '<div class="question-block"><label class="question-label" data-i18n="'+q.key+'"></label><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="checkbox" name="'+q.id+'" value="Yes" onclick="singleSelect(this, \''+q.id+'\'); '+(q.alert ? 'toggleTattooAlert(true)' : '')+'"> <span data-i18n="'+q.yKey+'"></span></label><label class="checkbox-option"><input type="checkbox" name="'+q.id+'" value="No" onclick="singleSelect(this, \''+q.id+'\'); '+(q.alert ? 'toggleTattooAlert(false)' : '')+'"> <span data-i18n="'+(q.noKey || 'no')+'">No</span></label></div>'+(q.alert ? '<div id="tattooAlert" class="alert-box hidden" data-i18n="'+q.alertMsgKey+'"></div>' : '')+'<div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>'; }).join('');
+    }
+
+    function createWorkPage(index) {
+        var div = document.createElement('div');
+        div.id = 'pageWork' + index;
+        div.className = 'page-section hidden';
+        var titleKey = index === 1 ? 'work_latest_title' : 'work_other_title';
+        var titleText = index === 1 ? '' : ' (' + index + ')';
+        var noOptionKey = 'work_more_no_' + index;
+
+        // Note: Using concatenated strings for safety in older parsers if backticks fail
+        var html = '<h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2 highlight-header"><span data-i18n="'+titleKey+'"></span>'+titleText+'</h2>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_country"></label><input type="text" id="w'+index+'_country" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg"></div>' +
+            '<label class="question-label mt-3" data-i18n="work_emp_nat"></label><div class="checkbox-group" onfocusout="validateGroup(this)">' +
+            ['Local people', 'Foreigner', 'Chinese', 'Hong Kong people', 'Asian'].map(function(o){ return '<label class="checkbox-option"><input type="radio" name="w'+index+'_emp_nat" value="'+o+'"> '+o+'</label>'; }).join('') +
+            '</div><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_start"></label><div class="flex gap-2"><select id="w'+index+'_startMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select><select id="w'+index+'_startYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_end"></label><div class="flex gap-2"><select id="w'+index+'_endMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select><select id="w'+index+'_endYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_size"></label><input type="number" id="w'+index+'_houseSize" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_fam_count"></label><select id="w'+index+'_famCount" onchange="renderFamMembers('+index+'); validateField(this)" onblur="validateField(this)"></select><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div id="w'+index+'_famDetails" class="question-block hidden"><label class="question-label" data-i18n="work_fam_age"></label><div id="w'+index+'_famRows" class="flex flex-col gap-3"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_helpers"></label><select id="w'+index+'_helpers" onblur="validateField(this)"></select><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_status"></label><div class="checkbox-group" onfocusout="validateGroup(this)">' +
+            '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Finished contract" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="hk_finish"></span></label>' +
+            '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Employer terminated me already" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="hk_terminated"></span></label>' +
+            '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="I resigned already" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="work_status_resigned"></span></label>' +
+            '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_status" value="Not contract and can leave anytime" onclick="singleSelect(this, \'w'+index+'_status\')"> <span data-i18n="work_status_nocontract"></span></label></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_reason"></label><textarea id="w'+index+'_reason" class="expandable" rows="3" onblur="validateField(this)"></textarea><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_dis_q"></label><div class="checkbox-group">' +
+            [{id:'dis_no', val:'No'}, {id:'dis_bed', val:'Bedridden care'}, {id:'dis_dis', val:'Disability care'}, {id:'dis_tra', val:'Tracheostomy care'}, {id:'dis_wheel', val:'Wheelchair'}, {id:'dis_walk', val:'Walking slowly'}, {id:'dis_med', val:'Medication feeding'}, {id:'dis_bath', val:'Bathing assistance'}, {id:'dis_stroke', val:'Stroke'}, {id:'dis_alz', val:'Alzheimer\'s disease'}, {id:'dis_park', val:'Parkinson\'s disease'}]
+            .map(function(d){ return '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_disabled" value="'+d.val+'"> <span data-i18n="'+d.id+'">'+d.val+'</span></label>'; }).join('') +
+            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (1)" onchange="toggleInput(\'w'+index+'_disabled_other1_input\', this.checked)"> <span data-i18n="dis_other1">Other disabled person (1)</span></div><input type="text" id="w'+index+'_disabled_other1_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"></label>' +
+            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (2)" onchange="toggleInput(\'w'+index+'_disabled_other2_input\', this.checked)"> <span data-i18n="dis_other2">Other disabled person (2)</span></div><input type="text" id="w'+index+'_disabled_other2_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"></label></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group">' +
+            [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.replace(/\s/g,'')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.replace(/\s/g,'')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('') +
+            '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div>' +
+            '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div>' +
+            '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div></div></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_resp"></label><div class="checkbox-group" onfocusout="validateGroup(this)">' +
+            [{id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'}, {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_wet_market', val: 'I go to Chinese wet-market to buy food'}, {id: 'resp_room', val: 'I sharing room with other'}, {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}]
+            .map(function(r){ return '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_resp" value="'+r.val+'"> <span data-i18n="'+r.id+'">'+r.val+'</span></label>'; }).join('') +
+            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other" onchange="toggleInput(\'w'+index+'_resp_other_input\', this.checked)"> <span data-i18n="resp_other">Other responsibilities (1)</span></div><input type="text" id="w'+index+'_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label>' +
+            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other2" onchange="toggleInput(\'w'+index+'_resp_other2_input\', this.checked)"> <span data-i18n="resp_other2">Other responsibilities (2)</span></div><input type="text" id="w'+index+'_resp_other2_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label>' +
+            '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other3" onchange="toggleInput(\'w'+index+'_resp_other3_input\', this.checked)"> <span data-i18n="resp_other3">Other responsibilities (3)</span></div><input type="text" id="w'+index+'_resp_other3_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"></label></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="question-block"><label class="question-label" data-i18n="work_more_q"></label><div class="checkbox-group" onfocusout="validateGroup(this)"><label class="checkbox-option"><input type="checkbox" name="w'+index+'_more" value="Yes" onclick="singleSelect(this, \'w'+index+'_more\')"> <span data-i18n="work_more_yes"></span></label><label class="checkbox-option"><input type="checkbox" name="w'+index+'_more" value="No" onclick="singleSelect(this, \'w'+index+'_more\')"> <span data-i18n="'+noOptionKey+'"></span></label></div><div class="error-msg" data-i18n="error_msg"></div></div>' +
+            '<div class="nav-buttons"><button class="btn-primary btn-prev" onclick="handleWorkPrev('+index+')" data-i18n="btn_prev"></button><button class="btn-primary" onclick="handleWorkNext('+index+')" data-i18n="btn_next"></button></div>';
+        
+        div.innerHTML = html;
+        document.getElementById('workPagesContainer').appendChild(div);
+    }
+
     function setLanguage(lang) {
         currentLang = lang;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.lang-btn[onclick="setLanguage('${lang}')"]`).classList.add('active');
+        document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.querySelector('.lang-btn[onclick="setLanguage(\''+lang+'\')"]').classList.add('active');
         document.getElementById('welcomeTitle').textContent = dict[lang].title_text;
         updateUI();
         regenerateAllSelects();
     }
 
     function updateUI() {
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
+        document.querySelectorAll('[data-i18n]').forEach(function(el){
+            var key = el.getAttribute('data-i18n');
             if(dict[currentLang][key]) el.textContent = dict[currentLang][key];
         });
-        
-        const phMap = { 
-            'ph_qty': '.pet-qty', 
-            'ph_pet': '.pet-other-input, #nat_other_input, #rel_other_input', 
-            'ph_resp': '.resp-other-input',
-            'ph_nat_other': '#nat_other_input',
-            'ph_rel_other': '#rel_other_input',
-            'ph_skill_other': '#skill_other_input',
-            'ph_cnt_other': '#otherCountryInput',
-            'ph_dis_other1': '.dis-other-input', 
-            'opt_select': '#whatsapp_code, #homePhone_code, #referrerPhone_code, #whatsapp_num, #homePhone_num, #referrerPhone_num'
-        };
-        
-        document.querySelectorAll('.pet-qty').forEach(el => el.placeholder = dict[currentLang].ph_qty);
+        document.querySelectorAll('.pet-qty').forEach(function(el){ el.placeholder = dict[currentLang].ph_qty; });
         if(document.getElementById('nat_other_input')) document.getElementById('nat_other_input').placeholder = dict[currentLang].ph_nat_other;
         if(document.getElementById('rel_other_input')) document.getElementById('rel_other_input').placeholder = dict[currentLang].ph_rel_other;
         if(document.getElementById('skill_other_input')) document.getElementById('skill_other_input').placeholder = dict[currentLang].ph_skill_other;
         if(document.getElementById('otherCountryInput')) document.getElementById('otherCountryInput').placeholder = dict[currentLang].ph_cnt_other;
         
-        document.querySelectorAll('.resp-other-input').forEach(el => el.placeholder = dict[currentLang].ph_resp);
-        document.querySelectorAll('.pet-other-input').forEach(el => el.placeholder = dict[currentLang].ph_pet);
-        
-        for(let i=1; i<=MAX_JOBS; i++) {
-             const d1 = document.getElementById(`w${i}_disabled_other1_input`);
-             const d2 = document.getElementById(`w${i}_disabled_other2_input`);
+        document.querySelectorAll('.resp-other-input').forEach(function(el){ el.placeholder = dict[currentLang].ph_resp; });
+        document.querySelectorAll('.pet-other-input').forEach(function(el){ el.placeholder = dict[currentLang].ph_pet; });
+        for(var i=1; i<=MAX_JOBS; i++) {
+             var d1 = document.getElementById('w'+i+'_disabled_other1_input');
+             var d2 = document.getElementById('w'+i+'_disabled_other2_input');
              if(d1) d1.placeholder = dict[currentLang].ph_dis_other1;
              if(d2) d2.placeholder = dict[currentLang].ph_dis_other2;
         }
 
-        const prefix = currentLang === 'id' ? 'Contoh' : 'e.g.';
-        ['whatsapp_code', 'referrerPhone_code'].forEach(id => {
-            const el = document.getElementById(id);
+        var prefix = currentLang === 'id' ? 'Contoh' : 'e.g.';
+        ['whatsapp_code', 'referrerPhone_code'].forEach(function(id){
+            var el = document.getElementById(id);
             if(el) el.placeholder = prefix + " +852"; 
         });
-        const homeCode = document.getElementById('homePhone_code');
+        var homeCode = document.getElementById('homePhone_code');
         if(homeCode) homeCode.placeholder = currentLang === 'id' ? "Contoh +62" : "e.g. +63";
 
-         ['whatsapp_num', 'homePhone_num', 'referrerPhone_num'].forEach(id => {
-            const el = document.getElementById(id);
+         ['whatsapp_num', 'homePhone_num', 'referrerPhone_num'].forEach(function(id){
+            var el = document.getElementById(id);
             if(el) el.placeholder = prefix + " 96111003"; 
         });
     }
 
-    // --- DYNAMIC SELECT GENERATION ---
     function regenerateAllSelects() {
         generateSiblingSelects();
         generateFamilySelects();
         generateCountryExpSelects(); 
-        for(let i=1; i<=MAX_JOBS; i++) {
-            const p = document.getElementById(`pageWork${i}`);
+        for(var i=1; i<=MAX_JOBS; i++) {
+            var p = document.getElementById('pageWork'+i);
             if(p) updateWorkPageSelects(i);
         }
-        
-        const hkSel = document.getElementById('hkExperienceYears');
+        var hkSel = document.getElementById('hkExperienceYears');
         if(hkSel) {
-            const val = hkSel.value;
-            hkSel.innerHTML = `<option value="0">${dict[currentLang].opt_never_hk}</option>`;
-            hkSel.innerHTML += `<option value="1">${dict[currentLang].opt_1_year}</option>`;
-            for(let i=2; i<=20; i++) hkSel.innerHTML += `<option value="${i}">${i}</option>`;
-            hkSel.innerHTML += `<option value="21+">21+</option>`;
+            var val = hkSel.value;
+            hkSel.innerHTML = '<option value="0">'+dict[currentLang].opt_never_hk+'</option>';
+            hkSel.innerHTML += '<option value="1">'+dict[currentLang].opt_1_year+'</option>';
+            for(var i=2; i<=20; i++) hkSel.innerHTML += '<option value="'+i+'">'+i+'</option>';
+            hkSel.innerHTML += '<option value="21+">21+</option>';
             hkSel.value = val;
         }
     }
 
     function generateCountryExpSelects() {
-        const container = document.getElementById('otherCountryExpContainer');
-        const questions = [
-            { id: 'cnt_sg', type: 'select' }, { id: 'cnt_tw', type: 'select' }, { id: 'cnt_my', type: 'select' },
-            { id: 'cnt_me', type: 'select' }, { id: 'cnt_sa', type: 'select' }, { id: 'cnt_id', type: 'select' },
-            { id: 'cnt_ph', type: 'select' }, { id: 'cnt_other', type: 'input_select' }
-        ];
-        
-        const savedVals = {};
-        questions.forEach(q => {
-            const s = document.getElementById(q.id + '_select');
+        var container = document.getElementById('otherCountryExpContainer');
+        var questions = [{ id: 'cnt_sg', type: 'select' }, { id: 'cnt_tw', type: 'select' }, { id: 'cnt_my', type: 'select' }, { id: 'cnt_me', type: 'select' }, { id: 'cnt_sa', type: 'select' }, { id: 'cnt_id', type: 'select' }, { id: 'cnt_ph', type: 'select' }, { id: 'cnt_other', type: 'input_select' }];
+        var savedVals = {};
+        questions.forEach(function(q){
+            var s = document.getElementById(q.id + '_select');
             if(s) savedVals[q.id + '_select'] = s.value;
             if(q.type === 'input_select') {
-                const i = document.getElementById('otherCountryInput');
+                var i = document.getElementById('otherCountryInput');
                 if(i) savedVals['otherCountryInput'] = i.value;
             }
         });
 
-        let html = '';
-        let opts = `<option value="0">0</option>`;
-        opts += `<option value="1">${dict[currentLang].opt_1_year}</option>`;
-        for(let i=2; i<=20; i++) opts += `<option value="${i}">${i}</option>`;
+        var html = '';
+        var opts = '<option value="0">0</option>';
+        opts += '<option value="1">'+dict[currentLang].opt_1_year+'</option>';
+        for(var i=2; i<=20; i++) opts += '<option value="'+i+'">'+i+'</option>';
 
-        questions.forEach(q => {
-            const labelText = dict[currentLang][q.id] || "Missing Translation";
-            html += `<div class="question-block">
-                <label class="question-label">${labelText}</label>`;
+        questions.forEach(function(q){
+            var labelText = dict[currentLang][q.id] || "Missing";
+            html += '<div class="question-block"><label class="question-label">'+labelText+'</label>';
             if(q.type === 'input_select') {
-                html += `<div class="flex gap-2">
-                    <input type="text" id="otherCountryInput" class="w-1/2" placeholder="${dict[currentLang].ph_cnt_other}" onblur="validateField(this)">
-                    <select id="${q.id}_select" class="w-1/2" onblur="validateField(this)">
-                        <option value="">${dict[currentLang].opt_select}</option>${opts}
-                    </select>
-                </div>`;
+                html += '<div class="flex gap-2"><input type="text" id="otherCountryInput" class="w-1/2" placeholder="'+dict[currentLang].ph_cnt_other+'" onblur="validateField(this)"><select id="'+q.id+'_select" class="w-1/2" onblur="validateField(this)"><option value="">'+dict[currentLang].opt_select+'</option>'+opts+'</select></div>';
             } else {
-                html += `<select id="${q.id}_select" onblur="validateField(this)">
-                    <option value="">${dict[currentLang].opt_select}</option>${opts}
-                </select>`;
+                html += '<select id="'+q.id+'_select" onblur="validateField(this)"><option value="">'+dict[currentLang].opt_select+'</option>'+opts+'</select>';
             }
-            html += `<div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>`;
+            html += '<div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>';
         });
         
         container.innerHTML = html;
-        questions.forEach(q => {
-            const s = document.getElementById(q.id + '_select');
+        questions.forEach(function(q){
+            var s = document.getElementById(q.id + '_select');
             if(s && savedVals[q.id + '_select']) s.value = savedVals[q.id + '_select'];
             if(q.type === 'input_select') {
-                const i = document.getElementById('otherCountryInput');
+                var i = document.getElementById('otherCountryInput');
                 if(i && savedVals['otherCountryInput']) i.value = savedVals['otherCountryInput'];
             }
         });
     }
 
     function generateSiblingSelects() {
-        const sCount = document.getElementById('siblingsCount');
-        const sPos = document.getElementById('siblingPos');
-        const sCountVal = sCount.value;
-        const sPosVal = sPos.value;
-        const selTxt = dict[currentLang].opt_select;
-        const sibSuf = dict[currentLang].opt_sibling_suf;
-        
-        let html = `<option value="">${selTxt}</option>`;
-        html += `<option value="1">1 ${sibSuf}</option>`;
-        for(let i=2; i<=13; i++) html += `<option value="${i}">${i} ${i==13?'+':''}</option>`;
+        var sCount = document.getElementById('siblingsCount');
+        var sPos = document.getElementById('siblingPos');
+        var sCountVal = sCount.value;
+        var sPosVal = sPos.value;
+        var html = '<option value="">'+dict[currentLang].opt_select+'</option>';
+        html += '<option value="1">1 '+dict[currentLang].opt_sibling_suf+'</option>';
+        for(var i=2; i<=13; i++) html += '<option value="'+i+'">'+i+' '+(i==13?'+':'')+'</option>';
         sCount.innerHTML = html; sCount.value = sCountVal;
 
-        html = `<option value="">${selTxt}</option>`;
-        html += currentLang === 'id' ? `<option value="1">Anak pertama</option>` : `<option value="1">Number 1</option>`;
-        for(let i=2; i<=13; i++) html += `<option value="${i}">${i} ${i==13?'+':''}</option>`;
+        html = '<option value="">'+dict[currentLang].opt_select+'</option>';
+        html += currentLang === 'id' ? '<option value="1">Anak pertama</option>' : '<option value="1">Number 1</option>';
+        for(var i=2; i<=13; i++) html += '<option value="'+i+'">'+i+' '+(i==13?'+':'')+'</option>';
         sPos.innerHTML = html; sPos.value = sPosVal;
     }
 
     function generateFamilySelects() {
-        const selTxt = dict[currentLang].opt_select;
-        const noson = dict[currentLang].opt_noson;
-        const nodaughter = dict[currentLang].opt_nodaughter;
-        
-        const sons = document.getElementById('sonsCount');
-        const daughters = document.getElementById('daughtersCount');
-        const sV = sons.value; const dV = daughters.value;
-
-        let h = `<option value="">${selTxt}</option><option value="0">${noson}</option>`;
-        h += `<option value="1">${dict[currentLang].opt_1_son}</option>`;
-        for(let i=2; i<=13; i++) h += `<option value="${i}">${i} ${i==13?'+':''}</option>`;
+        var sons = document.getElementById('sonsCount');
+        var daughters = document.getElementById('daughtersCount');
+        var sV = sons.value; var dV = daughters.value;
+        var h = '<option value="">'+dict[currentLang].opt_select+'</option><option value="0">'+dict[currentLang].opt_noson+'</option>';
+        h += '<option value="1">'+dict[currentLang].opt_1_son+'</option>';
+        for(var i=2; i<=13; i++) h += '<option value="'+i+'">'+i+' '+(i==13?'+':'')+'</option>';
         sons.innerHTML = h; sons.value = sV;
-
-        h = `<option value="">${selTxt}</option><option value="0">${nodaughter}</option>`;
-        h += `<option value="1">${dict[currentLang].opt_1_daughter}</option>`;
-        for(let i=2; i<=13; i++) h += `<option value="${i}">${i} ${i==13?'+':''}</option>`;
+        h = '<option value="">'+dict[currentLang].opt_select+'</option><option value="0">'+dict[currentLang].opt_nodaughter+'</option>';
+        h += '<option value="1">'+dict[currentLang].opt_1_daughter+'</option>';
+        for(var i=2; i<=13; i++) h += '<option value="'+i+'">'+i+' '+(i==13?'+':'')+'</option>';
         daughters.innerHTML = h; daughters.value = dV;
         
-        document.querySelectorAll('#sonsInputs input, #daughtersInputs input').forEach(inp => {
-             if(currentLang === 'id') {
-                 if(inp.placeholder.includes('Son') || inp.placeholder.includes('son')) inp.placeholder = "Umur anak laki-laki";
-                 if(inp.placeholder.includes('Daughter') || inp.placeholder.includes('daughter')) inp.placeholder = "Umur anak perempuan";
-             }
-        });
-        
-        const vac = document.getElementById('vacationMonth');
-        const vacV = vac.value;
-        const sh = document.getElementById('homeWeeks');
-        const shV = sh.value;
-        const months = currentLang === 'id' ? indoMonths : engMonths;
-        
-        h = `<option value="">${selTxt}</option>`;
-        months.forEach(m => h += `<option value="${m}">${m}</option>`);
+        var vac = document.getElementById('vacationMonth');
+        var vacV = vac.value;
+        var sh = document.getElementById('homeWeeks');
+        var shV = sh.value;
+        var months = currentLang === 'id' ? indoMonths : engMonths;
+        h = '<option value="">'+dict[currentLang].opt_select+'</option>';
+        months.forEach(function(m){ h += '<option value="'+m+'">'+m+'</option>'; });
         vac.innerHTML = h; vac.value = vacV;
-
-        const w = dict[currentLang].opt_week;
-        const ws = dict[currentLang].opt_weeks;
-        h = `<option value="">${selTxt}</option>`;
-        for(let i=1; i<=13; i++) h += `<option value="${i}">${i} ${i>1?ws:w}${i==13?'+':''}</option>`;
+        var w = dict[currentLang].opt_week;
+        var ws = dict[currentLang].opt_weeks;
+        h = '<option value="">'+dict[currentLang].opt_select+'</option>';
+        for(var i=1; i<=13; i++) h += '<option value="'+i+'">'+i+' '+(i>1?ws:w)+(i==13?'+':'')+'</option>';
         sh.innerHTML = h; sh.value = shV;
     }
 
     function updateWorkPageSelects(i) {
-        const months = currentLang === 'id' ? indoMonths : engMonths;
-        const selTxt = dict[currentLang].opt_select;
-        
-        ['start','end'].forEach(type => {
-            const m = document.getElementById(`w${i}_${type}Month`);
-            const y = document.getElementById(`w${i}_${type}Year`);
+        var months = currentLang === 'id' ? indoMonths : engMonths;
+        ['start','end'].forEach(function(type){
+            var m = document.getElementById('w'+i+'_'+type+'Month');
+            var y = document.getElementById('w'+i+'_'+type+'Year');
             if(!m) return;
-            const mV = m.value; const yV = y.value;
-            m.innerHTML = `<option value="">${dict[currentLang].opt_month}</option>` + months.map(x=>`<option value="${x}">${x}</option>`).join('');
-            y.innerHTML = `<option value="">${dict[currentLang].opt_year}</option>` + Array.from({length: 31}, (_, k) => 2000 + k).map(x=>`<option value="${x}">${x}</option>`).join('');
+            var mV = m.value; var yV = y.value;
+            m.innerHTML = '<option value="">'+dict[currentLang].opt_month+'</option>' + months.map(function(x){ return '<option value="'+x+'">'+x+'</option>'; }).join('');
+            y.innerHTML = '<option value="">'+dict[currentLang].opt_year+'</option>' + Array.from({length: 31}, function(_, k){ return 2000 + k; }).map(function(x){ return '<option value="'+x+'">'+x+'</option>'; }).join('');
             m.value = mV; y.value = yV;
         });
 
-        const fc = document.getElementById(`w${i}_famCount`);
+        var fc = document.getElementById('w'+i+'_famCount');
         if(fc) {
-            const v = fc.value;
-            const only = dict[currentLang].opt_only_emp;
-            const plus = dict[currentLang].opt_emp_plus;
-            let h = `<option value="">${selTxt}</option><option value="1">${only}</option>`;
-            for(let k=2; k<=13; k++) h += `<option value="${k}">${k} (${plus} ${k-1})</option>`;
-            h += `<option value="13+">13+</option>`;
+            var v = fc.value;
+            var h = '<option value="">'+dict[currentLang].opt_select+'</option><option value="1">'+dict[currentLang].opt_only_emp+'</option>';
+            for(var k=2; k<=13; k++) h += '<option value="'+k+'">'+k+' ('+dict[currentLang].opt_emp_plus+' '+(k-1)+')</option>';
+            h += '<option value="13+">13+</option>';
             fc.innerHTML = h; fc.value = v;
         }
 
-        const hlp = document.getElementById(`w${i}_helpers`);
+        var hlp = document.getElementById('w'+i+'_helpers');
         if(hlp) {
-            const v = hlp.value;
-            const only = dict[currentLang].opt_only_me;
-            const plus = dict[currentLang].opt_me_plus;
-            let h = `<option value="">${selTxt}</option><option value="1">${only}</option>`;
-            for(let k=2; k<=13; k++) h += `<option value="${k}">${k} (${plus} ${k-1})</option>`;
-            h += `<option value="13+">13+</option>`;
+            var v = hlp.value;
+            var h = '<option value="">'+dict[currentLang].opt_select+'</option><option value="1">'+dict[currentLang].opt_only_me+'</option>';
+            for(var k=2; k<=13; k++) h += '<option value="'+k+'">'+k+' ('+dict[currentLang].opt_me_plus+' '+(k-1)+')</option>';
+            h += '<option value="13+">13+</option>';
             hlp.innerHTML = h; hlp.value = v;
         }
         
-        const natContainer = document.querySelector(`#pageWork${i} .checkbox-group`); 
+        var natContainer = document.querySelector('#pageWork'+i+' .checkbox-group'); 
         if(natContainer) {
-             const labels = natContainer.querySelectorAll('label');
-             const map = {
+             var labels = natContainer.querySelectorAll('label');
+             var map = {
                  'Local people': dict[currentLang].opt_emp_nat_local,
                  'Foreigner': dict[currentLang].opt_emp_nat_foreigner,
                  'Chinese': dict[currentLang].opt_emp_nat_chinese,
                  'Hong Kong people': dict[currentLang].opt_emp_nat_hk,
                  'Asian': dict[currentLang].opt_emp_nat_asian
              };
-             labels.forEach(l => {
-                 const inp = l.querySelector('input');
-                 if(inp && map[inp.value]) {
-                     l.lastChild.textContent = " " + map[inp.value];
-                 }
+             labels.forEach(function(l){
+                 var inp = l.querySelector('input');
+                 if(inp && map[inp.value]) l.lastChild.textContent = " " + map[inp.value];
              });
         }
         
-        const statusInputs = document.querySelectorAll(`input[name="w${i}_status"]`);
+        var statusInputs = document.querySelectorAll('input[name="w'+i+'_status"]');
         if(statusInputs.length > 0) {
-             statusInputs.forEach(inp => {
-                 const label = inp.parentElement;
+             statusInputs.forEach(function(inp){
+                 var label = inp.parentElement;
                  if(inp.value.includes('resigned') || inp.value === 'I resigned already') label.lastChild.textContent = " " + dict[currentLang].work_status_resigned;
                  if(inp.value.includes('Not contract') || inp.value === 'Not contract and can leave anytime') label.lastChild.textContent = " " + dict[currentLang].work_status_nocontract;
              });
         }
-
-        const famRows = document.getElementById(`w${i}_famRows`);
-        if(famRows) {
-             const rows = famRows.querySelectorAll('.member-row');
-             rows.forEach(r => {
-                 const roleSel = r.querySelector('select');
-                 const rV = roleSel.value;
-                 roleSel.innerHTML = `<option value="">${currentLang==='id'?'Pilih Peran':'Select Role'}</option>` + 
-                     ['Adult','Boy','Girl','Twins','Triplets','Grandpa','Grandma'].map(x => 
-                         `<option value="${x}">${dict[currentLang]['opt_role_'+x.toLowerCase()]}</option>`
-                     ).join('');
-                 roleSel.value = rV;
-                 
-                 const labs = r.querySelectorAll('label');
-                 if(labs[0]) labs[0].textContent = dict[currentLang].opt_age_start;
-                 if(labs[1]) labs[1].textContent = dict[currentLang].opt_age_leave;
-                 
-                 const ageSels = r.querySelectorAll('.age-inputs select');
-                 ageSels.forEach(s => {
-                     const val = s.value;
-                     let opts = `<option value="">${selTxt}</option>`;
-                     if(rV === 'Grandpa' || rV === 'Grandma') {
-                         for(let k=60; k<=110; k++) opts += `<option value="${k}">${k}</option>`;
-                     } else {
-                         opts += `<option value="Start from female employer is pregnant">${dict[currentLang].opt_preg}</option>`;
-                         for(let k=0; k<=20; k+=0.5) opts += `<option value="${k}">${k}</option>`;
-                     }
-                     s.innerHTML = opts;
-                     s.value = val;
-                 });
-                 
-                 const memSpan = r.querySelector('span.font-bold');
-                 if(memSpan) {
-                     memSpan.classList.add('member-label-highlight');
-                     if(memSpan.textContent.includes('Member')) memSpan.textContent = memSpan.textContent.replace('Member', dict[currentLang].opt_month === 'Bulan' ? 'Anggota' : 'Member');
-                 }
-             });
-        }
-        
-        document.querySelectorAll(`input[name="w${i}_disabled"]`).forEach(inp => {
-             const lbl = inp.parentElement;
-             const val = inp.value;
-             if(val.includes('Other disabled person (1)')) lbl.lastChild.textContent = " " + dict[currentLang].dis_other1;
-             if(val.includes('Other disabled person (2)')) lbl.lastChild.textContent = " " + dict[currentLang].dis_other2;
-        });
-        const d1 = document.getElementById(`w${i}_disabled_other1_input`);
-        const d2 = document.getElementById(`w${i}_disabled_other2_input`);
-        if(d1) d1.placeholder = dict[currentLang].ph_dis_other1;
-        if(d2) d2.placeholder = dict[currentLang].ph_dis_other2;
     }
-
-    // --- NAVIGATION LOGIC ---
 
     function handleWelcomeNext() {
         if(ENABLE_VALIDATION) {
-            const group = document.getElementById('welcome_nat_group');
+            var group = document.getElementById('welcome_nat_group');
             validateGroup(group);
             if(group.parentElement.querySelector('.error-msg.visible')) return;
         }
 
-        const selected = document.querySelector('input[name="seeker_nationality"]:checked');
+        var selected = document.querySelector('input[name="seeker_nationality"]:checked');
         if(!selected) { alert("Please select your nationality"); return; }
 
-        const val = selected.value;
-        // Logic for Google Sheets Target
-        if(val === 'Filipino') {
-            targetSheetName = 'Phil'; 
-            setLanguage('en');
-        } else if (val === 'Indonesian') {
-            targetSheetName = 'Indo'; 
-            setLanguage('id');
-        } else {
-            targetSheetName = 'Phil'; 
-            setLanguage('en');
-        }
+        var val = selected.value;
+        if(val === 'Filipino') { targetSheetName = 'Phil'; setLanguage('en'); }
+        else if (val === 'Indonesian') { targetSheetName = 'Indo'; setLanguage('id'); }
+        else { targetSheetName = 'Phil'; setLanguage('en'); }
         goToPage('page1');
     }
 
     function goToPage(pageId) {
-        document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
+        document.querySelectorAll('.page-section').forEach(function(p){ p.classList.add('hidden'); });
         document.getElementById(pageId).classList.remove('hidden');
         window.scrollTo(0,0);
-        try { updateUI(); } catch(e) { console.error("Update UI Error:", e); }
+        try { updateUI(); } catch(e) {}
     }
 
     function nextPage(currentPageNum) {
         if(ENABLE_VALIDATION) {
-            let pId = currentPageNum === 1 ? 'page1' : 'page2';
-            const p = document.getElementById(pId);
-            const inputs = p.querySelectorAll('input:not(.hidden), select, textarea');
-            let valid = true;
-            inputs.forEach(i => { validateField(i); if(i.classList.contains('input-error')) valid = false; });
-            const groups = p.querySelectorAll('.checkbox-group');
-            groups.forEach(g => { validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
+            var pId = currentPageNum === 1 ? 'page1' : 'page2';
+            var p = document.getElementById(pId);
+            var inputs = p.querySelectorAll('input:not(.hidden), select, textarea');
+            var valid = true;
+            inputs.forEach(function(i){ validateField(i); if(i.classList.contains('input-error')) valid = false; });
+            var groups = p.querySelectorAll('.checkbox-group');
+            groups.forEach(function(g){ validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
             if(!valid) { alert("Please answer all questions"); return; }
         }
         
-        try { saveLocal(); } catch(e) { console.error("Save Local Error:", e); }
-        
+        saveLocal();
         const p1Nat = document.querySelector('input[name="nationality"]:checked');
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
@@ -687,20 +784,20 @@
 
     function handleWorkNext(index) {
         if(ENABLE_VALIDATION) {
-            const p = document.getElementById(`pageWork${index}`);
-            const inputs = p.querySelectorAll('input:not(.hidden), select, textarea');
-            let valid = true;
-            inputs.forEach(i => { validateField(i); if(i.classList.contains('input-error')) valid = false; });
-            const groups = p.querySelectorAll('.checkbox-group');
-            groups.forEach(g => { validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
+            var p = document.getElementById('pageWork'+index);
+            var inputs = p.querySelectorAll('input:not(.hidden), select, textarea');
+            var valid = true;
+            inputs.forEach(function(i){ validateField(i); if(i.classList.contains('input-error')) valid = false; });
+            var groups = p.querySelectorAll('.checkbox-group');
+            groups.forEach(function(g){ validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
             if(!valid) { alert("Please answer all questions"); return; }
         }
 
         saveLocal();
-        const more = document.querySelector(`input[name="w${index}_more"]:checked`);
-        const val = more ? more.value : '';
+        var more = document.querySelector('input[name="w'+index+'_more"]:checked');
+        var val = more ? more.value : '';
         if((val.includes('Yes') || val.includes('Ya')) && index < MAX_JOBS) {
-            goToPage(`pageWork${index+1}`);
+            goToPage('pageWork' + (index+1));
         } else {
             goToPage('pageFinal');
         }
@@ -709,107 +806,35 @@
     function handleWorkPrev(index) {
         saveLocal();
         if(index === 1) goToPage('page2');
-        else goToPage(`pageWork${index-1}`);
+        else goToPage('pageWork' + (index-1));
     }
 
     function goBackFromFinal() {
-        let targetPage = 1;
-        for(let i=1; i<MAX_JOBS; i++) {
-             const more = document.querySelector(`input[name="w${i}_more"]:checked`);
-             const val = more ? more.value : '';
+        var targetPage = 1;
+        for(var i=1; i<MAX_JOBS; i++) {
+             var more = document.querySelector('input[name="w'+i+'_more"]:checked');
+             var val = more ? more.value : '';
              if(val.includes('Yes') || val.includes('Ya')) targetPage = i + 1;
              else break;
         }
-        goToPage(`pageWork${targetPage}`);
-    }
-
-    function singleSelect(checkbox, name) {
-        document.getElementsByName(name).forEach((item) => {
-            if (item !== checkbox) item.checked = false;
-        });
-    }
-    function toggleInput(id, show) {
-        const el = document.getElementById(id);
-        if(show) el.classList.remove('hidden'); else el.classList.add('hidden');
-    }
-    function toggleHKStatus(isHK) {
-        const el = document.getElementById('hk_status_container');
-        if(isHK) el.classList.remove('hidden'); else el.classList.add('hidden');
-    }
-    function toggleReferrer(isYes) {
-        const el = document.getElementById('referrerDetails');
-        if(isYes) el.classList.remove('hidden'); else el.classList.add('hidden');
-    }
-    function validatePassport() {
-        const input = document.getElementById('passportExpiry');
-        if(!input.value) return;
-        const parts = input.value.split('-');
-        if(parts.length === 3) {
-             const d = new Date(parts[0], parts[1]-1, parts[2]);
-             const diffMonths = (d - new Date()) / (1000 * 60 * 60 * 24 * 30.44);
-             const alert = document.getElementById('passportAlert');
-             if (diffMonths < 9) alert.classList.remove('hidden'); else alert.classList.add('hidden');
-        }
-    }
-    function validateHeight() {
-        const input = document.getElementById('height');
-        const alert = document.getElementById('heightAlert');
-        if(input.value && parseInt(input.value) < 145) alert.classList.remove('hidden'); else alert.classList.add('hidden');
-    }
-    function renderChildAges(type) {
-        const count = parseInt(document.getElementById(type + 'Count').value);
-        const container = document.getElementById(type + 'AgesContainer');
-        const inputContainer = document.getElementById(type + 'Inputs');
-        inputContainer.innerHTML = '';
-        if (count > 0) {
-            container.classList.remove('hidden');
-            for(let i=1; i<=count; i++) {
-                let ph = type === 'sons' ? (currentLang === 'id' ? "Umur anak laki-laki" : "Age of son") : (currentLang === 'id' ? "Umur anak perempuan" : "Age of daughter");
-                ph += ` ${i}`;
-                inputContainer.innerHTML += `<input type="number" placeholder="${ph}" class="mb-2" onblur="validateField(this)">`;
-            }
-        } else container.classList.add('hidden');
-    }
-    function toggleVisaQ(isYes) {
-        if(isYes) {
-            document.getElementById('vacationDate').classList.remove('hidden');
-            document.getElementById('stayHomeDuration').classList.add('hidden');
-        } else {
-            document.getElementById('vacationDate').classList.add('hidden');
-            document.getElementById('stayHomeDuration').classList.remove('hidden');
-        }
-    }
-    function toggleTattooAlert(show) {
-        const el = document.getElementById('tattooAlert');
-        if(show) el.classList.remove('hidden'); else el.classList.add('hidden');
-    }
-    function togglePetQty(checkbox, inputId) {
-        const inputContainer = document.getElementById(inputId);
-        const petName = checkbox.getAttribute('data-pet');
-        if(petName === 'No pets') {} else {
-            if(checkbox.checked) inputContainer.classList.remove('hidden');
-            else {
-                inputContainer.classList.add('hidden');
-                inputContainer.querySelectorAll('input').forEach(i => i.value = '');
-            }
-        }
+        goToPage('pageWork' + targetPage);
     }
 
     async function submitRegistration() {
         if(ENABLE_VALIDATION) {
-            const pf = document.getElementById('pageFinal');
-            const groups = pf.querySelectorAll('.checkbox-group');
-            let valid = true;
-            groups.forEach(g => { validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
+            var pf = document.getElementById('pageFinal');
+            var groups = pf.querySelectorAll('.checkbox-group');
+            var valid = true;
+            groups.forEach(function(g){ validateGroup(g); if(g.parentElement.querySelector('.error-msg.visible')) valid = false; });
             if(!valid) { alert("Please answer all questions"); return; }
         }
         
-        const btn = document.querySelector('.btn-submit');
+        var btn = document.querySelector('.btn-submit');
         btn.innerHTML = 'Submitting...';
         btn.disabled = true;
 
-        const data = saveLocal();
-        const p1Nat = document.querySelector('input[name="nationality"]:checked');
+        var data = saveLocal();
+        var p1Nat = document.querySelector('input[name="nationality"]:checked');
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
              else if(p1Nat.value === 'Indonesian') targetSheetName = 'Indo';
@@ -819,36 +844,31 @@
         data.targetSheetName = targetSheetName;
         data.submissionLanguage = currentLang;
         
-        // UPDATE WITH YOUR APPS SCRIPT URL HERE
         const scriptURL = "https://script.google.com/macros/s/AKfycbzb0sBBOvornl0hh0Bt_WH_h8Nz9csh9j9_sCvMZdQZO_XduolcQM1Q2FVEC-4Lb6salw/exec"; 
         
         try {
-            // Uncomment next lines for real submission
             // await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
             console.log("Submitting to Sheet: " + targetSheetName, data);
             
-            setTimeout(() => {
-                document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
+            setTimeout(function() {
+                document.querySelectorAll('.page-section').forEach(function(p){ p.classList.add('hidden'); });
                 document.getElementById('pageSuccess').classList.remove('hidden');
-
-                const sTitle = document.getElementById('successTitle');
-                const sMsg = document.getElementById('successMsg');
-                const pMsg = document.getElementById('photoMsg');
-                const wBtn = document.getElementById('whatsappBtnText');
-                const waText = document.getElementById('agencyWaText');
-
-                const d = dict[currentLang];
+                var sTitle = document.getElementById('successTitle');
+                var sMsg = document.getElementById('successMsg');
+                var pMsg = document.getElementById('photoMsg');
+                var wBtn = document.getElementById('whatsappBtnText');
+                var waText = document.getElementById('agencyWaText');
+                var d = dict[currentLang];
                 if(currentLang === 'id') {
                     sTitle.textContent = "Pendaftaran Anda berhasil";
-                    sMsg.textContent = ""; 
                     sMsg.style.display = 'none';
-                    pMsg.innerHTML = `${d.photo_msg_part1}<span class="font-large">${d.photo_msg_highlight}</span>${d.photo_msg_part2}`;
+                    pMsg.innerHTML = d.photo_msg_part1 + '<span class="font-large">' + d.photo_msg_highlight + '</span>' + d.photo_msg_part2;
                     wBtn.textContent = "Kirim Foto via WhatsApp";
                     waText.textContent = d.agency_wa;
                 } else {
                     sTitle.textContent = "Registration Submitted!";
                     sMsg.style.display = 'none'; 
-                    pMsg.innerHTML = `${d.photo_msg_part1}<span class="font-large">${d.photo_msg_highlight}</span>${d.photo_msg_part2}`;
+                    pMsg.innerHTML = d.photo_msg_part1 + '<span class="font-large">' + d.photo_msg_highlight + '</span>' + d.photo_msg_part2;
                     wBtn.textContent = "Send Photo on WhatsApp";
                     waText.textContent = d.agency_wa;
                 }
@@ -861,221 +881,12 @@
         }
     }
 
-    // Helper for Work Pages
-    const workPagesContainer = document.getElementById('workPagesContainer');
-
-    function createWorkPage(index) {
-        const div = document.createElement('div');
-        div.id = `pageWork${index}`;
-        div.className = 'page-section hidden';
-        
-        const titleKey = index === 1 ? 'work_latest_title' : 'work_other_title';
-        const titleClass = index === 1 ? 'highlight-header' : '';
-        const titleText = index === 1 ? '' : ` (${index})`;
-        const noOptionKey = `work_more_no_${index}`;
-
-        div.innerHTML = `
-            <h2 class="text-xl font-bold mb-5 border-b-2 border-blue-500 pb-2 ${titleClass}"><span data-i18n="${titleKey}"></span>${titleText}</h2>
-            
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_country">Country of Employment?</label>
-                <input type="text" id="w${index}_country" onblur="validateField(this)">
-                <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-                
-                <label class="question-label mt-3" data-i18n="work_emp_nat">Employer's Nationality?</label>
-                <div class="checkbox-group" onfocusout="validateGroup(this)">
-                    ${['Local people', 'Foreigner', 'Chinese', 'Hong Kong people', 'Asian'].map(o => 
-                        `<label class="checkbox-option"><input type="radio" name="w${index}_emp_nat" value="${o}"> ${o}</label>`
-                    ).join('')}
-                </div>
-                <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_start">Start Date?</label>
-                <div class="flex gap-2">
-                    <select id="w${index}_startMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
-                    <select id="w${index}_startYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
-                </div>
-                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-             <div class="question-block">
-                <label class="question-label" data-i18n="work_end">End Date?</label>
-                <div class="flex gap-2">
-                    <select id="w${index}_endMonth" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
-                    <select id="w${index}_endYear" class="w-1/2 dynamic-select" onblur="validateField(this)"></select>
-                </div>
-                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_size">House Size?</label>
-                <input type="number" id="w${index}_houseSize" onblur="validateField(this)">
-                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_fam_count">Family Members Count?</label>
-                <select id="w${index}_famCount" onchange="renderFamMembers(${index}); validateField(this)" onblur="validateField(this)"></select>
-                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-            
-            <div id="w${index}_famDetails" class="question-block hidden">
-                <label class="question-label" data-i18n="work_fam_age">Age of Employer Family Members</label>
-                <div id="w${index}_famRows" class="flex flex-col gap-3"></div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_helpers">Number of Helpers?</label>
-                 <select id="w${index}_helpers" onblur="validateField(this)"></select>
-                  <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_status">Contract Status?</label>
-                <div class="checkbox-group" onfocusout="validateGroup(this)">
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Finished contract" onclick="singleSelect(this, 'w${index}_status')"> <span data-i18n="hk_finish">Finished contract</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Employer terminated me already" onclick="singleSelect(this, 'w${index}_status')"> <span data-i18n="hk_terminated">Employer terminated me already</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="I resigned already" onclick="singleSelect(this, 'w${index}_status')"> <span>I resigned already</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_status" value="Not contract and can leave anytime" onclick="singleSelect(this, 'w${index}_status')"> <span>Not contract and can leave anytime</span></label>
-                </div>
-                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_reason">Reason for Leaving?</label>
-                <textarea id="w${index}_reason" class="expandable" rows="3" onblur="validateField(this)"></textarea>
-                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-            <!-- DISABLED CARE SECTION (NEW) -->
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_dis_q">In This Employer, Did You Take Care of Disabled Person?</label>
-                <div class="checkbox-group">
-                    ${[
-                        {id:'dis_no', val:'No'}, {id:'dis_bed', val:'Bedridden care'}, {id:'dis_dis', val:'Disability care'}, 
-                        {id:'dis_tra', val:'Tracheostomy care'}, {id:'dis_wheel', val:'Wheelchair'}, {id:'dis_walk', val:'Walking slowly'},
-                        {id:'dis_med', val:'Medication feeding'}, {id:'dis_bath', val:'Bathing assistance'}, {id:'dis_stroke', val:'Stroke'},
-                        {id:'dis_alz', val:'Alzheimer\'s disease'}, {id:'dis_park', val:'Parkinson\'s disease'}
-                    ].map(d => `<label class="checkbox-option"><input type="checkbox" name="w${index}_disabled" value="${d.val}"> <span data-i18n="${d.id}">${d.val}</span></label>`).join('')}
-                    
-                    <label class="checkbox-option flex-col !items-start">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="w${index}_disabled" value="Other disabled person (1)" onchange="toggleInput('w${index}_disabled_other1_input', this.checked)"> 
-                            <span data-i18n="dis_other1">Other disabled person (1)</span>
-                        </div>
-                        <input type="text" id="w${index}_disabled_other1_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)">
-                    </label>
-                    <label class="checkbox-option flex-col !items-start">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="w${index}_disabled" value="Other disabled person (2)" onchange="toggleInput('w${index}_disabled_other2_input', this.checked)"> 
-                            <span data-i18n="dis_other2">Other disabled person (2)</span>
-                        </div>
-                        <input type="text" id="w${index}_disabled_other2_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)">
-                    </label>
-                </div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_pets">Employer’s Pets?</label>
-                <div class="checkbox-group">
-                     ${[
-                         {id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, 
-                         {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}
-                     ].map(p => `
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" class="pet-check" data-pet="${p.val}" onchange="togglePetQty(this, 'w${index}_${p.val.replace(/\s/g,'')}_qty')"> 
-                            <span data-i18n="${p.id}">${p.val}</span>
-                            <input type="number" id="w${index}_${p.val.replace(/\s/g,'')}_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
-                        </div>
-                     `).join('')}
-                     
-                     <div class="flex items-center gap-2">
-                        <input type="checkbox" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, 'w${index}_Others_qty')"> 
-                        <span data-i18n="pet_other">Other pet (1)</span>
-                        <div id="w${index}_Others_qty" class="hidden flex gap-2 w-full">
-                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
-                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
-                        </div>
-                    </div>
-                     <div class="flex items-center gap-2">
-                        <input type="checkbox" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, 'w${index}_Others2_qty')"> 
-                        <span data-i18n="pet_other2">Other pet (2)</span>
-                        <div id="w${index}_Others2_qty" class="hidden flex gap-2 w-full">
-                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
-                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
-                        </div>
-                    </div>
-                     <div class="flex items-center gap-2">
-                        <input type="checkbox" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, 'w${index}_Others3_qty')"> 
-                        <span data-i18n="pet_other3">Other pet (3)</span>
-                        <div id="w${index}_Others3_qty" class="hidden flex gap-2 w-full">
-                            <input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)">
-                            <input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_resp">Job Responsibilities?</label>
-                <div class="checkbox-group" onfocusout="validateGroup(this)">
-                    ${[
-                        {id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'},
-                        {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_wet_market', val: 'I go to Chinese wet-market to buy food'},
-                        {id: 'resp_room', val: 'I sharing room with other'},
-                        {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}
-                    ].map(r => `
-                         <label class="checkbox-option"><input type="checkbox" name="w${index}_resp" value="${r.val}"> <span data-i18n="${r.id}">${r.val}</span></label>
-                    `).join('')}
-                    <label class="checkbox-option flex-col !items-start">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="w${index}_resp" value="Other" onchange="toggleInput('w${index}_resp_other_input', this.checked)"> 
-                            <span data-i18n="resp_other">Other responsibilities (1)</span>
-                        </div>
-                        <input type="text" id="w${index}_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
-                    </label>
-                    <label class="checkbox-option flex-col !items-start">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="w${index}_resp" value="Other2" onchange="toggleInput('w${index}_resp_other2_input', this.checked)"> 
-                            <span data-i18n="resp_other2">Other responsibilities (2)</span>
-                        </div>
-                        <input type="text" id="w${index}_resp_other2_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
-                    </label>
-                    <label class="checkbox-option flex-col !items-start">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="w${index}_resp" value="Other3" onchange="toggleInput('w${index}_resp_other3_input', this.checked)"> 
-                            <span data-i18n="resp_other3">Other responsibilities (3)</span>
-                        </div>
-                        <input type="text" id="w${index}_resp_other3_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)">
-                    </label>
-                </div>
-                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-            <div class="question-block">
-                <label class="question-label" data-i18n="work_more_q">Do You Still Have Other Employer Work Experience?</label>
-                <div class="checkbox-group" onfocusout="validateGroup(this)">
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_more" value="Yes" onclick="singleSelect(this, 'w${index}_more')"> <span data-i18n="work_more_yes">Yes, still have other employer</span></label>
-                    <label class="checkbox-option"><input type="checkbox" name="w${index}_more" value="No" onclick="singleSelect(this, 'w${index}_more')"> <span data-i18n="${noOptionKey}">No, only one employer experience</span></label>
-                </div>
-                 <div class="error-msg" data-i18n="error_msg">Answer This Question</div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="btn-primary btn-prev" onclick="handleWorkPrev(${index})" data-i18n="btn_prev">Previous Page</button>
-                <button class="btn-primary" onclick="handleWorkNext(${index})" data-i18n="btn_next">Save And Next Page</button>
-            </div>
-        `;
-        workPagesContainer.appendChild(div);
-    }
-    
-    // --- INIT ---
+    // --- MAIN INIT ---
     window.onload = function() {
-        for(let i=1; i<=MAX_JOBS; i++) createWorkPage(i);
+        for(var i=1; i<=MAX_JOBS; i++) createWorkPage(i);
+        renderDynamicSections(); 
         restoreLocal();
-        document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
+        document.querySelectorAll('.page-section').forEach(function(p){ p.classList.add('hidden'); });
         document.getElementById('pageWelcome').classList.remove('hidden');
         setLanguage('en'); 
     };
