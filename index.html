@@ -101,7 +101,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.59</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.60</div>
     </div>
 
     <!-- PAGE 1 -->
@@ -223,7 +223,7 @@
 
     // --- 2. DICTIONARY ---
     var dict = {
-        // ... Same dict content ...
+        // ... Same dict content as previous ...
         en: {
             title_text: "Online Registration of Horizon Employment Agency", error_msg: "Answer This Question",
             seeker_nat_q: "Job Seeker's Nationality?", btn_welcome_next: "I want to find a new employer. I am registering my information now",
@@ -263,7 +263,7 @@
         id: {
             title_text: "Pendaftaran Online Horizon Employment Agency", error_msg: "Jawab Pertanyaan Ini",
             seeker_nat_q: "Kewarganegaraan Pencari Kerja?", btn_welcome_next: "Saya ingin mencari majikan baru. Saya sedang mendaftar sekarang", apply_q: "Ingin melamar apa?", apply_helper: "Melamar sebagai PRT", apply_driver: "Melamar sebagai sopir Hong Kong",
-            skills_q: "Keahlian khusus Anda?", skill_nurse: "Pengalaman perawat", skill_teacher: "Pengalaman guru", skill_elderly_home: "Pengalaman panti jompo", skill_hotel: "Pengalaman hotel", skill_gardening: "Pengalaman berkebun", skill_carpentry: "Pengalaman pertukangan", skill_none: "Tidak ada", skill_other: "Pengalaman lainnya", ph_skill_other: "Isi pengalaman lainnya", skill_restaurant: "Pengalaman memasak di restoran",
+            skills_q: "Keahlian khusus Anda?", skill_nurse: "Pengalaman perawat", skill_teacher: "Pengalaman guru", skill_elderly_home: "Pengalaman panti jompo", skill_hotel: "Pengalaman hotel", skill_gardening: "Pengalaman berkebun", skill_gardening: "Pengalaman berkebun", skill_carpentry: "Pengalaman pertukangan", skill_none: "Tidak ada", skill_other: "Pengalaman lainnya", ph_skill_other: "Isi pengalaman lainnya", skill_restaurant: "Pengalaman memasak di restoran",
             basic_info_title: "Informasi Dasar Pekerja Rumah Tangga", gender_q: "Jenis Kelamin?", female: "Wanita", male: "Pria", fullname_q: "Nama Lengkap?", where_now_q: "Dimana Anda Sekarang?", loc_hk: "Sekarang di Hong Kong", loc_ph: "Sekarang di Filipina", loc_id: "Sekarang di Indonesia", loc_other: "Sekarang di Negara Lain",
             nationality_q: "Kewarganegaraan?", nat_filipino: "Filipina", nat_indonesian: "Indonesia", nat_other: "Lainnya", nat_other_opt: "Lainnya Kewarganegaraan", ph_nat_other: "Mengisi kewarganegaraan",
             hk_status_q: "Status Kontrak HK?", hk_finish: "Selesai kontrak", hk_terminated: "Majikan sudah memutus kontrak", hk_breached: "Saya sudah melanggar kontrak", hk_break: "Saya akan memutus kontrak jika mendapat majikan baru", hk_passed: "Majikan saat ini meninggal", hk_relocation: "Majikan pindah negara", hk_financial: "Majikan ada masalah keuangan",
@@ -280,7 +280,9 @@
             skill_newborn: "Apakah Anda Bersedia Merawat Bayi Baru Lahir?", skill_children: "Apakah Anda Bersedia Merawat Anak-anak?", skill_elderly: "Apakah Anda Bersedia Merawat Lansia?", skill_disabled: "Apakah Anda Bersedia Merawat Orang Cacat?", skill_pets: "Apakah Anda Bersedia Merawat Hewan Peliharaan?", skill_cook: "Apakah Anda Bersedia Memasak?", yes_willing: "Ya, bersedia", no: "Tidak",
             cnt_sg: "Berapa Tahun Anda Bekerja di Singapura? (Hanya Pengalaman PRT)", cnt_tw: "Berapa Tahun Anda Bekerja di Taiwan? (Hanya Pengalaman PRT)", cnt_my: "Berapa Tahun Anda Bekerja di Malaysia? (Hanya Pengalaman PRT)", cnt_me: "Berapa Tahun Anda Bekerja di Timur Tengah? (Hanya Pengalaman PRT)", cnt_sa: "Berapa Tahun Anda Bekerja di Arab Saudi? (Hanya Pengalaman PRT)", cnt_id: "Berapa Tahun Anda Bekerja di Indonesia? (Hanya Pengalaman PRT)", cnt_ph: "Berapa Tahun Anda Bekerja di Filipina? (Hanya Pengalaman PRT)", cnt_other: "Berapa Tahun Anda Bekerja di negara-negara lain? (Hanya Pengalaman PRT)", ph_cnt_other: "Isi Negara Lain",
             cnt_other_q_check: "Berapa Tahun Anda Bekerja di negara-negara lain? (Hanya Pengalaman PRT)", cnt_yes_worked: "Ya, saya pernah bekerja di negara lain", cnt_no_worked: "Tidak ada negara lain",
-            work_latest_title: "PRT Pengalaman Kerja Terakhir (Termasuk Hong Kong, Filipina, Indonesia, Negara Lain, hanya PRT)", work_other_title: "Pengalaman PRT Lainnya", work_country: "Negara Tempat Bekerja? (Jika Hong Kong, Tulis Lokasi, Misalnya Causeway Bay)", work_emp_nat: "Kewarganegaraan Majikan?", work_start: "Di Majikan Ini, Tahun Mulai Kerja Dan Bulan Mulai Kerja?", work_end: "Di Majikan Ini, Tahun Selesai Kerja Dan Bulan Selesai Kerja?", work_size: "Ukuran Rumah Majikan? (contoh 1000 kaki persegi)", work_fam_count: "Jumlah Anggota Keluarga Majikan? (Tinggal di Rumah yang Sama)", work_fam_age: "Umur Anggota Keluarga Majikan", work_helpers: "Jumlah Pembantu?", work_status: "Status Kontrak?", work_reason: "Alasan Keluar? (Alasan Jelas Dan Benar)",
+            work_latest_title: "PRT Pengalaman Kerja Terakhir (Termasuk Hong Kong, Filipina, Indonesia, Negara Lain, hanya PRT)", work_other_title: "Pengalaman PRT Lainnya", work_country: "Negara Tempat Bekerja? (Jika Hong Kong, Tulis Lokasi, Misalnya Causeway Bay)", work_emp_nat: "Kewarganegaraan Majikan?", 
+            opt_emp_nat_local: "Orang Lokal", opt_emp_nat_foreigner: "Orang Asing", opt_emp_nat_chinese: "Orang Cina", opt_emp_nat_hk: "Orang Hong Kong", opt_emp_nat_asian: "Orang Asia",
+            work_start: "Di Majikan Ini, Tahun Mulai Kerja Dan Bulan Mulai Kerja?", work_end: "Di Majikan Ini, Tahun Selesai Kerja Dan Bulan Selesai Kerja?", work_size: "Ukuran Rumah Majikan? (contoh 1000 kaki persegi)", work_fam_count: "Jumlah Anggota Keluarga Majikan? (Tinggal di Rumah yang Sama)", work_fam_age: "Umur Anggota Keluarga Majikan", work_helpers: "Jumlah Pembantu?", work_status: "Status Kontrak?", work_reason: "Alasan Keluar? (Alasan Jelas Dan Benar)",
             work_dis_q: "Di majikan ini, apakah Anda mengurus orang disabilitas?", dis_no: "Tidak", dis_bed: "Perawatan pasien terbaring", dis_dis: "Perawatan disabilitas", dis_tra: "Perawatan trakeostomi", dis_wheel: "Kursi roda", dis_walk: "Berjalan perlahan", dis_med: "Pemberian obat", dis_bath: "Bantuan mandi", dis_stroke: "Stroke", dis_alz: "Alzheimer", dis_park: "Parkinson", dis_other1: "Penyandang disabilitas lainnya (1)", dis_other2: "Penyandang disabilitas lainnya (2)", ph_dis_other1: "Isi detail", ph_dis_other2: "Isi detail",
             work_pets: "Hewan Peliharaan Majikan?", pet_no: "Tidak ada", pet_s_dog: "Anjing kecil", pet_m_dog: "Anjing sedang", pet_b_dog: "Anjing besar", pet_cat: "Kucing", pet_rabbit: "Kelinci", pet_other: "Hewan Lain (1)", pet_other2: "Hewan Lain (2)", pet_other3: "Hewan Lain (3)",
             work_resp: "Tanggung Jawab Pekerjaan?", resp_car: "Cuci mobil", resp_clean: "Bersih-bersih rumah", resp_wash: "Cuci baju tangan", resp_market: "Pergi ke pasar beli makanan", resp_wet_market: "Saya pergi ke pasar basah Cina untuk membeli makanan", resp_room: "Berbagi kamar dengan orang lain", resp_cook_c: "Masak makanan Cina", resp_cook_w: "Masak makanan Barat", resp_other: "Tanggung jawab lainnya (1)", resp_other2: "Tanggung jawab lainnya (2)", resp_other3: "Tanggung jawab lainnya (3)",
@@ -321,8 +323,10 @@
     function validateField(input) {
         if(!ENABLE_VALIDATION) return;
         var parent = input.parentElement;
+        // Try next sibling first for our appended errors
         var errorMsg = input.nextElementSibling;
         if (!errorMsg || !errorMsg.classList.contains('error-msg')) {
+             // Fallback to parent search
              errorMsg = parent ? (parent.querySelector('.error-msg') || parent.parentElement.querySelector('.error-msg')) : null;
         }
         
@@ -351,9 +355,12 @@
         var inputs = container.querySelectorAll('input');
         var checked = false;
         for (var i = 0; i < inputs.length; i++) { if(inputs[i].checked) checked = true; }
-        var parent = container.parentElement;
-        var errorMsg = parent ? parent.querySelector('.error-msg') : null;
-        if(!errorMsg) return;
+        
+        // Use nextElementSibling to get the error msg associated with the group
+        var errorMsg = container.nextElementSibling;
+        if(!errorMsg || !errorMsg.classList.contains('error-msg')) {
+             return; 
+        }
         
         if(!checked) { errorMsg.classList.add('visible'); } 
         else { errorMsg.classList.remove('visible'); }
@@ -743,7 +750,6 @@
         var sCountVal = sCount.value;
         var sPosVal = sPos.value;
         var html = '<option value="">'+dict[currentLang].opt_select+'</option>';
-        html += '<option value="0">0 ' + (currentLang === 'id' ? '(Hanya aku)' : '(Only me)') + '</option>';
         html += '<option value="1">1 '+dict[currentLang].opt_sibling_suf+'</option>';
         for(var i=2; i<=13; i++) html += '<option value="'+i+'">'+i+' '+(i==13?'+':'')+'</option>';
         sCount.innerHTML = html; sCount.value = sCountVal;
@@ -1098,59 +1104,6 @@
         btn.disabled = true;
 
         var data = saveLocal();
-        
-        // --- DATA COLLECTION BEFORE SUBMIT ---
-        // 1. Sons Ages
-        var sAges = [];
-        document.querySelectorAll('#sonsInputs input').forEach(function(i){ if(i.value) sAges.push(i.value); });
-        data.sonsAges = sAges.join(', ');
-        
-        // 2. Daughters Ages
-        var dAges = [];
-        document.querySelectorAll('#daughtersInputs input').forEach(function(i){ if(i.value) dAges.push(i.value); });
-        data.daughtersAges = dAges.join(', ');
-        
-        // 3. Work Experience Family Details
-        for(var k=1; k<=MAX_JOBS; k++) {
-            var famRows = document.querySelectorAll('#w'+k+'_famRows .member-row');
-            var details = [];
-            famRows.forEach(function(row){
-                 var role = row.querySelector('select').value;
-                 var selects = row.querySelectorAll('.age-inputs select');
-                 if(selects.length === 2) {
-                     var start = selects[0].value;
-                     var end = selects[1].value;
-                     if(role) details.push({role: role, start: start, end: end});
-                 }
-            });
-            data['w'+k+'_famDetailsStr'] = details.map(function(d){ return d.role + ': ' + d.start + ' to ' + d.end; }).join(', ');
-            
-            // 4. Pet Qty (Fix for Multiple Other Pets)
-            // Pet 1
-            var petOther1Input = document.querySelector('#w'+k+'_Others_qty input[type="text"]');
-            var petOther1Num = document.querySelector('#w'+k+'_Others_qty input[type="number"]');
-            if(petOther1Input) {
-                data['w'+k+'_Others_qty_txt'] = petOther1Input.value;
-                data['w'+k+'_Others_qty_num'] = petOther1Num ? petOther1Num.value : '';
-            }
-            
-            // Pet 2
-            var petOther2Input = document.querySelector('#w'+k+'_Others2_qty input[type="text"]');
-            var petOther2Num = document.querySelector('#w'+k+'_Others2_qty input[type="number"]');
-            if(petOther2Input) {
-                data['w'+k+'_Others2_qty_txt'] = petOther2Input.value;
-                data['w'+k+'_Others2_qty_num'] = petOther2Num ? petOther2Num.value : '';
-            }
-
-            // Pet 3
-            var petOther3Input = document.querySelector('#w'+k+'_Others3_qty input[type="text"]');
-            var petOther3Num = document.querySelector('#w'+k+'_Others3_qty input[type="number"]');
-            if(petOther3Input) {
-                data['w'+k+'_Others3_qty_txt'] = petOther3Input.value;
-                data['w'+k+'_Others3_qty_num'] = petOther3Num ? petOther3Num.value : '';
-            }
-        }
-
         var p1Nat = document.querySelector('input[name="nationality"]:checked');
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
