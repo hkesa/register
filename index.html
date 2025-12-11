@@ -101,7 +101,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.63</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.64</div>
     </div>
 
     <!-- PAGE 1 -->
@@ -223,7 +223,7 @@
 
     // --- 2. DICTIONARY ---
     var dict = {
-        // ... Same dict content as previous ...
+        // ... Same dict content ...
         en: {
             title_text: "Online Registration of Horizon Employment Agency", error_msg: "Answer This Question",
             seeker_nat_q: "Job Seeker's Nationality?", btn_welcome_next: "I want to find a new employer. I am registering my information now",
@@ -236,7 +236,7 @@
             passport_q: "Your Passport Expiry Date?", passport_alert: "Your passport is about to expire, please renew it as soon as possible", dob_q: "Your Date of Birth?",
             religion_q: "Your Religion?", rel_no: "No religion", rel_catholic: "Catholic", rel_christian: "Christian", rel_muslim: "Muslim", rel_buddhist: "Buddhist", rel_other: "Other", rel_other_opt: "Other religion", ph_rel_other: "Fill-in religion",
             marital_q: "Marital Status?", mar_unmarried: "Unmarried, single", mar_partner: "Unmarried partner", mar_living: "Living with partner", mar_married: "Married", mar_divorced: "Divorced", mar_separated: "Separated", mar_singleparent: "Single parent", mar_widowed: "Widowed",
-            edu_q: "Education?", edu_pri: "Primary school", edu_sec: "Secondary school", edu_col: "College", edu_voc: "Vocational school", edu_uni: "University",
+            edu_q: "Education?", edu_pri: "Primary school", edu_sec: "Secondary school", edu_col: "College", edu_voc: "Vocational school", edu_uni: "Universitas",
             height_q: "Your Height (cm)?", height_alert: "Please check if your height was entered incorrectly", weight_q: "Your Weight (kg)?", spouse_name_q: "Your Spouse Name?", spouse_job_q: "Spouse's Job Occupation?",
             siblings_q: "Number of Siblings?", sibling_pos_q: "My Position Among Siblings?", sons_q: "How Many Sons Do You Have?", sons_age_q: "How Old Are Your All Sons?", opt_noson: "No son", daughters_q: "How Many Daughters Do You Have?", daughters_age_q: "How Old Are Your All Daughters?", opt_nodaughter: "No daughter",
             whatsapp_q: "Your WhatsApp Number? Please Include Country Code", homephone_q: "Your Home Country Mobile Phone Number? Please Include Country Code", referrer_q: "Who Referred You To Our Agency? (if any)", yes_referrer: "Yes, I have referrer", no_referrer: "No", referrer_name_q: "Name of Referrer", referrer_phone_q: "Referrer’s WhatsApp Number? Please Include Country Code", address_q: "Your Home Address? (Only Write Province, State, City)",
@@ -254,7 +254,7 @@
             work_more_q: "Do You Still Have Other Domestic Helper Work Experience in HK OR in Other Countries OR in Philippines OR in Indonesia? (Only Domestic Helper Experience)?", work_more_yes: "Yes, still have other employer", work_more_no_1: "No, only one employer experience", work_more_no_2: "No, only 2 employer experience", work_more_no_3: "No, only 3 employer experience", work_more_no_4: "No, only 4 employer experience", work_more_no_5: "No, only 5 employer experience", work_status_resigned: "I resigned already", work_status_nocontract: "Not contract and can leave anytime",
             other_q_title: "Other Question", q_like_cooking: "Do You Like Cooking?", q_like_cooking_yes: "Yes, I like", q_learn_yt: "Can You Learn New Dishes by Yourself From YouTube?", q_learn_yt_yes: "Yes, I can", q_confident: "Are You Confident in Your Cooking?", q_confident_yes: "Yes, I am confident", q_sing: "Can You Sing a Song OR Tell a Story to Lull The Child to Sleep?", q_sing_yes: "Yes, I can", q_tutor: "Do You Have Experience Tutoring Children With Their Homework?", q_tutor_yes: "Yes, I have experience", visa_q: "When You Get Your New Visa, Can You Start Working First?", visa_yes: "Yes, I can start work first", visa_no: "No, I will go home first", vacation_q: "When Will You Go Home For Vacation?", stay_home_q: "How Long Will You Stay Home, Then You Back to HK to Work?", q_dog: "Are You Afraid of Dogs?", q_cat: "Are You Afraid of Cats?", q_afraid_yes: "Yes, afraid", q_tattoo: "Do You Have Any Tattoos?", q_tattoo_yes: "Yes, I have", tattoo_msg: "If you have tattoos, please send us the photos later", q_smoke: "Do You Have Smoking OR Drinking Habits?", q_allergy: "Do You Have Any Allergies, illnesses, Diseases, Skin Irritations, Infectious Diseases, or Other Conditions?", q_chronic: "Do You Have Any Chronic illnesses, Require Injections, Take Medication, Need Follow-up Appointments, Diabetes, Heart Disease, or Other Serious illnesses?", q_consent: "Have you read, understood, agreed to, acknowledged, and authorized our Company’s Personal Information Collection Statement, and do you not object to it?", q_consent_yes: "Yes, I agree", q_fingers: "Are Your Fingers And Toes Normal, No More And No Less?", q_fingers_yes: "Yes, normal", q_fingers_no: "No, I have more or fewer", q_confirm: "I confirm that all of the above information is correct, complete, and true. And I will take full responsibility for any errors or omissions. And I also agree to have the Horizon Employment Agency send and use the above my information to all prospective employers?", q_confirm_yes: "I have read, understand, confirm and agree", q_confirm_no: "No",
             ph_qty: "Enter quantity", ph_pet: "Enter pet", ph_resp: "Enter Responsibilities",
-            opt_select: "Select", opt_month: "Month", opt_year: "Year", opt_sibling_suf: "sibling", opt_sibling_pos_pre: "Number", opt_week: "week", opt_weeks: "weeks", opt_emp_nat_local: "Local people", opt_emp_nat_foreigner: "Foreigner", opt_emp_nat_chinese: "Chinese", opt_emp_nat_hk: "Hong Kong people", opt_emp_nat_asian: "Asian", opt_only_emp: "1 (Only employer)", opt_emp_plus: "employer +", opt_only_me: "1 (only me)", opt_me_plus: "me +", opt_role_adult: "Adult", opt_role_boy: "Boy", opt_role_girl: "Girl", opt_role_twins: "Twins", opt_role_triplets: "Triplets", opt_role_grandpa: "Grandpa", opt_role_grandma: "Grandma", opt_age_start: "Age when you started (From)", opt_age_leave: "Age when you leave (until)", opt_preg: "Female employer is pregnant", opt_never_hk: "0 (Never been to Hong Kong)", opt_20_years: "0 to 20 years", opt_1_son: "1 son", opt_1_daughter: "1 daughter", opt_1_year: "1 year",
+            opt_select: "Select", opt_month: "Month", opt_year: "Year", opt_sibling_suf: "sibling", opt_sibling_pos_pre: "Number", opt_week: "week", opt_weeks: "weeks", opt_emp_nat_local: "Local people", opt_emp_nat_foreigner: "Orang Asing", opt_emp_nat_chinese: "Orang Cina", opt_emp_nat_hk: "Orang Hong Kong", opt_emp_nat_asian: "Orang Asia", opt_only_emp: "1 (Only employer)", opt_emp_plus: "employer +", opt_only_me: "1 (only me)", opt_me_plus: "me +", opt_role_adult: "Adult", opt_role_boy: "Boy", opt_role_girl: "Girl", opt_role_twins: "Twins", opt_role_triplets: "Triplets", opt_role_grandpa: "Grandpa", opt_role_grandma: "Grandma", opt_age_start: "Age when you started (From)", opt_age_leave: "Age when you leave (until)", opt_preg: "Female employer is pregnant", opt_never_hk: "0 (Never been to Hong Kong)", opt_20_years: "0 to 20 years", opt_1_son: "1 son", opt_1_daughter: "1 daughter", opt_1_year: "1 year",
             photo_msg_part1: "Now, please send us your ", photo_msg_highlight: "“half-body” photo", photo_msg_part2: " by clicking the WhatsApp button below", agency_wa: "Our agency WhatsApp is (+852) 96111003",
             os_msg_title: "Below message for all Overseas helpers and applicants:",
             os_msg_content: "<p class='mb-4'>You pay Zero peso, 0 piso, no salary deduction, you no need to pay any Philippine fees, such as the training fee, medical fee</p><p class='mb-4'>You only need to be responsible for the accommodation and air tickets and transportation go to our Manila agency (in Makati City) for training, medical, other processes and getting your flight from Manila to Hong Kong</p><p class='mb-4'>You need to calculate how much money you need to prepare and you will need to go to Manila agency 2 times, I think usually around 9000 peso, but depending on how far you are from Manila. You pay 9000 peso is for your accommodation and transportation to go to Manila agency 2 times from your hometown</p><p class='mb-4'>If you don't have enough money to pay for transportation, food and accommodation, please start working and prepare the money now. You need to go to the Manila agency 2 times and stay in Manila for a few days each time</p><p class='mb-4'>1st time you go to the Manila agency is when you get hired by our Employer. You go Manila for reporting, do medical and others, stay 6-9 days, after that you can go home to wait Hong Kong visa or you can find a job work in Manila to wait Hong Kong visa</p><p class='mb-4'>After 6-8 weeks, 2nd time go to Manila agency. When all documents is finished, I will tell you, then you go to Manila stay 2-3 days for getting your flight from Manila to Hong Kong</p><p class='mb-4'>The Hong Kong visa application process to come to Hong Kong takes about 2-3 months, so you need to start working from now until you can fly to Hong Kong. Otherwise, you won't have the financial to support your family's living expenses for these few months and cover the costs of air tickets and accommodation for the flight to Manila for processing</p>",
@@ -280,20 +280,15 @@
             skill_newborn: "Apakah Anda Bersedia Merawat Bayi Baru Lahir?", skill_children: "Apakah Anda Bersedia Merawat Anak-anak?", skill_elderly: "Apakah Anda Bersedia Merawat Lansia?", skill_disabled: "Apakah Anda Bersedia Merawat Orang Cacat?", skill_pets: "Apakah Anda Bersedia Merawat Hewan Peliharaan?", skill_cook: "Apakah Anda Bersedia Memasak?", yes_willing: "Ya, bersedia", no: "Tidak",
             cnt_sg: "Berapa Tahun Anda Bekerja di Singapura? (Hanya Pengalaman PRT)", cnt_tw: "Berapa Tahun Anda Bekerja di Taiwan? (Hanya Pengalaman PRT)", cnt_my: "Berapa Tahun Anda Bekerja di Malaysia? (Hanya Pengalaman PRT)", cnt_me: "Berapa Tahun Anda Bekerja di Timur Tengah? (Hanya Pengalaman PRT)", cnt_sa: "Berapa Tahun Anda Bekerja di Arab Saudi? (Hanya Pengalaman PRT)", cnt_id: "Berapa Tahun Anda Bekerja di Indonesia? (Hanya Pengalaman PRT)", cnt_ph: "Berapa Tahun Anda Bekerja di Filipina? (Hanya Pengalaman PRT)", cnt_other: "Berapa Tahun Anda Bekerja di negara-negara lain? (Hanya Pengalaman PRT)", ph_cnt_other: "Isi Negara Lain",
             cnt_other_q_check: "Berapa Tahun Anda Bekerja di negara-negara lain? (Hanya Pengalaman PRT)", cnt_yes_worked: "Ya, saya pernah bekerja di negara lain", cnt_no_worked: "Tidak ada negara lain",
-            work_latest_title: "PRT Pengalaman Kerja Terakhir (Termasuk Hong Kong, Filipina, Indonesia, Negara Lain, hanya PRT)", work_other_title: "Pengalaman PRT Lainnya", work_country: "Negara Tempat Bekerja? (Jika Hong Kong, Tulis Lokasi, Misalnya Causeway Bay)", work_emp_nat: "Kewarganegaraan Majikan?", 
-            opt_emp_nat_local: "Orang Lokal", opt_emp_nat_foreigner: "Orang Asing", opt_emp_nat_chinese: "Orang Cina", opt_emp_nat_hk: "Orang Hong Kong", opt_emp_nat_asian: "Orang Asia",
-            work_start: "Di Majikan Ini, Tahun Mulai Kerja Dan Bulan Mulai Kerja?", work_end: "Di Majikan Ini, Tahun Selesai Kerja Dan Bulan Selesai Kerja?", work_size: "Ukuran Rumah Majikan? (contoh 1000 kaki persegi)", work_fam_count: "Jumlah Anggota Keluarga Majikan? (Tinggal di Rumah yang Sama)", work_fam_age: "Umur Anggota Keluarga Majikan", work_helpers: "Jumlah Pembantu?", work_status: "Status Kontrak?", work_reason: "Alasan Keluar? (Alasan Jelas Dan Benar)",
+            work_latest_title: "PRT Pengalaman Kerja Terakhir (Termasuk Hong Kong, Filipina, Indonesia, Negara Lain, hanya PRT)", work_other_title: "Pengalaman PRT Lainnya", work_country: "Negara Tempat Bekerja? (Jika Hong Kong, Tulis Lokasi, Misalnya Causeway Bay)", work_emp_nat: "Kewarganegaraan Majikan?", work_start: "Di Majikan Ini, Tahun Mulai Kerja Dan Bulan Mulai Kerja?", work_end: "Di Majikan Ini, Tahun Selesai Kerja Dan Bulan Selesai Kerja?", work_size: "Ukuran Rumah Majikan? (contoh 1000 kaki persegi)", work_fam_count: "Jumlah Anggota Keluarga Majikan? (Tinggal di Rumah yang Sama)", work_fam_age: "Umur Anggota Keluarga Majikan", work_helpers: "Jumlah Pembantu?", work_status: "Status Kontrak?", work_reason: "Alasan Keluar? (Alasan Jelas Dan Benar)",
             work_dis_q: "Di majikan ini, apakah Anda mengurus orang disabilitas?", dis_no: "Tidak", dis_bed: "Perawatan pasien terbaring", dis_dis: "Perawatan disabilitas", dis_tra: "Perawatan trakeostomi", dis_wheel: "Kursi roda", dis_walk: "Berjalan perlahan", dis_med: "Pemberian obat", dis_bath: "Bantuan mandi", dis_stroke: "Stroke", dis_alz: "Alzheimer", dis_park: "Parkinson", dis_other1: "Penyandang disabilitas lainnya (1)", dis_other2: "Penyandang disabilitas lainnya (2)", ph_dis_other1: "Isi detail", ph_dis_other2: "Isi detail",
             work_pets: "Hewan Peliharaan Majikan?", pet_no: "Tidak ada", pet_s_dog: "Anjing kecil", pet_m_dog: "Anjing sedang", pet_b_dog: "Anjing besar", pet_cat: "Kucing", pet_rabbit: "Kelinci", pet_other: "Hewan Lain (1)", pet_other2: "Hewan Lain (2)", pet_other3: "Hewan Lain (3)",
             work_resp: "Tanggung Jawab Pekerjaan?", resp_car: "Cuci mobil", resp_clean: "Bersih-bersih rumah", resp_wash: "Cuci baju tangan", resp_market: "Pergi ke pasar beli makanan", resp_wet_market: "Saya pergi ke pasar basah Cina untuk membeli makanan", resp_room: "Berbagi kamar dengan orang lain", resp_cook_c: "Masak makanan Cina", resp_cook_w: "Masak makanan Barat", resp_other: "Tanggung jawab lainnya (1)", resp_other2: "Tanggung jawab lainnya (2)", resp_other3: "Tanggung jawab lainnya (3)",
             work_more_q: "Apakah Anda Masih Memiliki Pengalaman Kerja PRT Lain di HK, Negara lain, Filipina, Indonesia? (Hanya Pekerjaan PRT)?", work_more_yes: "Ya, masih punya majikan lain", work_more_no_1: "Tidak, hanya 1 pengalaman majikan", work_more_no_2: "Tidak, hanya 2 pengalaman majikan", work_more_no_3: "Tidak, hanya 3 pengalaman majikan", work_more_no_4: "Tidak, hanya 4 pengalaman majikan", work_more_no_5: "Tidak, hanya 5 pengalaman majikan", work_status_resigned: "Saya mengundurkan diri", work_status_nocontract: "Tidak ada kontrak, bisa keluar kapan saja",
             other_q_title: "Pertanyaan Lain", q_like_cooking: "Apakah Anda Suka Memasak?", q_like_cooking_yes: "Ya, saya suka", q_learn_yt: "Bisakah Anda Belajar Masakan Baru Sendiri Dari YouTube?", q_learn_yt_yes: "Ya, saya bisa", q_confident: "Apakah Anda Percaya Diri dengan Masakan Anda?", q_confident_yes: "Ya, saya percaya diri", q_sing: "Bisakah Anda Menyanyikan Lagu ATAU Bercerita untuk Menidurkan Anak?", q_sing_yes: "Ya, saya bisa", q_tutor: "Apakah Anda Punya Pengalaman Mengajari Anak-anak PR Mereka?", q_tutor_yes: "Ya, saya berpengalaman", visa_q: "Saat Anda Mendapatkan Visa Baru, Bisakah Anda Mulai Bekerja Dulu?", visa_yes: "Ya, saya bisa mulai kerja dulu", visa_no: "Tidak, saya pulang dulu", vacation_q: "Kapan Anda Akan Pulang Untuk Liburan?", stay_home_q: "Berapa Lama Anda Akan Tinggal di Rumah, Lalu Kembali ke HK untuk Bekerja?", q_dog: "Apakah Anda Takut Anjing?", q_cat: "Apakah Anda Takut Kucing?", q_afraid_yes: "Ya, takut", q_tattoo: "Apakah Anda Memiliki Tato?", q_tattoo_yes: "Ya, saya punya", tattoo_msg: "Jika Anda memiliki tato, silakan kirim foto-fotonya kepada kami nanti", q_smoke: "Apakah Anda Memiliki Kebiasaan Merokok ATAU Minum Alkohol?", q_allergy: "Apakah Anda Memiliki Alergi, Penyakit, Iritasi Kulit, Penyakit Menular, atau Kondisi Lainnya?", q_chronic: "Apakah Anda Memiliki Penyakit Kronis, Perlu Suntikan, Minum Obat, Perlu Janji Temu Lanjutan, Diabetes, Penyakit Jantung, atau Penyakit Serius Lainnya?", q_consent: "Apakah Anda sudah membaca, memahami, menyetujui, mengakui, dan memberikan wewenang pada Pernyataan Pengumpulan Informasi Pribadi Perusahaan kami, dan Anda tidak keberatan?", q_consent_yes: "Ya, saya setuju", q_fingers: "Apakah jari tangan dan jari kaki Anda normal, tidak lebih dan tidak kurang?", q_fingers_yes: "Ya, normal", q_fingers_no: "Tidak, saya punya lebih atau kurang", q_confirm: "Saya mengonfirmasi bahwa semua informasi di atas benar, lengkap, dan benar. Saya akan bertanggung jawab penuh atas segala kesalahan atau kelalaian. Saya juga setuju agar Horizon Employment Agency mengirimkan dan menggunakan informasi saya di atas kepada semua calon pemberi kerja.", q_confirm_yes: "Saya telah membaca, memahami, mengonfirmasi dan menyetujui", q_confirm_no: "No",
             ph_qty: "Masukkan jumlah", ph_pet: "Mohon sebutkan", ph_resp: "Mohon sebutkan",
-            opt_select: "Pilih", opt_month: "Bulan", opt_year: "Tahun", opt_sibling_suf: "saudara", opt_sibling_pos_pre: "Anak pertama", opt_week: "minggu", opt_weeks: "minggu", opt_emp_nat_local: "Orang Lokal", opt_emp_nat_foreigner: "Orang Asing", opt_emp_nat_chinese: "Orang Cina", opt_emp_nat_hk: "Orang Hong Kong", opt_emp_nat_asian: "Orang Asia", opt_only_emp: "1 (Only employer)", opt_emp_plus: "employer +", opt_only_me: "1 (only me)", opt_me_plus: "me +", opt_role_adult: "Adult", opt_role_boy: "Boy", opt_role_girl: "Girl", opt_role_twins: "Twins", opt_role_triplets: "Triplets", opt_role_grandpa: "Grandpa", opt_role_grandma: "Grandma", opt_age_start: "Age when you started (From)", opt_age_leave: "Age when you leave (until)", opt_preg: "Female employer is pregnant", opt_never_hk: "0 (Belum pernah ke Hong Kong)", opt_20_years: "0 sampai 20 tahun", opt_1_son: "1 putra", opt_1_daughter: "1 anak perempuan", opt_1_year: "1 tahun",
-            photo_msg_part1: "Sekarang, kirim ", photo_msg_highlight: "foto \"setengah badan\"", photo_msg_part2: " Anda dengan klik tombol WhatsApp di bawah", agency_wa: "Agensi kami WhatsApp adalah (+852) 96111003",
-            os_msg_title: "Below message for all Overseas helpers and applicants:",
-            os_msg_content: "<p class='mb-4'>You pay Zero peso, 0 piso, no salary deduction, you no need to pay any Philippine fees, such as the training fee, medical fee</p><p class='mb-4'>You only need to be responsible for the accommodation and air tickets and transportation go to our Manila agency (in Makati City) for training, medical, other processes and getting your flight from Manila to Hong Kong</p><p class='mb-4'>You need to calculate how much money you need to prepare and you will need to go to Manila agency 2 times, I think usually around 9000 peso, but depending on how far you are from Manila. You pay 9000 peso is for your accommodation and transportation to go to Manila agency 2 times from your hometown</p><p class='mb-4'>If you don't have enough money to pay for transportation, food and accommodation, please start working and prepare the money now. You need to go to the Manila agency 2 times and stay in Manila for a few days each time</p><p class='mb-4'>1st time you go to the Manila agency is when you get hired by our Employer. You go Manila for reporting, do medical and others, stay 6-9 days, after that you can go home to wait Hong Kong visa or you can find a job work in Manila to wait Hong Kong visa</p><p class='mb-4'>After 6-8 weeks, 2nd time go to Manila agency. When all documents is finished, I will tell you, then you go to Manila stay 2-3 days for getting your flight from Manila to Hong Kong</p><p class='mb-4'>The Hong Kong visa application process to come to Hong Kong takes about 2-3 months, so you need to start working from now until you can fly to Hong Kong. Otherwise, you won't have the financial to support your family's living expenses for these few months and cover the costs of air tickets and accommodation for the flight to Manila for processing</p>",
-            btn_understand: "Understand and Next Page"
+            opt_select: "Pilih", opt_month: "Bulan", opt_year: "Tahun", opt_sibling_suf: "saudara", opt_sibling_pos_pre: "Anak pertama", opt_week: "minggu", opt_weeks: "minggu", opt_emp_nat_local: "Orang Lokal", opt_emp_nat_foreigner: "Orang Asing", opt_emp_nat_chinese: "Orang Cina", opt_emp_nat_hk: "Orang Hong Kong", opt_emp_nat_asian: "Orang Asia", opt_only_emp: "Hanya majikan", opt_emp_plus: "Majikan +", opt_only_me: "1 (Saya sendiri)", opt_me_plus: "saya +", opt_role_adult: "Dewasa", opt_role_boy: "Anak Laki-laki", opt_role_girl: "Anak Perempuan", opt_role_twins: "Anak Kembar", opt_role_triplets: "Kembar Tiga", opt_role_grandpa: "Kakek", opt_role_grandma: "Nenek", opt_age_start: "Usia mulai (Dari)", opt_age_leave: "Usia selesai (Sampai)", opt_preg: "Majikan perempuan sedang hamil", opt_never_hk: "0 (Belum pernah ke Hong Kong)", opt_20_years: "0 sampai 20 tahun", opt_1_son: "1 putra", opt_1_daughter: "1 anak perempuan", opt_1_year: "1 tahun",
+            photo_msg_part1: "Sekarang, kirim ", photo_msg_highlight: "foto \"setengah badan\"", photo_msg_part2: " Anda dengan klik tombol WhatsApp di bawah", agency_wa: "Agensi kami WhatsApp adalah (+852) 96111003"
         }
     };
 
@@ -340,11 +335,9 @@
         if(!input.value || input.value.trim() === '') {
             errorMsg.classList.add('visible');
             input.classList.add('input-error');
-            return false;
         } else {
             errorMsg.classList.remove('visible');
             input.classList.remove('input-error');
-            return true;
         }
     }
 
@@ -355,24 +348,12 @@
         var inputs = container.querySelectorAll('input');
         var checked = false;
         for (var i = 0; i < inputs.length; i++) { if(inputs[i].checked) checked = true; }
-        
         var parent = container.parentElement;
-        // Try next sibling of the container
-        var errorMsg = container.nextElementSibling;
-        if(!errorMsg || !errorMsg.classList.contains('error-msg')) {
-            // Try within parent if not next sibling
-            errorMsg = parent ? parent.querySelector('.error-msg') : null;
-        }
-        
+        var errorMsg = parent ? parent.querySelector('.error-msg') : null;
         if(!errorMsg) return;
         
-        if(!checked) { 
-            errorMsg.classList.add('visible'); 
-            return false;
-        } else { 
-            errorMsg.classList.remove('visible'); 
-            return true;
-        }
+        if(!checked) { errorMsg.classList.add('visible'); } 
+        else { errorMsg.classList.remove('visible'); }
     }
 
     function singleSelect(checkbox, name) {
@@ -429,7 +410,7 @@
         var petName = checkbox.getAttribute('data-pet');
         
         if(petName === 'No pets') {
-            // Logic for No pets
+            // Logic for No pets (clear others?) - simplified here
         } else {
             if(checkbox.checked) {
                 inputContainer.classList.remove('hidden');
@@ -984,15 +965,7 @@
                  dinps.forEach(function(inp){ if(!inp.value) { inp.classList.add('input-error'); hasError = true; }});
             }
 
-            if(hasError) {
-                // Scroll to first error
-                var firstError = p.querySelector('.input-error, .error-msg.visible');
-                if(firstError) {
-                    firstError.scrollIntoView({behavior: "smooth", block: "center"});
-                }
-                alert("Please answer all required questions"); 
-                return; 
-            }
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
         
         saveLocal();
@@ -1016,8 +989,6 @@
             var groups = p.querySelectorAll('.checkbox-group');
             groups.forEach(function(g){ 
                  if(g.offsetParent === null) return;
-                 // Skip optional ones? For now, we assume all visible are required
-                 // Check if it's the "More experience" group or "Status" etc
                  validateGroup(g); 
                  if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
             });
@@ -1030,14 +1001,38 @@
                 if(i.classList.contains('input-error')) hasError = true; 
             });
             
-            if(hasError) { 
-                var firstError = p.querySelector('.input-error, .error-msg.visible');
-                if(firstError) {
-                    firstError.scrollIntoView({behavior: "smooth", block: "center"});
+            // Specific Checks for "Other" checkboxes in Work Page
+            var otherChecks = [
+                {check: 'w'+index+'_disabled', val: 'Other disabled person (1)', input: 'w'+index+'_disabled_other1_input'},
+                {check: 'w'+index+'_disabled', val: 'Other disabled person (2)', input: 'w'+index+'_disabled_other2_input'},
+                {check: 'w'+index+'_resp', val: 'Other', input: 'w'+index+'_resp_other_input'},
+                {check: 'w'+index+'_resp', val: 'Other2', input: 'w'+index+'_resp_other2_input'},
+                {check: 'w'+index+'_resp', val: 'Other3', input: 'w'+index+'_resp_other3_input'}
+            ];
+            
+            otherChecks.forEach(function(obj){
+                var cb = document.querySelector('input[name="'+obj.check+'"][value="'+obj.val+'"]');
+                if(cb && cb.checked) {
+                    var inp = document.getElementById(obj.input);
+                    if(inp && !inp.value.trim()) {
+                        inp.classList.add('input-error');
+                        hasError = true;
+                        // Use sibling for error msg
+                        var errMsg = inp.nextElementSibling;
+                        if(errMsg && errMsg.classList.contains('error-msg')) errMsg.classList.add('visible');
+                    }
                 }
-                alert("Please answer all required questions"); 
-                return; 
+            });
+            
+            // Pet Others
+            var petOther1 = document.querySelector('input.pet-check[data-pet="Other pet (1)"]');
+            if(petOther1 && petOther1.checked) {
+                 var c = document.getElementById('w'+index+'_Others_qty');
+                 var inps = c.querySelectorAll('input');
+                 inps.forEach(function(inp){ if(!inp.value) { inp.classList.add('input-error'); hasError=true; }});
             }
+
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
 
         saveLocal();
@@ -1092,14 +1087,7 @@
                 if(i.classList.contains('input-error')) hasError = true;
             });
             
-            if(hasError) { 
-                var firstError = pf.querySelector('.input-error, .error-msg.visible');
-                if(firstError) {
-                    firstError.scrollIntoView({behavior: "smooth", block: "center"});
-                }
-                alert("Please answer all required questions"); 
-                return; 
-            }
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
         
         var btn = document.querySelector('.btn-submit');
@@ -1107,6 +1095,50 @@
         btn.disabled = true;
 
         var data = saveLocal();
+        
+        // --- DATA COLLECTION BEFORE SUBMIT ---
+        // 1. Sons Ages
+        var sAges = [];
+        document.querySelectorAll('#sonsInputs input').forEach(function(i){ if(i.value) sAges.push(i.value); });
+        data.sonsAges = sAges.join(', ');
+        
+        // 2. Daughters Ages
+        var dAges = [];
+        document.querySelectorAll('#daughtersInputs input').forEach(function(i){ if(i.value) dAges.push(i.value); });
+        data.daughtersAges = dAges.join(', ');
+        
+        // 3. Work Experience Family Details
+        for(var k=1; k<=MAX_JOBS; k++) {
+            var famRows = document.querySelectorAll('#w'+k+'_famRows .member-row');
+            var details = [];
+            famRows.forEach(function(row){
+                 var role = row.querySelector('select').value;
+                 var selects = row.querySelectorAll('.age-inputs select');
+                 if(selects.length === 2) {
+                     var start = selects[0].value;
+                     var end = selects[1].value;
+                     if(role) details.push({role: role, start: start, end: end});
+                 }
+            });
+            data['w'+k+'_famDetailsStr'] = details.map(function(d){ return d.role + ': ' + d.start + ' to ' + d.end; }).join(', ');
+            
+            // 4. Pet Qty
+            var petOther1Input = document.querySelector('#w'+k+'_Others_qty input[type="text"]');
+            var petOther1Num = document.querySelector('#w'+k+'_Others_qty input[type="number"]');
+            if(petOther1Input) data['w'+k+'_other_pet_1_text'] = petOther1Input.value;
+            if(petOther1Num) data['w'+k+'_other_pet_1_num'] = petOther1Num.value;
+
+            var petOther2Input = document.querySelector('#w'+k+'_Others2_qty input[type="text"]');
+            var petOther2Num = document.querySelector('#w'+k+'_Others2_qty input[type="number"]');
+            if(petOther2Input) data['w'+k+'_other_pet_2_text'] = petOther2Input.value;
+            if(petOther2Num) data['w'+k+'_other_pet_2_num'] = petOther2Num.value;
+
+            var petOther3Input = document.querySelector('#w'+k+'_Others3_qty input[type="text"]');
+            var petOther3Num = document.querySelector('#w'+k+'_Others3_qty input[type="number"]');
+            if(petOther3Input) data['w'+k+'_other_pet_3_text'] = petOther3Input.value;
+            if(petOther3Num) data['w'+k+'_other_pet_3_num'] = petOther3Num.value;
+        }
+
         var p1Nat = document.querySelector('input[name="nationality"]:checked');
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
