@@ -101,7 +101,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.60</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.61</div>
     </div>
 
     <!-- PAGE 1 -->
@@ -215,7 +215,7 @@
 <script>
     // --- 1. GLOBAL VARIABLES ---
     var MAX_JOBS = 5; 
-    var ENABLE_VALIDATION = true; // VALIDATION ENABLED
+    var ENABLE_VALIDATION = true; 
     var currentLang = 'en';
     var targetSheetName = 'Phil'; 
     var indoMonths = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -223,7 +223,6 @@
 
     // --- 2. DICTIONARY ---
     var dict = {
-        // ... Same dict content as previous ...
         en: {
             title_text: "Online Registration of Horizon Employment Agency", error_msg: "Answer This Question",
             seeker_nat_q: "Job Seeker's Nationality?", btn_welcome_next: "I want to find a new employer. I am registering my information now",
@@ -263,7 +262,7 @@
         id: {
             title_text: "Pendaftaran Online Horizon Employment Agency", error_msg: "Jawab Pertanyaan Ini",
             seeker_nat_q: "Kewarganegaraan Pencari Kerja?", btn_welcome_next: "Saya ingin mencari majikan baru. Saya sedang mendaftar sekarang", apply_q: "Ingin melamar apa?", apply_helper: "Melamar sebagai PRT", apply_driver: "Melamar sebagai sopir Hong Kong",
-            skills_q: "Keahlian khusus Anda?", skill_nurse: "Pengalaman perawat", skill_teacher: "Pengalaman guru", skill_elderly_home: "Pengalaman panti jompo", skill_hotel: "Pengalaman hotel", skill_gardening: "Pengalaman berkebun", skill_gardening: "Pengalaman berkebun", skill_carpentry: "Pengalaman pertukangan", skill_none: "Tidak ada", skill_other: "Pengalaman lainnya", ph_skill_other: "Isi pengalaman lainnya", skill_restaurant: "Pengalaman memasak di restoran",
+            skills_q: "Keahlian khusus Anda?", skill_nurse: "Pengalaman perawat", skill_teacher: "Pengalaman guru", skill_elderly_home: "Pengalaman panti jompo", skill_hotel: "Pengalaman hotel", skill_gardening: "Pengalaman berkebun", skill_carpentry: "Pengalaman pertukangan", skill_none: "Tidak ada", skill_other: "Pengalaman lainnya", ph_skill_other: "Isi pengalaman lainnya", skill_restaurant: "Pengalaman memasak di restoran",
             basic_info_title: "Informasi Dasar Pekerja Rumah Tangga", gender_q: "Jenis Kelamin?", female: "Wanita", male: "Pria", fullname_q: "Nama Lengkap?", where_now_q: "Dimana Anda Sekarang?", loc_hk: "Sekarang di Hong Kong", loc_ph: "Sekarang di Filipina", loc_id: "Sekarang di Indonesia", loc_other: "Sekarang di Negara Lain",
             nationality_q: "Kewarganegaraan?", nat_filipino: "Filipina", nat_indonesian: "Indonesia", nat_other: "Lainnya", nat_other_opt: "Lainnya Kewarganegaraan", ph_nat_other: "Mengisi kewarganegaraan",
             hk_status_q: "Status Kontrak HK?", hk_finish: "Selesai kontrak", hk_terminated: "Majikan sudah memutus kontrak", hk_breached: "Saya sudah melanggar kontrak", hk_break: "Saya akan memutus kontrak jika mendapat majikan baru", hk_passed: "Majikan saat ini meninggal", hk_relocation: "Majikan pindah negara", hk_financial: "Majikan ada masalah keuangan",
@@ -323,10 +322,8 @@
     function validateField(input) {
         if(!ENABLE_VALIDATION) return;
         var parent = input.parentElement;
-        // Try next sibling first for our appended errors
         var errorMsg = input.nextElementSibling;
         if (!errorMsg || !errorMsg.classList.contains('error-msg')) {
-             // Fallback to parent search
              errorMsg = parent ? (parent.querySelector('.error-msg') || parent.parentElement.querySelector('.error-msg')) : null;
         }
         
@@ -355,12 +352,9 @@
         var inputs = container.querySelectorAll('input');
         var checked = false;
         for (var i = 0; i < inputs.length; i++) { if(inputs[i].checked) checked = true; }
-        
-        // Use nextElementSibling to get the error msg associated with the group
-        var errorMsg = container.nextElementSibling;
-        if(!errorMsg || !errorMsg.classList.contains('error-msg')) {
-             return; 
-        }
+        var parent = container.parentElement;
+        var errorMsg = parent ? parent.querySelector('.error-msg') : null;
+        if(!errorMsg) return;
         
         if(!checked) { errorMsg.classList.add('visible'); } 
         else { errorMsg.classList.remove('visible'); }
@@ -617,10 +611,10 @@
         
         // Pets - Added .error-msg divs for dynamic inputs
         html += '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group">';
-        html += [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="'+p.val+'" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.split(' ').join('')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.split(' ').join('')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('');
-        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (1)" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
-        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (2)" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
-        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (3)" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div></div><div class="error-msg" data-i18n="error_msg"></div></div>';
+        html += [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.split(' ').join('')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.split(' ').join('')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('');
+        html += '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
+        html += '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
+        html += '<div class="flex items-center gap-2"><input type="checkbox" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div></div><div class="error-msg" data-i18n="error_msg"></div></div>';
         
         // Resp - Added .error-msg divs for dynamic inputs
         html += '<div class="question-block"><label class="question-label" data-i18n="work_resp"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
