@@ -1097,18 +1097,20 @@
         var data = saveLocal();
         
         // --- DATA COLLECTION BEFORE SUBMIT ---
-        // 1. Sons Ages
+        
+        // 1. Sons & Daughters Ages (Global)
         var sAges = [];
         document.querySelectorAll('#sonsInputs input').forEach(function(i){ if(i.value) sAges.push(i.value); });
         data.sonsAges = sAges.join(', ');
         
-        // 2. Daughters Ages
         var dAges = [];
         document.querySelectorAll('#daughtersInputs input').forEach(function(i){ if(i.value) dAges.push(i.value); });
         data.daughtersAges = dAges.join(', ');
-        
-        // 3. Work Experience Family Details
+
+        // Loop through all 5 Work Experiences
         for(var k=1; k<=MAX_JOBS; k++) {
+            
+            // --- FIX: FAMILY DATA (Separated into Count and Details) ---
             var famRows = document.querySelectorAll('#w'+k+'_famRows .member-row');
             var details = [];
             famRows.forEach(function(row){
@@ -1117,26 +1119,56 @@
                  if(selects.length === 2) {
                      var start = selects[0].value;
                      var end = selects[1].value;
-                     if(role) details.push({role: role, start: start, end: end});
+                     if(role) details.push(role + ': ' + start + ' to ' + end);
                  }
             });
-            data['w'+k+'_famDetailsStr'] = details.map(function(d){ return d.role + ': ' + d.start + ' to ' + d.end; }).join(', ');
             
-            // 4. Pet Qty
-            var petOther1Input = document.querySelector('#w'+k+'_Others_qty input[type="text"]');
-            var petOther1Num = document.querySelector('#w'+k+'_Others_qty input[type="number"]');
-            if(petOther1Input) data['w'+k+'_other_pet_1_text'] = petOther1Input.value;
-            if(petOther1Num) data['w'+k+'_other_pet_1_num'] = petOther1Num.value;
+            // 上載資料 1: 家庭成員詳細年齡字串
+            data['w'+k+'_famDetailsStr'] = details.join(', '); 
+            
+            // 上載資料 2: 家庭成員總數 (明確分開)
+            var fcEl = document.getElementById('w'+k+'_famCount');
+            data['w'+k+'_famCount'] = fcEl ? fcEl.value : ""; 
 
-            var petOther2Input = document.querySelector('#w'+k+'_Others2_qty input[type="text"]');
-            var petOther2Num = document.querySelector('#w'+k+'_Others2_qty input[type="number"]');
-            if(petOther2Input) data['w'+k+'_other_pet_2_text'] = petOther2Input.value;
-            if(petOther2Num) data['w'+k+'_other_pet_2_num'] = petOther2Num.value;
 
-            var petOther3Input = document.querySelector('#w'+k+'_Others3_qty input[type="text"]');
-            var petOther3Num = document.querySelector('#w'+k+'_Others3_qty input[type="number"]');
-            if(petOther3Input) data['w'+k+'_other_pet_3_text'] = petOther3Input.value;
-            if(petOther3Num) data['w'+k+'_other_pet_3_num'] = petOther3Num.value;
+            // --- FIX: PETS DATA (Combined Name + Quantity) ---
+            var petList = [];
+            
+            // A. 檢查標準寵物 (Small dog, Cat, etc.)
+            ['No pets', 'Small dog', 'Medium dog', 'Big dog', 'Cat', 'Rabbit'].forEach(function(pName){
+                var cb = document.querySelector('input[name="w'+k+'_pets"][value="'+pName+'"]');
+                if(cb && cb.checked) {
+                     if(pName === 'No pets') {
+                         petList.push(pName);
+                     } else {
+                         // 找出對應的數量輸入框
+                         var qtyId = 'w'+k+'_' + pName.replace(/\s/g, '') + '_qty';
+                         var qEl = document.getElementById(qtyId);
+                         var qty = (qEl && qEl.value) ? qEl.value : '';
+                         // 格式化為: "Small dog (2)"
+                         petList.push(pName + (qty ? ' (' + qty + ')' : ''));
+                     }
+                }
+            });
+
+            // B. 檢查其他寵物 (Other 2 & 3)
+            [2, 3].forEach(function(num){
+                var valName = 'Other pet ('+num+')';
+                var cb = document.querySelector('input[name="w'+k+'_pets"][value="'+valName+'"]');
+                if(cb && cb.checked) {
+                     var div = document.getElementById('w'+k+'_Others'+num+'_qty');
+                     if(div) {
+                         var txtInp = div.querySelector('.pet-other-input');
+                         var qtyInp = div.querySelector('.pet-qty');
+                         var t = txtInp ? txtInp.value : '';
+                         var q = qtyInp ? qtyInp.value : '';
+                         if(t) petList.push(t + (q ? ' (' + q + ')' : ''));
+                     }
+                }
+            });
+
+            // 將所有寵物資料合併上傳至 wX_pets_combined
+            data['w'+k+'_pets_combined'] = petList.join(', ');
         }
 
         var p1Nat = document.querySelector('input[name="nationality"]:checked');
@@ -1223,5 +1255,4 @@
 
 </body>
 </html>
-
 
