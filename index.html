@@ -605,10 +605,10 @@
         html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (1)" onchange="toggleInput(\'w'+index+'_disabled_other1_input\', this.checked)"> <span data-i18n="dis_other1">Other disabled person (1)</span></div><input type="text" id="w'+index+'_disabled_other1_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></label>';
         html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (2)" onchange="toggleInput(\'w'+index+'_disabled_other2_input\', this.checked)"> <span data-i18n="dis_other2">Other disabled person (2)</span></div><input type="text" id="w'+index+'_disabled_other2_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></label></div><div class="error-msg" data-i18n="error_msg"></div></div>';
         
-                // Pets - Added .error-msg divs for dynamic inputs
-        html += '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
+        // Pets - Added .error-msg divs for dynamic inputs
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group">';
         html += [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="'+p.val+'" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.split(' ').join('')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.split(' ').join('')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('');
-        // Removed Other pet (1) as per request
+        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (1)" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
         html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (2)" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
         html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (3)" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div></div><div class="error-msg" data-i18n="error_msg"></div></div>';
         
@@ -1107,10 +1107,10 @@
         document.querySelectorAll('#daughtersInputs input').forEach(function(i){ if(i.value) dAges.push(i.value); });
         data.daughtersAges = dAges.join(', ');
 
-        // Loop through all 5 Work Experiences (k=1 to MAX_JOBS)
+        // Loop through all 5 Work Experiences
         for(var k=1; k<=MAX_JOBS; k++) {
             
-            // --- FIX 1: FAMILY DATA (W1 Family Count and W1 Family Ages are separated) ---
+            // --- FAMILY DATA: Confirmed Separation ---
             var famRows = document.querySelectorAll('#w'+k+'_famRows .member-row');
             var details = [];
             famRows.forEach(function(row){
@@ -1119,20 +1119,19 @@
                  if(selects.length === 2) {
                      var start = selects[0].value;
                      var end = selects[1].value;
-                     // Only collect if the role is selected (prevents empty entries)
                      if(role) details.push(role + ': ' + start + ' to ' + end);
                  }
             });
             
-            // 上載欄位: wX_famDetailsStr (對應 Google Sheet 的 WX Family Ages 欄位)
+            // 上載欄位: wX_famDetailsStr (Family Ages)
             data['w'+k+'_famDetailsStr'] = details.join(', '); 
             
-            // 上載欄位: wX_famCount (對應 Google Sheet 的 WX Family Count 欄位)
+            // 上載欄位: wX_famCount (Family Count)
             var fcEl = document.getElementById('w'+k+'_famCount');
             data['w'+k+'_famCount'] = fcEl ? fcEl.value : ""; 
 
 
-            // --- FIX 2: PETS DATA (Combined Name + Quantity - Corrected Input Selection) ---
+            // --- PETS DATA: Final Fix for Quantity Collection ---
             var petList = [];
             
             // A. 檢查標準寵物 (Small dog, Cat, etc.)
@@ -1142,50 +1141,42 @@
                      if(pName === 'No pets') {
                          petList.push(pName);
                      } else {
-                         // 1. 根據寵物名找出數量輸入框的容器 ID (例如: w1_Smalldog_qty)
-                         var qtyContainerId = 'w'+k+'_' + pName.replace(/\s/g, '') + '_qty'; 
-                         var qtyContainer = document.getElementById(qtyContainerId);
+                         // 1. 找出數量輸入框的容器 ID
+                         var qtyId = 'w'+k+'_' + pName.replace(/\s/g, '') + '_qty'; 
+                         var qtyContainer = document.getElementById(qtyId);
                          
-                         // 2. 修正: 在容器內找到 type="number" 的實際輸入框
+                         // 2. **修正關鍵：** 精確尋找 type="number" 的輸入框
                          var qtyInput = qtyContainer ? qtyContainer.querySelector('input[type="number"]') : null; 
                          
                          // 3. 獲取數量 
                          var qty = (qtyInput && qtyInput.value) ? qtyInput.value : '';
                          
-                         // 格式化為: "Small dog (2)"
                          petList.push(pName + (qty ? ' (' + qty + ')' : ''));
                      }
                 }
             });
 
-            // B. 檢查其他寵物 (Other 1, 2, 3) - 假設 Other 1/2/3 的 HTML ID 為 wX_Others_qty, wX_Others2_qty, wX_Others3_qty
-            // 請注意: 原始 HTML 中 "Other pet (1)" 的 value 是 "Other"，但我們上次只處理了 2 和 3。
-            // 為了完整性，我們檢查是否有 "Other pet (1)" 的輸入框，並將其名稱設為 "Others"。
-            [1, 2, 3].forEach(function(num){
-                var containerSuffix = (num === 1) ? 'Others' : 'Others'+num;
-                var valName = (num === 1) ? 'Other' : 'Other pet ('+num+')';
-                
+            // B. 檢查其他寵物 (Other 2 & 3)
+            [2, 3].forEach(function(num){
+                var valName = 'Other pet ('+num+')';
                 var cb = document.querySelector('input[name="w'+k+'_pets"][value="'+valName+'"]');
                 if(cb && cb.checked) {
-                     var div = document.getElementById('w'+k+'_'+containerSuffix+'_qty');
+                     var div = document.getElementById('w'+k+'_Others'+num+'_qty');
                      if(div) {
-                         // 假設 Other Pet 的輸入框使用了 .pet-other-input 和 .pet-qty 類
-                         var txtInp = div.querySelector('.pet-other-input'); // 寵物名稱
-                         var qtyInp = div.querySelector('.pet-qty'); // 寵物數量
+                         var txtInp = div.querySelector('.pet-other-input');
+                         var qtyInp = div.querySelector('.pet-qty'); // Assuming .pet-qty is the number input
                          var t = txtInp ? txtInp.value : '';
                          var q = qtyInp ? qtyInp.value : '';
-                         // 僅在寵物名填寫時才提交
                          if(t) petList.push(t + (q ? ' (' + q + ')' : ''));
                      }
                 }
             });
 
-            // 將所有寵物資料合併上傳至 wX_pets_combined (這是新的單一欄位)
-            // 原始代碼中所有舊的寵物欄位 (wX_other_pet_1_text 等) 都已移除，
-            // 您的 Google App Script 必須調整為讀取這個新的 wX_pets_combined 欄位。
+            // 將所有寵物資料合併上傳至 wX_pets_combined
             data['w'+k+'_pets_combined'] = petList.join(', ');
         }
 
+        // --- SHEET NAME LOGIC (保持不變) ---
         var p1Nat = document.querySelector('input[name="nationality"]:checked');
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
@@ -1270,6 +1261,4 @@
 
 </body>
 </html>
-
-
 
