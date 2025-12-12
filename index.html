@@ -990,9 +990,9 @@ html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question
             var groups = p.querySelectorAll('.checkbox-group');
             groups.forEach(function(g){ 
                 var questionBlock = g.closest('.question-block');
-                var isPetQuestion = questionBlock && questionBlock.querySelector('label[data-i18n="work_pets"]'); // 識別「Employer's Pets?」問題
+                var petLabel = questionBlock ? questionBlock.querySelector('label[data-i18n="work_pets"]') : null; // 識別「Employer's Pets?」問題
 
-                if (isPetQuestion) {
+                if (petLabel) {
                     // 客製化寵物驗證：只強制要求六個主要選項（No pets 到 Rabbit）
                     var petChecks = g.querySelectorAll('input.pet-check');
                     var isMainPetSelected = false;
@@ -1001,12 +1001,14 @@ html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question
                         var value = check.value;
                         if (check.checked) {
                             // 檢查是否選中了六個主要選項中的一個
+                            // 注意：這裡只檢查前六個主要選項，不檢查 Other pet (1), (2), (3)
                             if (value === 'No pets' || value === 'Small dog' || value === 'Medium dog' || value === 'Big dog' || value === 'Cat' || value === 'Rabbit') {
                                 isMainPetSelected = true;
                             }
                         }
                     });
 
+                    // 錯誤訊息是在整個 question-block 底部的 div.error-msg
                     var petErrorMsg = questionBlock.querySelector('.error-msg');
                     if (!isMainPetSelected) {
                         // 如果沒有選擇主要寵物，顯示錯誤並阻止導航
@@ -1184,7 +1186,7 @@ html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question
         data.submissionLanguage = currentLang;
         
         // UPDATE WITH YOUR APPS SCRIPT URL HERE
-        const scriptURL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; 
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzb0sBBOvornl0hh0Bt_WH_h8Nz9csh9j9_sCvMZdQZO_XduolcQM1Q2FVEC-4Lb6salw/exec"; 
         
         try {
             await fetch(scriptURL, { 
@@ -1257,3 +1259,4 @@ html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question
 
 </body>
 </html>
+
