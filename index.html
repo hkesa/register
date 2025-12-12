@@ -921,15 +921,51 @@ html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question
             var pId = currentPageNum === 1 ? 'page1' : 'page2';
             var p = document.getElementById(pId);
             
-            // Validate Groups first
+            // Custom Validate Groups for Pets and General Validation
             var groups = p.querySelectorAll('.checkbox-group');
             var hasError = false;
-            
+
             groups.forEach(function(g){ 
                 // Special Skip Logic
                 if(g.offsetParent === null) return; // Hidden
-                validateGroup(g); 
-                if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
+
+                var questionBlock = g.closest('.question-block');
+                var petLabel = questionBlock ? questionBlock.querySelector('label[data-i18n="work_pets"]') : null; // 識別「Employer's Pets?」問題
+
+                if (petLabel) {
+                    // 客製化寵物驗證：只強制要求六個主要選項（No pets 到 Rabbit）
+                    var petChecks = g.querySelectorAll('input.pet-check');
+                    var isMainPetSelected = false;
+
+                    petChecks.forEach(function(check) {
+                        var value = check.value;
+                        if (check.checked) {
+                            // 檢查是否選中了六個主要選項中的一個
+                            if (value === 'No pets' || value === 'Small dog' || value === 'Medium dog' || value === 'Big dog' || value === 'Cat' || value === 'Rabbit') {
+                                isMainPetSelected = true;
+                            }
+                        }
+                    });
+
+                    // 錯誤訊息是在整個 question-block 底部的 div.error-msg
+                    var petErrorMsg = questionBlock.querySelector('.error-msg');
+                    if (!isMainPetSelected) {
+                        // 如果沒有選擇主要寵物，顯示錯誤並阻止導航
+                        if (petErrorMsg) {
+                            petErrorMsg.classList.add('visible');
+                            hasError = true;
+                        }
+                    } else {
+                        // 如果有選擇主要寵物，隱藏錯誤
+                        if (petErrorMsg) {
+                            petErrorMsg.classList.remove('visible');
+                        }
+                    }
+                } else {
+                    // 對所有其他非寵物問題組，執行標準驗證
+                    validateGroup(g); 
+                    if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
+                }
             });
 
             // Validate Inputs
@@ -986,46 +1022,12 @@ html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question
             var p = document.getElementById('pageWork'+index);
             var hasError = false;
 
-            // Validate Checkbox Groups (Custom logic for Pets)
+            // Validate Groups (Strict Check for Visible Groups)
             var groups = p.querySelectorAll('.checkbox-group');
             groups.forEach(function(g){ 
-                var questionBlock = g.closest('.question-block');
-                var petLabel = questionBlock ? questionBlock.querySelector('label[data-i18n="work_pets"]') : null; // 識別「Employer's Pets?」問題
-
-                if (petLabel) {
-                    // 客製化寵物驗證：只強制要求六個主要選項（No pets 到 Rabbit）
-                    var petChecks = g.querySelectorAll('input.pet-check');
-                    var isMainPetSelected = false;
-
-                    petChecks.forEach(function(check) {
-                        var value = check.value;
-                        if (check.checked) {
-                            // 檢查是否選中了六個主要選項中的一個
-                            if (value === 'No pets' || value === 'Small dog' || value === 'Medium dog' || value === 'Big dog' || value === 'Cat' || value === 'Rabbit') {
-                                isMainPetSelected = true;
-                            }
-                        }
-                    });
-
-                    // 錯誤訊息是在整個 question-block 底部的 div.error-msg
-                    var petErrorMsg = questionBlock.querySelector('.error-msg');
-                    if (!isMainPetSelected) {
-                        // 如果沒有選擇主要寵物，顯示錯誤並阻止導航
-                        if (petErrorMsg) {
-                            petErrorMsg.classList.add('visible');
-                            hasError = true;
-                        }
-                    } else {
-                        // 如果有選擇主要寵物，隱藏錯誤
-                        if (petErrorMsg) {
-                            petErrorMsg.classList.remove('visible');
-                        }
-                    }
-                } else {
-                    // 對所有其他問題組，執行標準驗證
-                    validateGroup(g); 
-                    if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
-                }
+                 if(g.offsetParent === null) return;
+                 validateGroup(g); 
+                 if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
             });
 
             // Validate Inputs & Special Checks
