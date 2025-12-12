@@ -1107,10 +1107,10 @@
         document.querySelectorAll('#daughtersInputs input').forEach(function(i){ if(i.value) dAges.push(i.value); });
         data.daughtersAges = dAges.join(', ');
 
-        // Loop through all 5 Work Experiences
+        // Loop through all 5 Work Experiences (k=1 to MAX_JOBS)
         for(var k=1; k<=MAX_JOBS; k++) {
             
-            // --- FIX: FAMILY DATA (Separated into Count and Details) ---
+            // --- FIX 1: FAMILY DATA (W1 Family Count and W1 Family Ages are separated) ---
             var famRows = document.querySelectorAll('#w'+k+'_famRows .member-row');
             var details = [];
             famRows.forEach(function(row){
@@ -1119,19 +1119,20 @@
                  if(selects.length === 2) {
                      var start = selects[0].value;
                      var end = selects[1].value;
+                     // Only collect if the role is selected (prevents empty entries)
                      if(role) details.push(role + ': ' + start + ' to ' + end);
                  }
             });
             
-            // 上載資料 1: 家庭成員詳細年齡字串
+            // 上載欄位: wX_famDetailsStr (對應 Google Sheet 的 WX Family Ages 欄位)
             data['w'+k+'_famDetailsStr'] = details.join(', '); 
             
-            // 上載資料 2: 家庭成員總數 (明確分開)
+            // 上載欄位: wX_famCount (對應 Google Sheet 的 WX Family Count 欄位)
             var fcEl = document.getElementById('w'+k+'_famCount');
             data['w'+k+'_famCount'] = fcEl ? fcEl.value : ""; 
 
 
-            // --- FIX: PETS DATA (Combined Name + Quantity) ---
+            // --- FIX 2: PETS DATA (Combined Name + Quantity - Corrected Input Selection) ---
             var petList = [];
             
             // A. 檢查標準寵物 (Small dog, Cat, etc.)
@@ -1141,33 +1142,47 @@
                      if(pName === 'No pets') {
                          petList.push(pName);
                      } else {
-                         // 找出對應的數量輸入框
-                         var qtyId = 'w'+k+'_' + pName.replace(/\s/g, '') + '_qty';
-                         var qEl = document.getElementById(qtyId);
-                         var qty = (qEl && qEl.value) ? qEl.value : '';
+                         // 1. 根據寵物名找出數量輸入框的容器 ID (例如: w1_Smalldog_qty)
+                         var qtyContainerId = 'w'+k+'_' + pName.replace(/\s/g, '') + '_qty'; 
+                         var qtyContainer = document.getElementById(qtyContainerId);
+                         
+                         // 2. 修正: 在容器內找到 type="number" 的實際輸入框
+                         var qtyInput = qtyContainer ? qtyContainer.querySelector('input[type="number"]') : null; 
+                         
+                         // 3. 獲取數量 
+                         var qty = (qtyInput && qtyInput.value) ? qtyInput.value : '';
+                         
                          // 格式化為: "Small dog (2)"
                          petList.push(pName + (qty ? ' (' + qty + ')' : ''));
                      }
                 }
             });
 
-            // B. 檢查其他寵物 (Other 2 & 3)
-            [2, 3].forEach(function(num){
-                var valName = 'Other pet ('+num+')';
+            // B. 檢查其他寵物 (Other 1, 2, 3) - 假設 Other 1/2/3 的 HTML ID 為 wX_Others_qty, wX_Others2_qty, wX_Others3_qty
+            // 請注意: 原始 HTML 中 "Other pet (1)" 的 value 是 "Other"，但我們上次只處理了 2 和 3。
+            // 為了完整性，我們檢查是否有 "Other pet (1)" 的輸入框，並將其名稱設為 "Others"。
+            [1, 2, 3].forEach(function(num){
+                var containerSuffix = (num === 1) ? 'Others' : 'Others'+num;
+                var valName = (num === 1) ? 'Other' : 'Other pet ('+num+')';
+                
                 var cb = document.querySelector('input[name="w'+k+'_pets"][value="'+valName+'"]');
                 if(cb && cb.checked) {
-                     var div = document.getElementById('w'+k+'_Others'+num+'_qty');
+                     var div = document.getElementById('w'+k+'_'+containerSuffix+'_qty');
                      if(div) {
-                         var txtInp = div.querySelector('.pet-other-input');
-                         var qtyInp = div.querySelector('.pet-qty');
+                         // 假設 Other Pet 的輸入框使用了 .pet-other-input 和 .pet-qty 類
+                         var txtInp = div.querySelector('.pet-other-input'); // 寵物名稱
+                         var qtyInp = div.querySelector('.pet-qty'); // 寵物數量
                          var t = txtInp ? txtInp.value : '';
                          var q = qtyInp ? qtyInp.value : '';
+                         // 僅在寵物名填寫時才提交
                          if(t) petList.push(t + (q ? ' (' + q + ')' : ''));
                      }
                 }
             });
 
-            // 將所有寵物資料合併上傳至 wX_pets_combined
+            // 將所有寵物資料合併上傳至 wX_pets_combined (這是新的單一欄位)
+            // 原始代碼中所有舊的寵物欄位 (wX_other_pet_1_text 等) 都已移除，
+            // 您的 Google App Script 必須調整為讀取這個新的 wX_pets_combined 欄位。
             data['w'+k+'_pets_combined'] = petList.join(', ');
         }
 
@@ -1182,7 +1197,7 @@
         data.submissionLanguage = currentLang;
         
         // UPDATE WITH YOUR APPS SCRIPT URL HERE
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzb0sBBOvornl0hh0Bt_WH_h8Nz9csh9j9_sCvMZdQZO_XduolcQM1Q2FVEC-4Lb6salw/exec"; 
+        const scriptURL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; 
         
         try {
             await fetch(scriptURL, { 
@@ -1255,4 +1270,6 @@
 
 </body>
 </html>
+
+
 
