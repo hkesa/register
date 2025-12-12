@@ -101,7 +101,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.70</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.71</div>
     </div>
 
     <!-- PAGE 1 -->
@@ -223,7 +223,7 @@
 
     // --- 2. DICTIONARY ---
     var dict = {
-        // ... Same dict content as previous ...
+        // ... Same dict content ...
         en: {
             title_text: "Online Registration of Horizon Employment Agency", error_msg: "Answer This Question",
             seeker_nat_q: "Job Seeker's Nationality?", btn_welcome_next: "I want to find a new employer. I am registering my information now",
@@ -608,13 +608,13 @@
         // Pets - Added .error-msg divs for dynamic inputs
         html += '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group">';
         html += [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="'+p.val+'" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.split(' ').join('')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.split(' ').join('')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('');
-        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (1)" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
+        // Removed Other pet (1) as per request
         html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (2)" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
         html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (3)" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div></div><div class="error-msg" data-i18n="error_msg"></div></div>';
         
         // Resp - Added .error-msg divs for dynamic inputs
         html += '<div class="question-block"><label class="question-label" data-i18n="work_resp"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
-        html += '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_resp" value="No"> <span data-i18n="resp_no">No</span></label>'; // Added No Option
+        html += '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_resp" value="No"> <span data-i18n="resp_no">No</span></label>';
         html += [{id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'}, {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_wet_market', val: 'I go to Chinese wet-market to buy food'}, {id: 'resp_room', val: 'I sharing room with other'}, {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}]
             .map(function(r){ return '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_resp" value="'+r.val+'"> <span data-i18n="'+r.id+'">'+r.val+'</span></label>'; }).join('');
         html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other" onchange="toggleInput(\'w'+index+'_resp_other_input\', this.checked)"> <span data-i18n="resp_other">Other responsibilities (1)</span></div><input type="text" id="w'+index+'_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></label>';
