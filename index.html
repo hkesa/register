@@ -101,7 +101,7 @@
         </div>
 
         <button class="btn-primary" onclick="handleWelcomeNext()" data-i18n="btn_welcome_next">I want to find a new employer. I am registering my information now</button>
-        <div class="text-center text-gray-400 mt-4 text-sm">V1.69</div>
+        <div class="text-center text-gray-400 mt-4 text-sm">V1.64</div>
     </div>
 
     <!-- PAGE 1 -->
@@ -223,7 +223,7 @@
 
     // --- 2. DICTIONARY ---
     var dict = {
-        // ... Same dict content as previous ...
+        // ... Same dict content ...
         en: {
             title_text: "Online Registration of Horizon Employment Agency", error_msg: "Answer This Question",
             seeker_nat_q: "Job Seeker's Nationality?", btn_welcome_next: "I want to find a new employer. I am registering my information now",
@@ -612,9 +612,8 @@
         html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (2)" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
         html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (3)" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div></div><div class="error-msg" data-i18n="error_msg"></div></div>';
         
-        // Resp - Added .error-msg divs for dynamic inputs and added 'No' option
+        // Resp - Added .error-msg divs for dynamic inputs
         html += '<div class="question-block"><label class="question-label" data-i18n="work_resp"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
-        html += '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_resp" value="No"> <span data-i18n="resp_no">No</span></label>'; // Added No Option
         html += [{id: 'resp_car', val: 'Car wash'}, {id: 'resp_clean', val: 'House cleaning'}, {id: 'resp_wash', val: 'Hand washing clothes'}, {id: 'resp_market', val: 'I go to supermarket to buy food'}, {id: 'resp_wet_market', val: 'I go to Chinese wet-market to buy food'}, {id: 'resp_room', val: 'I sharing room with other'}, {id: 'resp_cook_c', val: 'Cook Chinese food'}, {id: 'resp_cook_w', val: 'Cook Western food'}]
             .map(function(r){ return '<label class="checkbox-option"><input type="checkbox" name="w'+index+'_resp" value="'+r.val+'"> <span data-i18n="'+r.id+'">'+r.val+'</span></label>'; }).join('');
         html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_resp" value="Other" onchange="toggleInput(\'w'+index+'_resp_other_input\', this.checked)"> <span data-i18n="resp_other">Other responsibilities (1)</span></div><input type="text" id="w'+index+'_resp_other_input" class="hidden w-full p-1 border rounded mt-2 resp-other-input" placeholder="Enter Responsibilities" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></label>';
@@ -799,8 +798,8 @@
         var fc = document.getElementById('w'+i+'_famCount');
         if(fc) {
             var v = fc.value;
-            var h = '<option value="">'+dict[currentLang].opt_select+'</option><option value="1 (Only employer)">'+dict[currentLang].opt_only_emp+'</option>';
-            for(var k=2; k<=13; k++) h += '<option value="'+k+' ('+dict[currentLang].opt_emp_plus+' '+(k-1)+')">'+k+' ('+dict[currentLang].opt_emp_plus+' '+(k-1)+')</option>';
+            var h = '<option value="">'+dict[currentLang].opt_select+'</option><option value="1">'+dict[currentLang].opt_only_emp+'</option>';
+            for(var k=2; k<=13; k++) h += '<option value="'+k+'">'+k+' ('+dict[currentLang].opt_emp_plus+' '+(k-1)+')</option>';
             h += '<option value="13+">13+</option>';
             fc.innerHTML = h; fc.value = v;
         }
@@ -924,16 +923,12 @@
             // Validate Groups first
             var groups = p.querySelectorAll('.checkbox-group');
             var hasError = false;
-            var firstError = null;
             
             groups.forEach(function(g){ 
                 // Special Skip Logic
                 if(g.offsetParent === null) return; // Hidden
                 validateGroup(g); 
-                if(g.parentElement.querySelector('.error-msg.visible')) {
-                    hasError = true;
-                    if(!firstError) firstError = g;
-                }
+                if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
             });
 
             // Validate Inputs
@@ -955,32 +950,22 @@
                      validateField(i); 
                 }
                 
-                if(i.classList.contains('input-error')) {
-                    hasError = true;
-                    if(!firstError) firstError = i;
-                }
+                if(i.classList.contains('input-error')) hasError = true; 
             });
             
             // Specific check for child ages container visibility
             var sonsCount = parseInt(document.getElementById('sonsCount').value);
             if(sonsCount > 0) {
                  var sinps = document.querySelectorAll('#sonsInputs input');
-                 sinps.forEach(function(inp){ if(!inp.value) { inp.classList.add('input-error'); hasError = true; if(!firstError) firstError = inp; }});
+                 sinps.forEach(function(inp){ if(!inp.value) { inp.classList.add('input-error'); hasError = true; }});
             }
             var dCount = parseInt(document.getElementById('daughtersCount').value);
             if(dCount > 0) {
                  var dinps = document.querySelectorAll('#daughtersInputs input');
-                 dinps.forEach(function(inp){ if(!inp.value) { inp.classList.add('input-error'); hasError = true; if(!firstError) firstError = inp; }});
+                 dinps.forEach(function(inp){ if(!inp.value) { inp.classList.add('input-error'); hasError = true; }});
             }
 
-            if(hasError) { 
-                alert("Please answer all required questions"); 
-                if(firstError) {
-                    firstError.scrollIntoView({behavior: "smooth", block: "center"});
-                    firstError.focus();
-                }
-                return; 
-            }
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
         
         saveLocal();
@@ -999,17 +984,13 @@
         if(ENABLE_VALIDATION) {
             var p = document.getElementById('pageWork'+index);
             var hasError = false;
-            var firstError = null;
 
             // Validate Groups (Strict Check for Visible Groups)
             var groups = p.querySelectorAll('.checkbox-group');
             groups.forEach(function(g){ 
                  if(g.offsetParent === null) return;
                  validateGroup(g); 
-                 if(g.parentElement.querySelector('.error-msg.visible')) {
-                     hasError = true;
-                     if(!firstError) firstError = g;
-                 }
+                 if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
             });
 
             // Validate Inputs & Special Checks
@@ -1017,20 +998,41 @@
             inputs.forEach(function(i){ 
                 if(i.offsetParent === null) return;
                 validateField(i); 
-                if(i.classList.contains('input-error')) {
-                    hasError = true;
-                    if(!firstError) firstError = i;
+                if(i.classList.contains('input-error')) hasError = true; 
+            });
+            
+            // Specific Checks for "Other" checkboxes in Work Page
+            var otherChecks = [
+                {check: 'w'+index+'_disabled', val: 'Other disabled person (1)', input: 'w'+index+'_disabled_other1_input'},
+                {check: 'w'+index+'_disabled', val: 'Other disabled person (2)', input: 'w'+index+'_disabled_other2_input'},
+                {check: 'w'+index+'_resp', val: 'Other', input: 'w'+index+'_resp_other_input'},
+                {check: 'w'+index+'_resp', val: 'Other2', input: 'w'+index+'_resp_other2_input'},
+                {check: 'w'+index+'_resp', val: 'Other3', input: 'w'+index+'_resp_other3_input'}
+            ];
+            
+            otherChecks.forEach(function(obj){
+                var cb = document.querySelector('input[name="'+obj.check+'"][value="'+obj.val+'"]');
+                if(cb && cb.checked) {
+                    var inp = document.getElementById(obj.input);
+                    if(inp && !inp.value.trim()) {
+                        inp.classList.add('input-error');
+                        hasError = true;
+                        // Use sibling for error msg
+                        var errMsg = inp.nextElementSibling;
+                        if(errMsg && errMsg.classList.contains('error-msg')) errMsg.classList.add('visible');
+                    }
                 }
             });
             
-            if(hasError) { 
-                alert("Please answer all required questions"); 
-                if(firstError) {
-                    firstError.scrollIntoView({behavior: "smooth", block: "center"});
-                    firstError.focus();
-                }
-                return; 
+            // Pet Others
+            var petOther1 = document.querySelector('input.pet-check[data-pet="Other pet (1)"]');
+            if(petOther1 && petOther1.checked) {
+                 var c = document.getElementById('w'+index+'_Others_qty');
+                 var inps = c.querySelectorAll('input');
+                 inps.forEach(function(inp){ if(!inp.value) { inp.classList.add('input-error'); hasError=true; }});
             }
+
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
 
         saveLocal();
@@ -1071,15 +1073,10 @@
             var pf = document.getElementById('pageFinal');
             var groups = pf.querySelectorAll('.checkbox-group');
             var hasError = false;
-            var firstError = null;
-
             groups.forEach(function(g){ 
                 if(g.offsetParent === null) return;
                 validateGroup(g); 
-                if(g.parentElement.querySelector('.error-msg.visible')) {
-                    hasError = true;
-                    if(!firstError) firstError = g;
-                }
+                if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
             });
             
             // Validate Selects in Final Page (e.g. Vacation Month)
@@ -1087,20 +1084,10 @@
             inputs.forEach(function(i){
                 if(i.offsetParent === null) return;
                 validateField(i);
-                if(i.classList.contains('input-error')) {
-                    hasError = true;
-                    if(!firstError) firstError = i;
-                }
+                if(i.classList.contains('input-error')) hasError = true;
             });
             
-            if(hasError) { 
-                alert("Please answer all required questions"); 
-                if(firstError) {
-                    firstError.scrollIntoView({behavior: "smooth", block: "center"});
-                    firstError.focus();
-                }
-                return; 
-            }
+            if(hasError) { alert("Please answer all required questions"); return; }
         }
         
         var btn = document.querySelector('.btn-submit');
@@ -1108,6 +1095,50 @@
         btn.disabled = true;
 
         var data = saveLocal();
+        
+        // --- DATA COLLECTION BEFORE SUBMIT ---
+        // 1. Sons Ages
+        var sAges = [];
+        document.querySelectorAll('#sonsInputs input').forEach(function(i){ if(i.value) sAges.push(i.value); });
+        data.sonsAges = sAges.join(', ');
+        
+        // 2. Daughters Ages
+        var dAges = [];
+        document.querySelectorAll('#daughtersInputs input').forEach(function(i){ if(i.value) dAges.push(i.value); });
+        data.daughtersAges = dAges.join(', ');
+        
+        // 3. Work Experience Family Details
+        for(var k=1; k<=MAX_JOBS; k++) {
+            var famRows = document.querySelectorAll('#w'+k+'_famRows .member-row');
+            var details = [];
+            famRows.forEach(function(row){
+                 var role = row.querySelector('select').value;
+                 var selects = row.querySelectorAll('.age-inputs select');
+                 if(selects.length === 2) {
+                     var start = selects[0].value;
+                     var end = selects[1].value;
+                     if(role) details.push({role: role, start: start, end: end});
+                 }
+            });
+            data['w'+k+'_famDetailsStr'] = details.map(function(d){ return d.role + ': ' + d.start + ' to ' + d.end; }).join(', ');
+            
+            // 4. Pet Qty
+            var petOther1Input = document.querySelector('#w'+k+'_Others_qty input[type="text"]');
+            var petOther1Num = document.querySelector('#w'+k+'_Others_qty input[type="number"]');
+            if(petOther1Input) data['w'+k+'_other_pet_1_text'] = petOther1Input.value;
+            if(petOther1Num) data['w'+k+'_other_pet_1_num'] = petOther1Num.value;
+
+            var petOther2Input = document.querySelector('#w'+k+'_Others2_qty input[type="text"]');
+            var petOther2Num = document.querySelector('#w'+k+'_Others2_qty input[type="number"]');
+            if(petOther2Input) data['w'+k+'_other_pet_2_text'] = petOther2Input.value;
+            if(petOther2Num) data['w'+k+'_other_pet_2_num'] = petOther2Num.value;
+
+            var petOther3Input = document.querySelector('#w'+k+'_Others3_qty input[type="text"]');
+            var petOther3Num = document.querySelector('#w'+k+'_Others3_qty input[type="number"]');
+            if(petOther3Input) data['w'+k+'_other_pet_3_text'] = petOther3Input.value;
+            if(petOther3Num) data['w'+k+'_other_pet_3_num'] = petOther3Num.value;
+        }
+
         var p1Nat = document.querySelector('input[name="nationality"]:checked');
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
