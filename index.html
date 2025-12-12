@@ -1001,7 +1001,6 @@ html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question
                         var value = check.value;
                         if (check.checked) {
                             // 檢查是否選中了六個主要選項中的一個
-                            // 注意：這裡只檢查前六個主要選項，不檢查 Other pet (1), (2), (3)
                             if (value === 'No pets' || value === 'Small dog' || value === 'Medium dog' || value === 'Big dog' || value === 'Cat' || value === 'Rabbit') {
                                 isMainPetSelected = true;
                             }
@@ -1259,4 +1258,5 @@ html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question
 
 </body>
 </html>
+
 
