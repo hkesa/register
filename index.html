@@ -608,11 +608,10 @@
         // Pets - Added .error-msg divs for dynamic inputs
         html += '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group">';
         html += [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="'+p.val+'" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.split(' ').join('')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.split(' ').join('')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('');
-        html += '<div class="flex items-center gap-2 flex-wrap"><input type="checkbox" name="w'+index+'_pets" value="Other pet (1)" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div><div class="error-msg other-pet-error" data-i18n="error_msg" style="display: none;">Answer This Question</div></div>';
-        html += '<div class="flex items-center gap-2 flex-wrap"><input type="checkbox" name="w'+index+'_pets" value="Other pet (2)" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div><div class="error-msg other-pet-error" data-i18n="error_msg" style="display: none;">Answer This Question</div></div>';
-        html += '<div class="flex items-center gap-2 flex-wrap"><input type="checkbox" name="w'+index+'_pets" value="Other pet (3)" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div><div class="error-msg other-pet-error" data-i18n="error_msg" style="display: none;">Answer This Question</div></div>';html += '</div>'; // <-- 這是關閉 div.checkbox-group
-html += '<div class="error-msg main-pet-error" data-i18n="error_msg" style="display: none;">Answer This Question</div>'; // <-- 這是新增的總體錯誤提示
-html += '</div>'; // <-- 這是關閉 div.question-block
+        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (1)" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity"></div></div>';
+        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (2)" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity"></div></div>';
+        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (3)" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity"></div></div>';
+html += '</div><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div>';
         
         // Resp - Added .error-msg divs for dynamic inputs
         html += '<div class="question-block"><label class="question-label" data-i18n="work_resp"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
@@ -987,12 +986,45 @@ html += '</div>'; // <-- 這是關閉 div.question-block
             var p = document.getElementById('pageWork'+index);
             var hasError = false;
 
-            // Validate Groups (Strict Check for Visible Groups)
+            // Validate Checkbox Groups (Custom logic for Pets)
             var groups = p.querySelectorAll('.checkbox-group');
             groups.forEach(function(g){ 
-                 if(g.offsetParent === null) return;
-                 validateGroup(g); 
-                 if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
+                var questionBlock = g.closest('.question-block');
+                var isPetQuestion = questionBlock && questionBlock.querySelector('label[data-i18n="work_pets"]'); // 識別「Employer's Pets?」問題
+
+                if (isPetQuestion) {
+                    // 客製化寵物驗證：只強制要求六個主要選項（No pets 到 Rabbit）
+                    var petChecks = g.querySelectorAll('input.pet-check');
+                    var isMainPetSelected = false;
+
+                    petChecks.forEach(function(check) {
+                        var value = check.value;
+                        if (check.checked) {
+                            // 檢查是否選中了六個主要選項中的一個
+                            if (value === 'No pets' || value === 'Small dog' || value === 'Medium dog' || value === 'Big dog' || value === 'Cat' || value === 'Rabbit') {
+                                isMainPetSelected = true;
+                            }
+                        }
+                    });
+
+                    var petErrorMsg = questionBlock.querySelector('.error-msg');
+                    if (!isMainPetSelected) {
+                        // 如果沒有選擇主要寵物，顯示錯誤並阻止導航
+                        if (petErrorMsg) {
+                            petErrorMsg.classList.add('visible');
+                            hasError = true;
+                        }
+                    } else {
+                        // 如果有選擇主要寵物，隱藏錯誤
+                        if (petErrorMsg) {
+                            petErrorMsg.classList.remove('visible');
+                        }
+                    }
+                } else {
+                    // 對所有其他問題組，執行標準驗證
+                    validateGroup(g); 
+                    if(g.parentElement.querySelector('.error-msg.visible')) hasError = true; 
+                }
             });
 
             // Validate Inputs & Special Checks
@@ -1152,7 +1184,7 @@ html += '</div>'; // <-- 這是關閉 div.question-block
         data.submissionLanguage = currentLang;
         
         // UPDATE WITH YOUR APPS SCRIPT URL HERE
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzb0sBBOvornl0hh0Bt_WH_h8Nz9csh9j9_sCvMZdQZO_XduolcQM1Q2FVEC-4Lb6salw/exec"; 
+        const scriptURL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; 
         
         try {
             await fetch(scriptURL, { 
@@ -1225,5 +1257,3 @@ html += '</div>'; // <-- 這是關閉 div.question-block
 
 </body>
 </html>
-
-
