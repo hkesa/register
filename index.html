@@ -605,10 +605,10 @@
         html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (1)" onchange="toggleInput(\'w'+index+'_disabled_other1_input\', this.checked)"> <span data-i18n="dis_other1">Other disabled person (1)</span></div><input type="text" id="w'+index+'_disabled_other1_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></label>';
         html += '<label class="checkbox-option flex-col !items-start"><div class="flex items-center"><input type="checkbox" name="w'+index+'_disabled" value="Other disabled person (2)" onchange="toggleInput(\'w'+index+'_disabled_other2_input\', this.checked)"> <span data-i18n="dis_other2">Other disabled person (2)</span></div><input type="text" id="w'+index+'_disabled_other2_input" class="hidden w-full p-1 border rounded mt-2 dis-other-input" placeholder="Fill-in details" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></label></div><div class="error-msg" data-i18n="error_msg"></div></div>';
         
-                // Pets - Added .error-msg divs for dynamic inputs
-        html += '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group" onfocusout="validateGroup(this)">';
+        // Pets - Added .error-msg divs for dynamic inputs
+        html += '<div class="question-block"><label class="question-label" data-i18n="work_pets"></label><div class="checkbox-group">';
         html += [{id: 'pet_no', val: 'No pets'}, {id: 'pet_s_dog', val: 'Small dog'}, {id: 'pet_m_dog', val: 'Medium dog'}, {id: 'pet_b_dog', val: 'Big dog'}, {id: 'pet_cat', val: 'Cat'}, {id: 'pet_rabbit', val: 'Rabbit'}].map(function(p){ return '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="'+p.val+'" class="pet-check" data-pet="'+p.val+'" onchange="togglePetQty(this, \'w'+index+'_'+p.val.split(' ').join('')+'_qty\')"> <span data-i18n="'+p.id+'">'+p.val+'</span><input type="number" id="w'+index+'_'+p.val.split(' ').join('')+'_qty" class="hidden w-24 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"></div>'; }).join('');
-        // Removed Other pet (1) as per request
+        html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (1)" class="pet-check" data-pet="Other pet (1)" onchange="togglePetQty(this, \'w'+index+'_Others_qty\')"> <span data-i18n="pet_other">Other pet (1)</span><div id="w'+index+'_Others_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
         html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (2)" class="pet-check" data-pet="Other pet (2)" onchange="togglePetQty(this, \'w'+index+'_Others2_qty\')"> <span data-i18n="pet_other2">Other pet (2)</span><div id="w'+index+'_Others2_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div>';
         html += '<div class="flex items-center gap-2"><input type="checkbox" name="w'+index+'_pets" value="Other pet (3)" class="pet-check" data-pet="Other pet (3)" onchange="togglePetQty(this, \'w'+index+'_Others3_qty\')"> <span data-i18n="pet_other3">Other pet (3)</span><div id="w'+index+'_Others3_qty" class="hidden flex gap-2 w-full"><input type="text" class="w-full p-1 border rounded pet-other-input" placeholder="Enter pet" onblur="validateField(this)"><input type="number" class="w-20 p-1 border rounded pet-qty" placeholder="Enter quantity" onblur="validateField(this)"><div class="error-msg" data-i18n="error_msg">Answer This Question</div></div></div></div><div class="error-msg" data-i18n="error_msg"></div></div>';
         
@@ -1097,20 +1097,18 @@
         var data = saveLocal();
         
         // --- DATA COLLECTION BEFORE SUBMIT ---
-        
-        // 1. Sons & Daughters Ages (Global)
+        // 1. Sons Ages
         var sAges = [];
         document.querySelectorAll('#sonsInputs input').forEach(function(i){ if(i.value) sAges.push(i.value); });
         data.sonsAges = sAges.join(', ');
         
+        // 2. Daughters Ages
         var dAges = [];
         document.querySelectorAll('#daughtersInputs input').forEach(function(i){ if(i.value) dAges.push(i.value); });
         data.daughtersAges = dAges.join(', ');
-
-        // Loop through all 5 Work Experiences
+        
+        // 3. Work Experience Family Details
         for(var k=1; k<=MAX_JOBS; k++) {
-            
-            // --- FAMILY DATA: Confirmed Separation ---
             var famRows = document.querySelectorAll('#w'+k+'_famRows .member-row');
             var details = [];
             famRows.forEach(function(row){
@@ -1119,64 +1117,28 @@
                  if(selects.length === 2) {
                      var start = selects[0].value;
                      var end = selects[1].value;
-                     if(role) details.push(role + ': ' + start + ' to ' + end);
+                     if(role) details.push({role: role, start: start, end: end});
                  }
             });
+            data['w'+k+'_famDetailsStr'] = details.map(function(d){ return d.role + ': ' + d.start + ' to ' + d.end; }).join(', ');
             
-            // 上載欄位: wX_famDetailsStr (Family Ages)
-            data['w'+k+'_famDetailsStr'] = details.join(', '); 
-            
-            // 上載欄位: wX_famCount (Family Count)
-            var fcEl = document.getElementById('w'+k+'_famCount');
-            data['w'+k+'_famCount'] = fcEl ? fcEl.value : ""; 
+            // 4. Pet Qty
+            var petOther1Input = document.querySelector('#w'+k+'_Others_qty input[type="text"]');
+            var petOther1Num = document.querySelector('#w'+k+'_Others_qty input[type="number"]');
+            if(petOther1Input) data['w'+k+'_other_pet_1_text'] = petOther1Input.value;
+            if(petOther1Num) data['w'+k+'_other_pet_1_num'] = petOther1Num.value;
 
+            var petOther2Input = document.querySelector('#w'+k+'_Others2_qty input[type="text"]');
+            var petOther2Num = document.querySelector('#w'+k+'_Others2_qty input[type="number"]');
+            if(petOther2Input) data['w'+k+'_other_pet_2_text'] = petOther2Input.value;
+            if(petOther2Num) data['w'+k+'_other_pet_2_num'] = petOther2Num.value;
 
-            // --- PETS DATA: Final Fix for Quantity Collection ---
-            var petList = [];
-            
-            // A. 檢查標準寵物 (Small dog, Cat, etc.)
-            ['No pets', 'Small dog', 'Medium dog', 'Big dog', 'Cat', 'Rabbit'].forEach(function(pName){
-                var cb = document.querySelector('input[name="w'+k+'_pets"][value="'+pName+'"]');
-                if(cb && cb.checked) {
-                     if(pName === 'No pets') {
-                         petList.push(pName);
-                     } else {
-                         // 1. 找出數量輸入框的容器 ID
-                         var qtyId = 'w'+k+'_' + pName.replace(/\s/g, '') + '_qty'; 
-                         var qtyContainer = document.getElementById(qtyId);
-                         
-                         // 2. **修正關鍵：** 精確尋找 type="number" 的輸入框
-                         var qtyInput = qtyContainer ? qtyContainer.querySelector('input[type="number"]') : null; 
-                         
-                         // 3. 獲取數量 
-                         var qty = (qtyInput && qtyInput.value) ? qtyInput.value : '';
-                         
-                         petList.push(pName + (qty ? ' (' + qty + ')' : ''));
-                     }
-                }
-            });
-
-            // B. 檢查其他寵物 (Other 2 & 3)
-            [2, 3].forEach(function(num){
-                var valName = 'Other pet ('+num+')';
-                var cb = document.querySelector('input[name="w'+k+'_pets"][value="'+valName+'"]');
-                if(cb && cb.checked) {
-                     var div = document.getElementById('w'+k+'_Others'+num+'_qty');
-                     if(div) {
-                         var txtInp = div.querySelector('.pet-other-input');
-                         var qtyInp = div.querySelector('.pet-qty'); // Assuming .pet-qty is the number input
-                         var t = txtInp ? txtInp.value : '';
-                         var q = qtyInp ? qtyInp.value : '';
-                         if(t) petList.push(t + (q ? ' (' + q + ')' : ''));
-                     }
-                }
-            });
-
-            // 將所有寵物資料合併上傳至 wX_pets_combined
-            data['w'+k+'_pets_combined'] = petList.join(', ');
+            var petOther3Input = document.querySelector('#w'+k+'_Others3_qty input[type="text"]');
+            var petOther3Num = document.querySelector('#w'+k+'_Others3_qty input[type="number"]');
+            if(petOther3Input) data['w'+k+'_other_pet_3_text'] = petOther3Input.value;
+            if(petOther3Num) data['w'+k+'_other_pet_3_num'] = petOther3Num.value;
         }
 
-        // --- SHEET NAME LOGIC (保持不變) ---
         var p1Nat = document.querySelector('input[name="nationality"]:checked');
         if(p1Nat) {
              if(p1Nat.value === 'Filipino') targetSheetName = 'Phil';
@@ -1188,7 +1150,7 @@
         data.submissionLanguage = currentLang;
         
         // UPDATE WITH YOUR APPS SCRIPT URL HERE
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzFouc902TWwUU4Ur9rJE87xG0I-DL5Yng991uO8iQcnA1FLWW-WjVtEd07Jui-BNVX6Q/exec"; 
+        const scriptURL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; 
         
         try {
             await fetch(scriptURL, { 
@@ -1261,8 +1223,3 @@
 
 </body>
 </html>
-
-
-
-
-
